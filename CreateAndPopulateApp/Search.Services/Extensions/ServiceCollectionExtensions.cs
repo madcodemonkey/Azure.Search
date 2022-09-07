@@ -1,0 +1,16 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace Search.Services
+{
+    public static class ServiceCollectionExtensions
+    {
+        public static void AddSearchServices(this IServiceCollection sc, SearchServiceSettings settings)
+        {
+            sc.AddSingleton(settings);
+            
+            sc.AddTransient<IHotelSynonymService, HotelSynonymService>();
+            sc.AddScoped<ISearchIndexService, SearchIndexService>();
+            sc.AddTransient<ISearchSynonymService, SearchSynonymService>();
+        }
+    }
+}
