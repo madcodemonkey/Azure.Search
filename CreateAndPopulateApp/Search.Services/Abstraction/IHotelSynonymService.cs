@@ -2,5 +2,5 @@
 
 public interface IHotelSynonymService
 {
-    Task<bool> AssociateSynonymMapToFieldsAsync(string hotelIndexName, string synonymMapName);
+    Task<bool> AssociateSynonymMapToHotelFieldsAsync(string hotelIndexName, string synonymMapName);
 }

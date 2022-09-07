@@ -5,13 +5,14 @@ using Search.Services;
 namespace CreateAndPopulateApp;
 
 [ConsoleMenuItem("Synonyms")]
-public class SynonymsDeleteMenuItem : IConsoleMenuItem
+public class SynonymDeleteMenuItem : IConsoleMenuItem
 {
     private readonly IPromptHelper _promptHelper;
     private readonly ISearchSynonymService _synonymService;
     private readonly string _defaultMapName;
 
-    public SynonymsDeleteMenuItem(IConfiguration configuration, IPromptHelper promptHelper, ISearchSynonymService synonymService)
+    /// <summary>Constructor</summary>
+    public SynonymDeleteMenuItem(IConfiguration configuration, IPromptHelper promptHelper, ISearchSynonymService synonymService)
     {
         _promptHelper = promptHelper;
         _synonymService = synonymService;
@@ -36,5 +37,5 @@ public class SynonymsDeleteMenuItem : IConsoleMenuItem
     public string ItemText => "Delete Synonyms";
 
     /// <summary>Optional data from the attribute.</summary>
-    public string AttributeData { get; set; }
+    public string AttributeData { get; set; } = string.Empty;
 }

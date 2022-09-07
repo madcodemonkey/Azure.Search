@@ -12,7 +12,7 @@ public class HotelSynonymService : IHotelSynonymService
     }
 
 
-    public async Task<bool> AssociateSynonymMapToFieldsAsync(string hotelIndexName, string synonymMapName)
+    public async Task<bool> AssociateSynonymMapToHotelFieldsAsync(string hotelIndexName, string synonymMapName)
     {
         int MaxNumTries = 3;
 

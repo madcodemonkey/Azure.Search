@@ -2,12 +2,13 @@
 
 namespace CreateAndPopulateApp;
 
-[ConsoleMenuItem("Main")]
-public class SynonymsMenuItem : IConsoleMenuItem
+[ConsoleMenuItem("Main", 2)]
+public class SynonymMenuItem : IConsoleMenuItem
 {
     private readonly IConsoleMenuController _menuController;
 
-    public SynonymsMenuItem(IConsoleMenuController menuController)
+    /// <summary>Constructor</summary>
+    public SynonymMenuItem(IConsoleMenuController menuController)
     {
         _menuController = menuController;
     }
@@ -21,5 +22,5 @@ public class SynonymsMenuItem : IConsoleMenuItem
     public string ItemText => "Synonyms";
 
     /// <summary>Optional data from the attribute.</summary>
-    public string AttributeData { get; set; }
+    public string AttributeData { get; set; } = string.Empty;
 }

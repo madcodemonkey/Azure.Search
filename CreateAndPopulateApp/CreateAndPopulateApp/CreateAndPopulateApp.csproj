@@ -11,13 +11,14 @@
   <ItemGroup>
     <PackageReference Include="Azure.Search.Documents" Version="11.3.0" />
     <PackageReference Include="ConsoleMenuHelper" Version="1.0.0.4" />
+    <PackageReference Include="Microsoft.Azure.Core.Spatial" Version="1.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Spatial" Version="7.12.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Search.Model\Search.Model.csproj" />
     <ProjectReference Include="..\Search.Services\Search.Services.csproj" />
   </ItemGroup>
 

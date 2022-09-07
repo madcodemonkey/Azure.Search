@@ -4,12 +4,12 @@ using Search.Services;
 namespace CreateAndPopulateApp;
 
 [ConsoleMenuItem("Synonyms")]
-public class SynonymsListAllMapsMenuItem : IConsoleMenuItem
+public class SynonymListAllMapsMenuItem : IConsoleMenuItem
 {
     private readonly ISearchSynonymService _synonymService;
 
     /// <summary>Constructor</summary>
-    public SynonymsListAllMapsMenuItem(ISearchSynonymService synonymService)
+    public SynonymListAllMapsMenuItem(ISearchSynonymService synonymService)
     {
         _synonymService = synonymService;
     }
@@ -30,5 +30,5 @@ public class SynonymsListAllMapsMenuItem : IConsoleMenuItem
     public string ItemText => "List all Synonyms Maps";
 
     /// <summary>Optional data from the attribute.</summary>
-    public string AttributeData { get; set; }
+    public string AttributeData { get; set; } = string.Empty;
 }

@@ -5,14 +5,15 @@ using Search.Services;
 namespace CreateAndPopulateApp;
 
 [ConsoleMenuItem("Synonyms")]
-public class SynonymsAssociateMenuItem : IConsoleMenuItem
+public class SynonymAssociateMenuItem : IConsoleMenuItem
 {
     private readonly IPromptHelper _promptHelper;
     private readonly IHotelSynonymService _hotelSynonymService;
     private readonly string _defaultMapName;
     private readonly string _defaultIndexName;
 
-    public SynonymsAssociateMenuItem(IConfiguration configuration, IPromptHelper promptHelper, IHotelSynonymService hotelSynonymService)
+    /// <summary>Constructor</summary>
+    public SynonymAssociateMenuItem(IConfiguration configuration, IPromptHelper promptHelper, IHotelSynonymService hotelSynonymService)
     {
         _promptHelper = promptHelper;
         _hotelSynonymService = hotelSynonymService;
@@ -33,16 +34,16 @@ public class SynonymsAssociateMenuItem : IConsoleMenuItem
        
         if (synonymMapName != "exit")
         {
-            await _hotelSynonymService.AssociateSynonymMapToFieldsAsync(hotelIndexName, synonymMapName);
+            await _hotelSynonymService.AssociateSynonymMapToHotelFieldsAsync(hotelIndexName, synonymMapName);
         }
 
         Console.WriteLine("-------------------------------");
-
+   
         return new ConsoleMenuItemResponse(false, false);
     }
 
     public string ItemText => "Associate index to synonym map";
 
     /// <summary>Optional data from the attribute.</summary>
-    public string AttributeData { get; set; }
+    public string AttributeData { get; set; } = string.Empty;
 }
