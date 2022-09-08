@@ -1,9 +1,9 @@
 # Azure Search
 
 ## Projects List
-- Service Bus Message Transceiver (ServiceBusMessageTransceiver) - This is a console application designed to 
-    - Send Queue message to a service bus
-    - Retrieve all the message from a queue on a service bus 
+- Create and Populate (CreateAndPopulateApp) - This is a console application designed to 
+    - Show how to programmatically create an index, data source, indexer
+    - Manually upload data using the NuGet package.
   
 Notes
 - See the readme.md file in each project for setup instructions.
