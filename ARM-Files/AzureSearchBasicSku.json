@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "searchServices_name": {
+            "defaultValue": "awesomesearch",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Search/searchServices",
+            "apiVersion": "2021-04-01-preview",
+            "name": "[parameters('searchServices_name')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "basic"
+            },
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "replicaCount": 1,
+                "partitionCount": 1,
+                "hostingMode": "Default",
+                "publicNetworkAccess": "Enabled",
+                "networkRuleSet": {
+                    "ipRules": [],
+                    "bypass": "None"
+                },
+                "encryptionWithCmk": {
+                    "enforcement": "Unspecified"
+                },
+                "disableLocalAuth": false,
+                "authOptions": {
+                    "apiKeyOnly": {}
+                },
+                "disabledDataExfiltrationOptions": [],
+                "semanticSearch": "disabled"
+            }
+        }
+    ]
+}

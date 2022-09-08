@@ -1,6 +1,5 @@
 ﻿using Azure;
 using Azure.Search.Documents.Indexes;
-using Azure.Search.Documents.Indexes.Models;
 
 namespace Search.Services;
 
@@ -21,16 +20,29 @@ public class SearchIndexerService : ISearchIndexerService
         new Uri(_settings.SearchEndPoint), new AzureKeyCredential(_settings.SearchAdminApiKey));
 
 
-    public async Task CreateAzureSqlDataSourceAsync(string dataSourceName, string tableOrViewName)
+    /// <summary>Gets a list of data sources</summary>
+    /// <param name="indexerName">The name of the indexer</param>
+    public async Task<bool> DeleteIndexerAsync(string indexerName)
     {
-        var dataSource = new SearchIndexerDataSourceConnection(
-            dataSourceName, SearchIndexerDataSourceType.AzureSql,
-            _settings.SearchAzureSqlConnectionString,
-            new SearchIndexerDataContainer(tableOrViewName));
+        var response = await ClientIndexer.DeleteIndexerAsync(indexerName);
 
-        // The data source does not need to be deleted if it was already created,
-        // but the connection string may need to be updated if it was changed
-        await ClientIndexer.CreateOrUpdateDataSourceConnectionAsync(dataSource);
+        if (response != null && response.Status == 200)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /// <summary>Gets a list of indexers</summary>
+    public async Task<List<string>> GetIndexerListAsync()
+    {
+        Response<IReadOnlyList<string>> response = await ClientIndexer.GetIndexerNamesAsync();
+
+        List<string> result = response.Value.ToList();
+
+        return result;
     }
 
     public async Task RunIndexerAsync(string indexerName)

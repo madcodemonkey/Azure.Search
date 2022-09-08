@@ -11,6 +11,8 @@ namespace Search.Services
             
             sc.AddTransient<IHotelIndexerService, HotelIndexerService>();
             sc.AddTransient<IHotelSynonymService, HotelSynonymService>();
+            
+            sc.AddScoped<ISearchDataSourceService, SearchDataSourceService>();
             sc.AddScoped<ISearchIndexService, SearchIndexService>();
             sc.AddScoped<ISearchIndexerService, SearchIndexerService>();
             sc.AddTransient<ISearchSynonymService, SearchSynonymService>();
