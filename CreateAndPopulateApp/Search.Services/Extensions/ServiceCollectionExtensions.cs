@@ -8,8 +8,11 @@ namespace Search.Services
         {
             sc.AddSingleton(settings);
             
+            
+            sc.AddTransient<IHotelIndexerService, HotelIndexerService>();
             sc.AddTransient<IHotelSynonymService, HotelSynonymService>();
             sc.AddScoped<ISearchIndexService, SearchIndexService>();
+            sc.AddScoped<ISearchIndexerService, SearchIndexerService>();
             sc.AddTransient<ISearchSynonymService, SearchSynonymService>();
         }
     }

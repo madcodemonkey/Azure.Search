@@ -46,6 +46,12 @@ static SearchServiceSettings GetSearchSettings(IConfiguration config )
     {
         SearchAdminApiKey = config["SearchServiceAdminApiKey"],
         SearchEndPoint = config["SearchServiceEndPoint"],
-        SearchQueryApiKey = config["SearchServiceQueryApiKey"]
+        SearchQueryApiKey = config["SearchServiceQueryApiKey"],
+
+        // Azure SQL Settings
+        SearchAzureSqlConnectionString= config["SearchServiceAzureSqlConnectionString"],
+        SearchAzureSqlTableName = config["SearchServiceAzureSqlTableName"],
+        SearchAzureSqlDataSourceName= config["SearchServiceAzureSqlDataSourceName"],
+        SearchAzureSqlIndexerName= config["SearchServiceAzureSqlIndexerName"],
     };
 }

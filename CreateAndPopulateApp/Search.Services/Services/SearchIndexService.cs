@@ -22,7 +22,8 @@ public class SearchIndexService : ISearchIndexService
     }
     
 
-    public SearchIndexClient Client => _client ??= new SearchIndexClient(new Uri(_settings.SearchEndPoint), new AzureKeyCredential(_settings.SearchAdminApiKey), _clientOptions);
+    public SearchIndexClient Client => _client ??= new SearchIndexClient(
+        new Uri(_settings.SearchEndPoint), new AzureKeyCredential(_settings.SearchAdminApiKey), _clientOptions);
 
     public async Task<bool> CreateOrUpdateAsync(Type typeToCreate, string indexName)
     {
