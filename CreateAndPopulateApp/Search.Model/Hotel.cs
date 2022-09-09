@@ -54,6 +54,10 @@ public partial class Hotel
     [JsonPropertyName("rating")]
     public int? Rating { get; set; }
 
+    [SearchableField(IsFilterable = true)]
+    [JsonPropertyName("roles")] 
+    public string[] Roles { get; set; }
+    
     /// <summary>Location</summary>
     /// <remarks>Requires Microsoft.Azure.Core.Spatial NuGet package for GeographyPoint</remarks>
     [SimpleField(IsFilterable = true, IsSortable = true)]

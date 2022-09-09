@@ -8,12 +8,13 @@ CREATE TABLE Hotels (
     [Category] nvarchar(max) NULL,
     [Description] nvarchar(max) NULL,
     [Description_fr] nvarchar(max) NULL,
-    [HotelName] nvarchar(max) NULL,
+    [HotelName] nvarchar(max)  NOT NULL,
     [Amenities] nvarchar(max) NULL,
     [IsDeleted] bit NOT NULL,
     [LastRenovationDate] DateTime NULL,
     [ParkingIncluded] bit NULL,
     [Rating] int NULL,
+    [Roles] nvarchar(max) NOT NULL,  
     [SmokingAllowed] bit NULL,
     [Location] geography NULL,
 )
@@ -24,12 +25,16 @@ ALTER TABLE Hotels
 ENABLE CHANGE_TRACKING
 WITH (TRACK_COLUMNS_UPDATED = ON)
 GO
-INSERT INTO [Hotels] (BaseRate, Category, Description, description_fr, HotelName, Amenities, IsDeleted, LastRenovationDate, ParkingIncluded, Rating, SmokingAllowed, Location)
-VALUES (199, N'Luxury', N'Best hotel in town', N'Meilleur hôtel en ville', N'Fancy Stay', N'["pool", "view", "wifi", "concierge"]', 0, N'2010-06-27', 0, 5, 0, geography::Point(47.678581, -122.131577, 4326))
+INSERT INTO [Hotels] (BaseRate, Category, Description, description_fr, HotelName, Amenities, IsDeleted, LastRenovationDate, ParkingIncluded, Rating, Roles, SmokingAllowed, Location)
+VALUES (199, N'Luxury', N'Best hotel in town', N'Meilleur hôtel en ville', N'Fancy Stay', N'["pool", "view", "wifi", "concierge"]', 0, N'2010-06-27', 0, 5, N'["admin", "member"]', 0, geography::Point(47.678581, -122.131577, 4326))
 
-INSERT INTO [Hotels] (BaseRate, Category, Description, description_fr, HotelName, Amenities, IsDeleted, LastRenovationDate, ParkingIncluded, Rating, SmokingAllowed, Location)
-VALUES (79.99, N'Budget', N'Cheapest hotel in town', N'Hôtel le moins cher en ville', N'Roach Motel', N'["motel", "budget"]', 0, N'1982-04-28', 1, 1, 1, geography::Point(49.678581, -122.131577, 4326))
+INSERT INTO [Hotels] (BaseRate, Category, Description, description_fr, HotelName, Amenities, IsDeleted, LastRenovationDate, ParkingIncluded, Rating, Roles, SmokingAllowed, Location)
+VALUES (79.99, N'Budget', N'Cheapest hotel in town', N'Hôtel le moins cher en ville', N'Roach Motel', N'["motel", "budget"]', 0, N'1982-04-28', 1, 1, N'["nonmember", "admin", "member" ]', 1, geography::Point(49.678581, -122.131577, 4326))
 
-INSERT INTO [Hotels] (BaseRate, Category, Description, description_fr, HotelName, Amenities, IsDeleted, LastRenovationDate, ParkingIncluded, Rating, SmokingAllowed, Location)
-VALUES (129.99, NULL, N'Close to town hall and the river', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL)
+INSERT INTO [Hotels] (BaseRate, Category, Description, description_fr, HotelName, Amenities, IsDeleted, LastRenovationDate, ParkingIncluded, Rating, Roles, SmokingAllowed, Location)
+VALUES (129.99, NULL, N'Close to town hall and the river', NULL, 'Downtown Hotel', NULL, 0, NULL, NULL, NULL, N'["nonmember", "admin", "member" ]', NULL, NULL)
+GO
+
+INSERT INTO [Hotels] (BaseRate, Category, Description, description_fr, HotelName, Amenities, IsDeleted, LastRenovationDate, ParkingIncluded, Rating, Roles, SmokingAllowed, Location)
+VALUES (247.19, NULL, N'Super secret hideout', NULL, 'Secret Motel # 9', NULL, 0, NULL, NULL, NULL, N'["nonmember", "admin", "member" ]', NULL, NULL)
 GO

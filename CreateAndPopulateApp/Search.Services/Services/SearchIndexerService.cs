@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿using System.Net;
+using Azure;
 using Azure.Search.Documents.Indexes;
 
 namespace Search.Services;
@@ -25,8 +26,8 @@ public class SearchIndexerService : ISearchIndexerService
     public async Task<bool> DeleteIndexerAsync(string indexerName)
     {
         var response = await ClientIndexer.DeleteIndexerAsync(indexerName);
-
-        if (response != null && response.Status == 200)
+        
+        if (response != null && response.Status == (int) HttpStatusCode.NoContent) //  204 is No Content
         {
             return true;
         }

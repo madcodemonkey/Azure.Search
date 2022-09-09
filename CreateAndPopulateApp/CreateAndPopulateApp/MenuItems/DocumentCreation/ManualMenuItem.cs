@@ -61,6 +61,7 @@ public class ManualMenuItem : IConsoleMenuItem
                 ParkingIncluded = false,
                 LastRenovationDate = new DateTimeOffset(1970, 1, 18, 0, 0, 0, TimeSpan.Zero),
                 Rating = 3,
+                Roles = new[] { "admin" },
                 Location = GeographyPoint.Create(40.760586, -73.975403)
             },
             new()
@@ -75,6 +76,7 @@ public class ManualMenuItem : IConsoleMenuItem
                 ParkingIncluded = false,
                 LastRenovationDate = new DateTimeOffset(1979, 2, 18, 0, 0, 0, TimeSpan.Zero),
                 Rating = 3,
+                Roles = new[] { "admin", "member" },
                 Location = GeographyPoint.Create(27.384417, -82.452843)
             },
             new()
@@ -89,6 +91,7 @@ public class ManualMenuItem : IConsoleMenuItem
                 ParkingIncluded = true,
                 LastRenovationDate = new DateTimeOffset(2015, 9, 20, 0, 0, 0, TimeSpan.Zero),
                 Rating = 4,
+                Roles = new[] { "nonmember", "admin", "member" },
                 Location = GeographyPoint.Create(33.84643, -84.362465),
              
             },
@@ -104,6 +107,7 @@ public class ManualMenuItem : IConsoleMenuItem
                 ParkingIncluded = true,
                 LastRenovationDate = new DateTimeOffset(2015, 1, 1, 0, 0, 0, TimeSpan.Zero),
                 Rating = 4,
+                Roles = new[] { "nonmember", "admin", "member" },
                 Location = GeographyPoint.Create(36.09867, -115.17517),
              
             },
@@ -118,6 +122,7 @@ public class ManualMenuItem : IConsoleMenuItem
                 Tags = new[] { "air conditioning", "gym", "pool", "parking available" },
                 ParkingIncluded = true,
                 LastRenovationDate = new DateTimeOffset(2018, 3, 1, 0, 0, 0, TimeSpan.Zero),
+                Roles = new[] { "nonmember", "admin", "member" },
                 Rating = 4,
                 Location = GeographyPoint.Create(36.09572, -115.17620),
              
