@@ -4,7 +4,7 @@ using Search.Services;
 
 namespace CreateAndPopulateApp;
 
-[ConsoleMenuItem("Index", 3)]
+[ConsoleMenuItem("Index", 9)]
 public class DeleteHotelsIndexMenuItem : IConsoleMenuItem
 {
     private readonly ISearchIndexService _indexService;
@@ -23,10 +23,13 @@ public class DeleteHotelsIndexMenuItem : IConsoleMenuItem
         string indexName = _promptHelper.GetText($"Name of the index to delete (Default: {_defaultIndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexName))
             indexName = _defaultIndexName;
-
+        
         if (indexName != "exit")
         {
-            await _indexService.DeleteAsync(indexName);
+            if (_promptHelper.GetYorN($"WARNING!  Are you sure you want to delete the '{indexName}' index?", true))
+            {
+                await _indexService.DeleteAsync(indexName);
+            }
         }
 
         Console.WriteLine("-------------------------------");

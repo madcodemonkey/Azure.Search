@@ -31,6 +31,10 @@ public class SearchIndexService : ISearchIndexService
         var searchFields = fieldBuilder.Build(typeToCreate);
         var searchIndex = new SearchIndex(indexName, searchFields);
 
+        // This is needed for autocomplete.
+        var suggester = new SearchSuggester("sg", new[] { "hotelName", "category" });
+        searchIndex.Suggesters.Add(suggester);
+        
         Response<SearchIndex>? result = await Client.CreateOrUpdateIndexAsync(searchIndex);
 
         return result != null && result.Value != null;
@@ -44,6 +48,36 @@ public class SearchIndexService : ISearchIndexService
         await Client.DeleteIndexAsync(indexName);
 
         return true;
+    }
+
+
+    /// <summary>Retrieves a single document.</summary>
+    /// <param name="indexName">The name of the index</param>
+    /// <param name="searchText">The partial bit of text to search upon</param>
+    /// <param name="suggesterName">The name of the suggester</param>
+    public async Task<Response<AutocompleteResults>> AutocompleteAsync(string indexName, string searchText, string suggesterName)
+    {
+        var searchClient = Client.GetSearchClient(indexName);
+        return await searchClient.AutocompleteAsync(searchText, suggesterName);
+    }
+
+    /// <summary>Retrieves a single document.</summary>
+    /// <typeparam name="T">The type of data being returned.</typeparam>
+    /// <param name="indexName">The name of the index</param>
+    /// <param name="key">The documents key</param>
+    public async Task<Response<T>?> GetDocumentAsync<T>(string indexName, string key)
+    {
+        try
+        {
+            var searchClient = Client.GetSearchClient(indexName);
+            return await searchClient.GetDocumentAsync<T>(key);
+        }
+        catch (RequestFailedException ex)
+        {
+            if (ex.Status == 404)
+              return null;
+            throw;
+        }
     }
 
     public async Task<bool> ExistsAsync(string indexName)
@@ -75,6 +109,17 @@ public class SearchIndexService : ISearchIndexService
         }
 
         return result;
+    }
+
+    /// <summary>Performs a search against the index.</summary>
+    /// <typeparam name="T">The type of data being returned.</typeparam>
+    /// <param name="indexName">The name of the index</param>
+    /// <param name="searchText">The text to find</param>
+    /// <param name="options">The search options to apply</param>
+    public async Task<Response<SearchResults<T>>> Search<T>(string indexName, string searchText, SearchOptions? options = null)
+    {
+        var searchClient = Client.GetSearchClient(indexName);
+        return await searchClient.SearchAsync<T>(searchText, options);
     }
 
     /// <summary>Uploads documents to an index.</summary>

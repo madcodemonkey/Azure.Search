@@ -5,7 +5,7 @@ using Search.Services;
 
 namespace CreateAndPopulateApp;
 
-[ConsoleMenuItem("Index", 2)]
+[ConsoleMenuItem("Index", 8)]
 public class CreateHotelsIndexMenuItem : IConsoleMenuItem
 {
     private readonly ISearchIndexService _indexService;
