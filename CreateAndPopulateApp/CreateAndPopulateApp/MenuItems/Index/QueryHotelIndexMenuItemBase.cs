@@ -33,7 +33,8 @@ public abstract class QueryHotelIndexMenuItemBase
         await foreach (SearchResult<Hotel> result in resultList)
         {
             somethingFound = true;
-            Console.WriteLine(result.Document);
+            
+            Console.WriteLine($"Score: {result.Score} - {result.Document}");
         }
 
         if (somethingFound == false)

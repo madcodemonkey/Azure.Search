@@ -21,10 +21,14 @@ public class SearchIndexService : ISearchIndexService
         _clientOptions =  CreateSearchClientOptions();
     }
     
-
+    /// <summary>This is the Microsoft client that does all the work.</summary>
     public SearchIndexClient Client => _client ??= new SearchIndexClient(
         new Uri(_settings.SearchEndPoint), new AzureKeyCredential(_settings.SearchAdminApiKey), _clientOptions);
 
+    /// <summary>Creates or updates an index.</summary>
+    /// <param name="typeToCreate">The class type that represents the index.  This POCO will be decorated with Azure Search attributes
+    /// indicating how the field can be used.</param>
+    /// <param name="indexName">The name you want to give the index.</param>
     public async Task<bool> CreateOrUpdateAsync(Type typeToCreate, string indexName)
     {
         FieldBuilder fieldBuilder = new FieldBuilder();
@@ -34,12 +38,23 @@ public class SearchIndexService : ISearchIndexService
         // This is needed for autocomplete.
         var suggester = new SearchSuggester("sg", new[] { "hotelName", "category" });
         searchIndex.Suggesters.Add(suggester);
+
+        // This is a scoring profile to boost results if used.  
+        // We can mark one as default if desired.
+        var scoringProfile1 = new ScoringProfile("sp-hotel-name")
+        {
+            FunctionAggregation = ScoringFunctionAggregation.Sum,
+            TextWeights = new TextWeights(new Dictionary<string, double> { { "hotelName", 5.0 } })
+        };
+
+        searchIndex.ScoringProfiles.Add(scoringProfile1);
         
         Response<SearchIndex>? result = await Client.CreateOrUpdateIndexAsync(searchIndex);
 
         return result != null && result.Value != null;
     }
 
+    /// <summary>Deletes an index.</summary>
     public async Task<bool> DeleteAsync(string indexName)
     {
         if (await ExistsAsync(indexName) == false)
@@ -49,7 +64,6 @@ public class SearchIndexService : ISearchIndexService
 
         return true;
     }
-
 
     /// <summary>Retrieves a single document.</summary>
     /// <param name="indexName">The name of the index</param>
@@ -80,6 +94,11 @@ public class SearchIndexService : ISearchIndexService
         }
     }
 
+    /// <summary>Indicates if an index exists.</summary>
+    /// <param name="indexName">The name of the index to find.</param>
+    /// <remarks>Unfortunately, we get this response as an exception from the API,
+    /// so we have to check for the HTTP status code of 404 to determine if it was really missing or if there was
+    /// some type of other error</remarks>
     public async Task<bool> ExistsAsync(string indexName)
     {
         try
@@ -130,7 +149,10 @@ public class SearchIndexService : ISearchIndexService
     {
         if (uploadList.Count == 0) return;
 
+        // Turn the uploadLIst into an array of Upload Actions
         IndexDocumentsAction<T>[] actions = uploadList.Select(s => IndexDocumentsAction.Upload(s)).ToArray();
+
+        // Create a back of actions
         IndexDocumentsBatch<T> batch = IndexDocumentsBatch.Create(actions);
 
         SearchClient searchClient = Client.GetSearchClient(indexName);

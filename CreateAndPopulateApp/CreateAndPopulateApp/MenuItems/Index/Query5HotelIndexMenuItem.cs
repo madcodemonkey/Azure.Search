@@ -1,5 +1,4 @@
 ﻿using Azure;
-using Azure.Search.Documents.Models;
 using ConsoleMenuHelper;
 using Microsoft.Extensions.Configuration;
 using Search.Model;

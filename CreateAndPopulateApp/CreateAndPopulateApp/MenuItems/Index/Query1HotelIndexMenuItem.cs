@@ -35,12 +35,13 @@ public class Query1HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
             Filter = "",
             OrderBy = { "" }
         };
-
+        
         // Be careful here. The case must match what is in the index.  Since I've lowercased my first characters with the 
         // [JsonPropertyName("hotelId")] attribute, it expects them to match.
-        options.Select.Add("hotelId");
-        options.Select.Add("hotelName");
-        options.Select.Add("rating");
+        // If you only want to bring back these three fields, uncomment the next three lines; otherwise, all fields are returned:
+        //options.Select.Add("hotelId");
+        //options.Select.Add("hotelName");
+        //options.Select.Add("rating");
 
         SearchResults<Hotel> response = await _indexService.Search<Hotel>(indexName, "*", options);
 

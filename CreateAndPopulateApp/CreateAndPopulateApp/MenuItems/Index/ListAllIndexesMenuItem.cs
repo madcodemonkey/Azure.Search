@@ -3,7 +3,7 @@ using Search.Services;
 
 namespace CreateAndPopulateApp;
 
-[ConsoleMenuItem("Index", 7)]
+[ConsoleMenuItem("Index", 8)]
 public class ListAllIndexesMenuItem : IConsoleMenuItem
 {
     private readonly ISearchIndexService _indexService;
