@@ -27,6 +27,11 @@ public class SynonymCreateMenuItem : IConsoleMenuItem
        
         if (synonymMapName != "exit")
         {
+            // Note that each synonym group is new line delimited!
+            // Docs to understand equivalency: USA, United States, United States of America
+            // https://learn.microsoft.com/en-us/azure/search/search-synonyms#equivalency-rules
+            // Docs to understand explicit mapping (substitute all the words on the left with one on right):  Washington, Wash., WA => WA
+            // https://learn.microsoft.com/en-us/azure/search/search-synonyms#explicit-mapping
             await _synonymService.CreateAsync(synonymMapName, "hotel, motel\ninternet,wifi\nfive star=>luxury\neconomy,inexpensive=>budget");
         }
 

@@ -7,25 +7,34 @@ namespace HotelWeb.Controllers;
 [ApiController]
 public class SynonymController : ControllerBase
 {
-    private readonly ISearchSynonymService _synonymService;
-
-    public SynonymController(ISearchSynonymService synonymService)
+    private readonly IHotelSynonymService _hotelSynonymService;
+   
+    /// <summary>Constructor</summary>
+    public SynonymController(IHotelSynonymService hotelSynonymService)
     {
-        _synonymService = synonymService;
+        _hotelSynonymService = hotelSynonymService; 
+    }
+     
+    /// <summary>Lists the names of ALL the synonym maps</summary>
+    [HttpGet("Maps")]
+    public async Task<IActionResult> GetMapNames()
+    {
+        var data = await _hotelSynonymService.GetSynonymMapNamesAsync();
+        return Ok(data);
     }
 
-    [HttpGet("[action]")]
-    public async Task<IActionResult> GetList()
+    /// <summary>Lists all the items in ONE of the synonym maps</summary>
+    [HttpGet("Map/{name}")]
+    public async Task<IActionResult> GetList(string name)
     {
-        var data = await _synonymService.GetSynonymMapNamesAsync();
+        var data = await _hotelSynonymService.GetSynonymNamesAsync(name);
         return Ok(data);
     }
 
     [HttpPost]
-    public IActionResult CreateSynonymList()
+    public async Task<IActionResult> CreateSynonymList()
     {
-
-
-        return Ok();
+        string message = await _hotelSynonymService.CreateAsync();
+        return Ok(message);
     }
 }

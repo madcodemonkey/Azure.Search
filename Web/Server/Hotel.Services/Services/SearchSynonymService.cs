@@ -5,7 +5,7 @@ namespace Hotel.Services;
 
 public class SearchSynonymService : ISearchSynonymService
 {
-    private readonly ISearchIndexService _indexService;
+    protected readonly ISearchIndexService _indexService;
 
     /// <summary>Constructor</summary>
     /// <param name="indexService"></param>
