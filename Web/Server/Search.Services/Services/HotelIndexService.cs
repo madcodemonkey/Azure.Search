@@ -18,7 +18,7 @@ public class HotelIndexService : SearchIndexService, IHotelIndexService
     {
         FieldBuilder fieldBuilder = new FieldBuilder();
         var searchFields = fieldBuilder.Build(typeof(Hotel));
-        var searchIndex = new SearchIndex(_settings.SearchIndexName, searchFields);
+        var searchIndex = new SearchIndex(_settings.HotelIndexName, searchFields);
 
         // This is needed for autocomplete.
         string hotelNameFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(Hotel.HotelName));
@@ -46,6 +46,6 @@ public class HotelIndexService : SearchIndexService, IHotelIndexService
     /// <summary>Deletes the hotel index.</summary>
     public async Task<bool> DeleteAsync()
     {
-        return await DeleteAsync(_settings.SearchIndexName);
+        return await DeleteAsync(_settings.HotelIndexName);
     }
 }

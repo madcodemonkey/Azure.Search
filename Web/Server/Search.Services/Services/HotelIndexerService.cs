@@ -30,7 +30,7 @@ public class HotelIndexerService : SearchIndexerService, IHotelIndexerService
         // Common optional properties include a schedule, parameters, and field mappings
         // The field mappings below are redundant due to how the Hotel class is defined, but 
         // we included them anyway to show the syntax 
-        var indexer = new SearchIndexer(Settings.SearchAzureSqlIndexerName, Settings.SearchAzureSqlDataSourceName, Settings.SearchIndexName)
+        var indexer = new SearchIndexer(Settings.HotelIndexerName, Settings.DatabaseDataSourceName, Settings.HotelIndexName)
         {
             Description = "Hotel data indexer",
             Schedule = schedule,
@@ -51,13 +51,13 @@ public class HotelIndexerService : SearchIndexerService, IHotelIndexerService
     /// <summary>Deletes the hotel indexer</summary>
     public async Task<bool> DeleteAsync()
     {
-        return await DeleteAsync(Settings.SearchAzureSqlIndexerName);
+        return await DeleteAsync(Settings.HotelIndexerName);
     }
 
     /// <summary>Runs the hotel indexer now.</summary>
     public async Task RunAsync()
     {
-        await ClientIndexer.RunIndexerAsync(Settings.SearchAzureSqlIndexerName);
+        await ClientIndexer.RunIndexerAsync(Settings.HotelIndexerName);
     }
 
 }

@@ -25,7 +25,7 @@ public class HotelSearchService : IHotelSearchService
         var options = CreateDefaultSearchOptions(numberOfItemsPerPage, pageNumber);
 
         // SEARCH!!!!!
-        SearchResults<Hotel> searchResults = await _searchIndexService.Search<Hotel>(_settings.SearchIndexName, "*", options);
+        SearchResults<Hotel> searchResults = await _searchIndexService.Search<Hotel>(_settings.HotelIndexName, "*", options);
 
         return await ConvertSearchResultsAsync(pageNumber, searchResults);
     }
@@ -44,7 +44,7 @@ public class HotelSearchService : IHotelSearchService
         options.OrderBy.Add($"{ratingField} desc");
 
         // SEARCH!!!!!
-        SearchResults<Hotel> searchResults = await _searchIndexService.Search<Hotel>(_settings.SearchIndexName, "*", options);
+        SearchResults<Hotel> searchResults = await _searchIndexService.Search<Hotel>(_settings.HotelIndexName, "*", options);
 
         return await ConvertSearchResultsAsync(pageNumber, searchResults);
     }
