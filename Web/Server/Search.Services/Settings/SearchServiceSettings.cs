@@ -5,7 +5,7 @@ public class SearchServiceSettings
     public string SearchEndPoint { get; set; }
     public string SearchApiKey { get; set; }
 
-    public string DatabaseConnectionString { get; set; }
+    public string DatabaseConnectionString { get; set; }   // TODO: Get rid of this one and use the database options
     public string HotelDataSourceName { get; set; }
 
     public string HotelIndexName { get; set; }
