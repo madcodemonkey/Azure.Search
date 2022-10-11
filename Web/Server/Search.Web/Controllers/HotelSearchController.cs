@@ -21,5 +21,7 @@ public class HotelSearchController : ControllerBase
         var response = await _hotelSearchService.GetAllHotelsAsync(pageSize, pageNumber);
         return Ok(response);
     }
+
+    // TODO: Flush out remaining queries and figure out pattern to them.  Potentially pull in filter classes from other project.
      
 }
