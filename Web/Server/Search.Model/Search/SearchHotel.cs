@@ -8,7 +8,7 @@ namespace Search.Model;
 // The JsonPropertyName attribute is defined in the Azure Search .NET SDK.
 // Here it used to ensure that Pascal-case property names in the model class are mapped to camel-case
 // field names in the index.
-public partial class Hotel
+public partial class SearchHotel
 {
     [SimpleField(IsKey = true, IsFilterable = true)]
     [JsonPropertyName("hotelId")]

@@ -28,17 +28,17 @@ public class HotelIndexerService : SearchIndexerService, IHotelIndexerService
 
         // Indexer declarations require a data source and search index.
         // Common optional properties include a schedule, parameters, and field mappings
-        // The field mappings below are redundant due to how the Hotel class is defined, but 
+        // The field mappings below are redundant due to how the SearchHotel class is defined, but 
         // we included them anyway to show the syntax 
-        var indexer = new SearchIndexer(Settings.HotelIndexerName, Settings.DatabaseDataSourceName, Settings.HotelIndexName)
+        var indexer = new SearchIndexer(Settings.HotelIndexerName, Settings.HotelDataSourceName, Settings.HotelIndexName)
         {
             Description = "Hotel data indexer",
             Schedule = schedule,
             Parameters = parameters,
             FieldMappings =
             {
-                new FieldMapping("Id") {TargetFieldName = nameof(Hotel.HotelId)},
-                new FieldMapping("Amenities") {TargetFieldName = nameof(Hotel.Tags) }
+                new FieldMapping("Id") {TargetFieldName = nameof(SearchHotel.HotelId)},
+                new FieldMapping("Amenities") {TargetFieldName = nameof(SearchHotel.Tags) }
             }
         };
 

@@ -20,12 +20,12 @@ public class HotelSearchService : IHotelSearchService
     /// <summary>Returns all hotels</summary>
     /// <param name="numberOfItemsPerPage">The total number of items per page</param>
     /// <param name="pageNumber">Current page number</param>
-    public async Task<SearchResponse<Hotel>> GetAllHotelsAsync(int numberOfItemsPerPage, int pageNumber)
+    public async Task<SearchResponse<SearchHotel>> GetAllHotelsAsync(int numberOfItemsPerPage, int pageNumber)
     {
         var options = CreateDefaultSearchOptions(numberOfItemsPerPage, pageNumber);
 
         // SEARCH!!!!!
-        SearchResults<Hotel> searchResults = await _searchIndexService.Search<Hotel>(_settings.HotelIndexName, "*", options);
+        SearchResults<SearchHotel> searchResults = await _searchIndexService.Search<SearchHotel>(_settings.HotelIndexName, "*", options);
 
         return await ConvertSearchResultsAsync(pageNumber, searchResults);
     }
@@ -34,17 +34,17 @@ public class HotelSearchService : IHotelSearchService
     /// <param name="numberOfItemsPerPage">The total number of items per page</param>
     /// <param name="pageNumber">Current page number</param>
     /// <param name="minRating">The lowest rating allowed</param>
-    public async Task<SearchResponse<Hotel>> GetHotelsBasedOnRatingAsync(int numberOfItemsPerPage, int pageNumber, int minRating)
+    public async Task<SearchResponse<SearchHotel>> GetHotelsBasedOnRatingAsync(int numberOfItemsPerPage, int pageNumber, int minRating)
     {
         var options = CreateDefaultSearchOptions(numberOfItemsPerPage, pageNumber);
 
-        var ratingField = nameof(Hotel.Rating).ConvertToCamelCase();
+        var ratingField = nameof(SearchHotel.Rating).ConvertToCamelCase();
         options.Filter = $"{ratingField} gt {minRating}";
         options.OrderBy.Clear();
         options.OrderBy.Add($"{ratingField} desc");
 
         // SEARCH!!!!!
-        SearchResults<Hotel> searchResults = await _searchIndexService.Search<Hotel>(_settings.HotelIndexName, "*", options);
+        SearchResults<SearchHotel> searchResults = await _searchIndexService.Search<SearchHotel>(_settings.HotelIndexName, "*", options);
 
         return await ConvertSearchResultsAsync(pageNumber, searchResults);
     }
@@ -67,15 +67,15 @@ public class HotelSearchService : IHotelSearchService
 
 
         // Add facets of interest that we want returned.
-        options.Facets.Add(nameof(Hotel.Category).ConvertToCamelCase());
-        options.Facets.Add(nameof(Hotel.Tags).ConvertToCamelCase());
+        options.Facets.Add(nameof(SearchHotel.Category).ConvertToCamelCase());
+        options.Facets.Add(nameof(SearchHotel.Tags).ConvertToCamelCase());
 
         return options;
     }
 
-    private static async Task<SearchResponse<Hotel>> ConvertSearchResultsAsync(int pageNumber, SearchResults<Hotel> searchResults)
+    private static async Task<SearchResponse<SearchHotel>> ConvertSearchResultsAsync(int pageNumber, SearchResults<SearchHotel> searchResults)
     {
-        var result = new SearchResponse<Hotel>
+        var result = new SearchResponse<SearchHotel>
         {
             TotalCount = searchResults.TotalCount ?? 0,
             PageNumber = pageNumber
@@ -104,9 +104,9 @@ public class HotelSearchService : IHotelSearchService
             }
         }
 
-        AsyncPageable<SearchResult<Hotel>> resultList = searchResults.GetResultsAsync();
+        AsyncPageable<SearchResult<SearchHotel>> resultList = searchResults.GetResultsAsync();
 
-        await foreach (SearchResult<Hotel> item in resultList)
+        await foreach (SearchResult<SearchHotel> item in resultList)
         {
             result.Data.Add(item.Document);
             // Console.WriteLine($"Score: {item.Score} - {item.Document}");

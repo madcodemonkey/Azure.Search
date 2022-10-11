@@ -1,3 +1,4 @@
+using Search.Repositories;
 using Search.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,11 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+#if DEBUG
+// Avoid running EF migrations in upper environments
+await app.Services.ApplyDatabaseMigrationsAsync();
+#endif
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

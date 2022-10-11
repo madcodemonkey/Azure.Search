@@ -6,7 +6,7 @@ public class SearchServiceSettings
     public string SearchApiKey { get; set; }
 
     public string DatabaseConnectionString { get; set; }
-    public string DatabaseDataSourceName { get; set; }
+    public string HotelDataSourceName { get; set; }
 
     public string HotelIndexName { get; set; }
     public string HotelSynonymMapName { get; set; }

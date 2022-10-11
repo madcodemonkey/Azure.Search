@@ -1,4 +1,5 @@
-﻿using Search.Services;
+﻿using Search.Repositories;
+using Search.Services;
 
 namespace Search.Web.Extensions
 {
@@ -11,7 +12,7 @@ namespace Search.Web.Extensions
             config.GetSection("SearchService").Bind(settings);
 
             services.AddSearchServices(settings);
-
+            services.AddAcmeRepositories(options => config.GetSection("AcmeDatabaseOptions").Bind(options));
 
             return services;
 

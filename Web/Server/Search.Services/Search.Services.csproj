@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Azure.Search.Documents" Version="11.4.0" />
     <PackageReference Include="Microsoft.Azure.Core.Spatial" Version="1.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>

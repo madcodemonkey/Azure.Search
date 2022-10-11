@@ -14,7 +14,7 @@ public class HotelDataSourceService : SearchDataSourceService, IHotelDataSourceS
     public async Task<bool> CreateAsync()
     {
         return await this.CreateForAzureSqlAsync(
-            _settings.DatabaseDataSourceName, 
+            _settings.HotelDataSourceName, 
             _settings.HotelTableName,
             _settings.DatabaseConnectionString);
     }
@@ -22,6 +22,6 @@ public class HotelDataSourceService : SearchDataSourceService, IHotelDataSourceS
     /// <summary>Deletes a hotel data source if it exists.</summary>
     public async Task<bool> DeleteAsync()
     {
-        return await this.DeleteAsync(_settings.DatabaseDataSourceName);
+        return await this.DeleteAsync(_settings.HotelDataSourceName);
     }
 }

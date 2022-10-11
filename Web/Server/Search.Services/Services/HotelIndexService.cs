@@ -17,12 +17,12 @@ public class HotelIndexService : SearchIndexService, IHotelIndexService
     public async Task<bool> CreateOrUpdateAsync()
     {
         FieldBuilder fieldBuilder = new FieldBuilder();
-        var searchFields = fieldBuilder.Build(typeof(Hotel));
+        var searchFields = fieldBuilder.Build(typeof(SearchHotel));
         var searchIndex = new SearchIndex(_settings.HotelIndexName, searchFields);
 
         // This is needed for autocomplete.
-        string hotelNameFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(Hotel.HotelName));
-        string categoryFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(Hotel.Category));
+        string hotelNameFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(SearchHotel.HotelName));
+        string categoryFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(SearchHotel.Category));
 
 
         var suggester = new SearchSuggester("sg", new[] { hotelNameFieldName, categoryFieldName });

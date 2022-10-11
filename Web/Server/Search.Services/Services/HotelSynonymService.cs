@@ -48,8 +48,8 @@ public class HotelSynonymService : SearchSynonymService, IHotelSynonymService
                 // Get the index
                 SearchIndex index = await IndexService.Client.GetIndexAsync(_searchServiceSettings.HotelIndexName);
 
-                AddSynonymToField(index, nameof(Hotel.Category).ConvertToCamelCase(), _searchServiceSettings.HotelSynonymMapName);
-                AddSynonymToField(index, nameof(Hotel.Tags).ConvertToCamelCase(), _searchServiceSettings.HotelSynonymMapName);
+                AddSynonymToField(index, nameof(SearchHotel.Category).ConvertToCamelCase(), _searchServiceSettings.HotelSynonymMapName);
+                AddSynonymToField(index, nameof(SearchHotel.Tags).ConvertToCamelCase(), _searchServiceSettings.HotelSynonymMapName);
 
                 // The IfNotChanged condition ensures that the index is updated only if the ETags match.
                 await IndexService.Client.CreateOrUpdateIndexAsync(index);
