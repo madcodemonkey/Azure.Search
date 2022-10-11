@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Azure.Search.Documents.Indexes.Models;
+﻿using Azure.Search.Documents.Indexes.Models;
 using Search.Model;
 
 namespace Search.Services;
@@ -27,40 +26,54 @@ public class HotelSynonymService : SearchSynonymService, IHotelSynonymService
         // https://learn.microsoft.com/en-us/azure/search/search-synonyms#explicit-mapping
         await CreateAsync(_searchServiceSettings.SearchSynonymMapName,
             "hotel, motel\ninternet,wifi\nfive star=>luxury\neconomy,inexpensive=>budget");
-        
+
         return $"{_searchServiceSettings.SearchSynonymMapName} created.";
     }
 
-
-    public async Task<bool> AssociateSynonymMapToHotelFieldsAsync(string hotelIndexName, string synonymMapName)
+    /// <summary>Deletes hotel synonym map</summary>
+    public async Task<bool> DeleteAsync()
     {
-        int MaxNumTries = 3;
+        return await DeleteAsync(_searchServiceSettings.SearchSynonymMapName);
+    }
 
-        for (int i = 0; i < MaxNumTries; ++i)
+    /// <summary>Associates a synonym map with certain fields on the Hotel Index</summary>
+    public async Task AssociateSynonymMapToHotelFieldsAsync()
+    {
+        const int maxNumTries = 3;
+
+        for (int i = 0; i < maxNumTries; ++i)
         {
             try
             {
                 // Get the index
-                SearchIndex index = _indexService.Client.GetIndex(hotelIndexName);
+                SearchIndex index = await IndexService.Client.GetIndexAsync(_searchServiceSettings.SearchIndexName);
 
-                string categoryFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(Hotel.Category));
-                index.Fields.First(f => f.Name == categoryFieldName).SynonymMapNames.Add(synonymMapName);
-
-                string tagsFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(Hotel.Tags));
-                index.Fields.First(f => f.Name == tagsFieldName).SynonymMapNames.Add(synonymMapName);
+                AddSynonymToField(index, nameof(Hotel.Category).ConvertToCamelCase(), _searchServiceSettings.SearchSynonymMapName);
+                AddSynonymToField(index, nameof(Hotel.Tags).ConvertToCamelCase(), _searchServiceSettings.SearchSynonymMapName);
 
                 // The IfNotChanged condition ensures that the index is updated only if the ETags match.
-               await _indexService.Client.CreateOrUpdateIndexAsync(index);
+                await IndexService.Client.CreateOrUpdateIndexAsync(index);
 
-                return true;
+                break;
             }
             catch
             {
-                Console.WriteLine($"Index update failed : . Attempt({i}/{MaxNumTries}).\n");
+                if (i == (maxNumTries - 1))
+                    throw;
             }
         }
-
-        return false;
     }
 
+    /// <summary>Adds a synonym to a field if it isn't already there.</summary>
+    private void AddSynonymToField(SearchIndex index, string fieldName, string synonymMapName)
+    {
+        var field = index.Fields.First(f => f.Name == fieldName);
+        if (field == null) throw new ArgumentException($"Field {fieldName} does not exist!");
+
+        // Only add it if it wasn't already there; otherwise, you will get an exception for adding a synonym twice.
+        if (field.SynonymMapNames.Any(w => w == synonymMapName) == false)
+        {
+            field.SynonymMapNames.Add(synonymMapName);
+        }
+    }
 }

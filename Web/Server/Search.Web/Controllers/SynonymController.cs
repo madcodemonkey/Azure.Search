@@ -1,5 +1,6 @@
 ﻿using Search.Services;
 using Microsoft.AspNetCore.Mvc;
+using Search.Model;
 
 namespace Search.Controllers;
 
@@ -7,19 +8,19 @@ namespace Search.Controllers;
 [ApiController]
 public class SynonymController : ControllerBase
 {
-    private readonly IHotelSynonymService _hotelSynonymService;
+    private readonly ISearchSynonymService _searchSynonymService;
    
     /// <summary>Constructor</summary>
-    public SynonymController(IHotelSynonymService hotelSynonymService)
+    public SynonymController(ISearchSynonymService searchSynonymService)
     {
-        _hotelSynonymService = hotelSynonymService; 
+        _searchSynonymService = searchSynonymService;
     }
      
     /// <summary>Lists the names of ALL the synonym maps</summary>
     [HttpGet("Maps")]
     public async Task<IActionResult> GetMapNames()
     {
-        var data = await _hotelSynonymService.GetSynonymMapNamesAsync();
+        var data = await _searchSynonymService.GetSynonymMapNamesAsync();
         return Ok(data);
     }
 
@@ -27,14 +28,24 @@ public class SynonymController : ControllerBase
     [HttpGet("Map/{name}")]
     public async Task<IActionResult> GetList(string name)
     {
-        var data = await _hotelSynonymService.GetSynonymNamesAsync(name);
+        var data = await _searchSynonymService.GetSynonymNamesAsync(name);
         return Ok(data);
     }
+    
+    [HttpDelete("{name}")]
+    public async Task<IActionResult> DeleteSynonymList(string name)
+    {
+        var result = await _searchSynonymService.DeleteAsync(name);
+
+        return Ok(result ? "Deleted" : "Not Deleted");
+    }
+
 
     [HttpPost]
-    public async Task<IActionResult> CreateSynonymList()
+    public async Task<IActionResult> CreateSynonymList(SynonymCreationRequest request)
     {
-        string message = await _hotelSynonymService.CreateAsync();
-        return Ok(message);
+        var result = await _searchSynonymService.CreateAsync(request.Name, request.SynonymnList);
+
+        return Ok(result ? "Created" : "Not Created");
     }
 }

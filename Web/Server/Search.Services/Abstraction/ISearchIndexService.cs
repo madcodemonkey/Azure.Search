@@ -15,7 +15,8 @@ public interface ISearchIndexService
     /// <param name="suggesterName">The name of the suggester</param>
     Task<Response<AutocompleteResults>> AutocompleteAsync(string indexName, string searchText, string suggesterName);
     
-    Task<bool> CreateOrUpdateAsync(Type typeToCreate, string indexName);
+    /// <summary>Deletes an index.</summary>
+    /// <param name="indexName">The name of the index to delete</param>
     Task<bool> DeleteAsync(string indexName);
 
     /// <summary>Retrieves a single document.</summary>

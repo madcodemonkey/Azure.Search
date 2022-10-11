@@ -5,19 +5,19 @@ namespace Search.Services;
 
 public class SearchSynonymService : ISearchSynonymService
 {
-    protected readonly ISearchIndexService _indexService;
+    protected ISearchIndexService IndexService { get; private set; }
 
     /// <summary>Constructor</summary>
     /// <param name="indexService"></param>
     public SearchSynonymService(ISearchIndexService indexService)
     {
-        _indexService = indexService;
+        IndexService = indexService;
     }
 
     /// <summary>Gets a list of synonym maps names</summary>
     public async Task<IReadOnlyList<string>> GetSynonymMapNamesAsync()
     {
-        Response<IReadOnlyList<string>>? data =  await _indexService.Client.GetSynonymMapNamesAsync();
+        Response<IReadOnlyList<string>>? data =  await IndexService.Client.GetSynonymMapNamesAsync();
         if (data == null) return new List<string>();
 
         return data.Value;
@@ -27,7 +27,7 @@ public class SearchSynonymService : ISearchSynonymService
     /// <param name="synonymMapName">Name of the synonym map</param>
     public async Task<List<string>> GetSynonymNamesAsync(string synonymMapName)
     {
-        Response<SynonymMap> data =  await _indexService.Client.GetSynonymMapAsync(synonymMapName);
+        Response<SynonymMap> data =  await IndexService.Client.GetSynonymMapAsync(synonymMapName);
         if (data == null) return new List<string>(0);
 
         string[] items = data.Value.Synonyms.Split('\n');
@@ -56,7 +56,7 @@ public class SearchSynonymService : ISearchSynonymService
         
         SynonymMap synonymMap = new SynonymMap(synonymMapName, synonyms);
         
-        await _indexService.Client.CreateSynonymMapAsync(synonymMap); 
+        await IndexService.Client.CreateSynonymMapAsync(synonymMap); 
 
         return true;
     }
@@ -70,7 +70,7 @@ public class SearchSynonymService : ISearchSynonymService
             return false;
         }
 
-        await _indexService.Client.DeleteSynonymMapAsync(synonymMapName);
+        await IndexService.Client.DeleteSynonymMapAsync(synonymMapName);
 
         return true;
     }

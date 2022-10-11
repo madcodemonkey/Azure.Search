@@ -7,8 +7,11 @@ public static class ServiceCollectionExtensions
     public static void AddSearchServices(this IServiceCollection sc, SearchServiceSettings settings)
     {
         sc.AddSingleton(settings);
-
+        
+        sc.AddTransient<IHotelDataSourceService, HotelDataSourceService>();
+        sc.AddTransient<IHotelIndexService, HotelIndexService>();
         sc.AddTransient<IHotelIndexerService, HotelIndexerService>();
+        sc.AddTransient<IHotelSearchService, HotelSearchService>();
         sc.AddTransient<IHotelSynonymService, HotelSynonymService>();
 
         sc.AddScoped<ISearchDataSourceService, SearchDataSourceService>();

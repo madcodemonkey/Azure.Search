@@ -5,51 +5,59 @@ namespace Search.Services;
 
 public class SearchDataSourceService : ISearchDataSourceService
 {
-    private readonly SearchServiceSettings _settings;
-    private readonly ISearchIndexerService _indexerService;
+    protected ISearchIndexerService IndexerService { get; }
 
     /// <summary>Constructor</summary>
-    public SearchDataSourceService(SearchServiceSettings settings, ISearchIndexerService indexerService)
+    public SearchDataSourceService(ISearchIndexerService indexerService)
     {
-        _settings = settings;
-        _indexerService = indexerService;
+        IndexerService = indexerService;
     }
 
-    /// <summary>Creates a Azure SQL datasource that will be used by an indexer.</summary>
-    /// <param name="dataSourceConnectionName">The name of the data source</param>
-    /// <param name="tableOrViewName">The table or view that the Azure SQL datasource is pointed at.</param>
-    public async Task CreateAzureSqlDataSourceAsync(string dataSourceConnectionName, string tableOrViewName)
+    /// <summary>Creates a Azure SQL data source that will be used by an indexer.</summary>
+    /// <param name="name">The name of the data source</param>
+    /// <param name="tableOrViewName">The table or view that the Azure SQL data source is pointed at.</param>
+    /// <param name="connectionString">A connection string to attach to the database.</param>
+    public async Task<bool> CreateForAzureSqlAsync(string name, string tableOrViewName, string connectionString)
     {
         var dataSource = new SearchIndexerDataSourceConnection(
-            dataSourceConnectionName, SearchIndexerDataSourceType.AzureSql,
-            _settings.SearchAzureSqlConnectionString,
+            name, SearchIndexerDataSourceType.AzureSql, connectionString,
             new SearchIndexerDataContainer(tableOrViewName));
 
         // The data source does not need to be deleted if it was already created,
         // but the connection string may need to be updated if it was changed
-        await _indexerService.ClientIndexer.CreateOrUpdateDataSourceConnectionAsync(dataSource);
+        var results = await IndexerService.ClientIndexer.CreateOrUpdateDataSourceConnectionAsync(dataSource);
+
+        return results != null;  // Is this a good check?
     }
 
     /// <summary>Gets a list of data sources</summary>
     /// <param name="dataSourceConnectionName">The name of the data source</param>
-    public async Task<bool> DeleteDataSourceAsync(string dataSourceConnectionName)
+    public async Task<bool> ExistsAsync(string dataSourceConnectionName)
     {
-        Response<SearchIndexerDataSourceConnection>? dataSource = await _indexerService.ClientIndexer.GetDataSourceConnectionAsync(dataSourceConnectionName);
+        Response<SearchIndexerDataSourceConnection>? dataSource = await IndexerService.ClientIndexer.GetDataSourceConnectionAsync(dataSourceConnectionName);
+
+        return dataSource != null;
+    }
+
+    /// <summary>Gets a list of data sources</summary>
+    /// <param name="dataSourceConnectionName">The name of the data source</param>
+    public async Task<bool> DeleteAsync(string dataSourceConnectionName)
+    {
+        Response<SearchIndexerDataSourceConnection>? dataSource = await IndexerService.ClientIndexer.GetDataSourceConnectionAsync(dataSourceConnectionName);
 
         if (dataSource != null)
         {
-            await _indexerService.ClientIndexer.DeleteDataSourceConnectionAsync(dataSource);
+            await IndexerService.ClientIndexer.DeleteDataSourceConnectionAsync(dataSource);
             return true;
         }
 
         return false;
     }
-
-
+    
     /// <summary>Gets a list of data sources</summary>
-    public async Task<List<string>> GetDataSourceListAsync()
+    public async Task<List<string>> GetListAsync()
     {
-        Response<IReadOnlyList<string>> response = await _indexerService.ClientIndexer.GetDataSourceConnectionNamesAsync();
+        Response<IReadOnlyList<string>> response = await IndexerService.ClientIndexer.GetDataSourceConnectionNamesAsync();
 
         List<string> result = response.Value.ToList();
 

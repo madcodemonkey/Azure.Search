@@ -1,17 +1,15 @@
-﻿using System.Text.Json;
-using Azure;
+﻿using Azure;
 using Azure.Core.Serialization;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
-using Azure.Search.Documents.Indexes.Models;
 using Azure.Search.Documents.Models;
-using Search.Model;
+using System.Text.Json;
 
 namespace Search.Services;
 
 public class SearchIndexService : ISearchIndexService
 {
-    private readonly SearchServiceSettings _settings;
+    protected readonly SearchServiceSettings _settings;
     private SearchIndexClient? _client;
     private readonly SearchClientOptions _clientOptions;
 
@@ -19,47 +17,15 @@ public class SearchIndexService : ISearchIndexService
     public SearchIndexService(SearchServiceSettings settings)
     {
         _settings = settings;
-        _clientOptions =  CreateSearchClientOptions();
+        _clientOptions = CreateSearchClientOptions();
     }
-    
+
     /// <summary>This is the Microsoft client that does all the work.</summary>
     public SearchIndexClient Client => _client ??= new SearchIndexClient(
         new Uri(_settings.SearchEndPoint), new AzureKeyCredential(_settings.SearchApiKey), _clientOptions);
 
-    /// <summary>Creates or updates an index.</summary>
-    /// <param name="typeToCreate">The class type that represents the index.  This POCO will be decorated with Azure Search attributes
-    /// indicating how the field can be used.</param>
-    /// <param name="indexName">The name you want to give the index.</param>
-    public async Task<bool> CreateOrUpdateAsync(Type typeToCreate, string indexName)
-    {
-        FieldBuilder fieldBuilder = new FieldBuilder();
-        var searchFields = fieldBuilder.Build(typeToCreate);
-        var searchIndex = new SearchIndex(indexName, searchFields);
-
-        // This is needed for autocomplete.
-        string hotelNameFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(Hotel.HotelName));
-        string categoryFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(Hotel.Category));
-
-
-        var suggester = new SearchSuggester("sg", new[] { hotelNameFieldName, categoryFieldName });
-        searchIndex.Suggesters.Add(suggester);
-
-        // This is a scoring profile to boost results if used.  
-        // We can mark one as default if desired.
-        var scoringProfile1 = new ScoringProfile("sp-hotel-name")
-        {
-            FunctionAggregation = ScoringFunctionAggregation.Sum,
-            TextWeights = new TextWeights(new Dictionary<string, double> { { hotelNameFieldName, 5.0 } })
-        };
-
-        searchIndex.ScoringProfiles.Add(scoringProfile1);
-        
-        Response<SearchIndex>? result = await Client.CreateOrUpdateIndexAsync(searchIndex);
-
-        return result != null && result.Value != null;
-    }
-
     /// <summary>Deletes an index.</summary>
+    /// <param name="indexName">The name of the index to delete</param>
     public async Task<bool> DeleteAsync(string indexName)
     {
         if (await ExistsAsync(indexName) == false)
@@ -94,7 +60,7 @@ public class SearchIndexService : ISearchIndexService
         catch (RequestFailedException ex)
         {
             if (ex.Status == 404)
-              return null;
+                return null;
             throw;
         }
     }

@@ -3,25 +3,23 @@ using Search.Model;
 
 namespace Search.Services;
 
-public class HotelIndexerService : IHotelIndexerService
+public class HotelIndexerService : SearchIndexerService, IHotelIndexerService
 {
-    private readonly ISearchIndexerService _indexerService;
-
     /// <summary>Constructor</summary>
-    public HotelIndexerService(ISearchIndexerService indexerService)
+    public HotelIndexerService(SearchServiceSettings settings) : base(settings)
     {
-        _indexerService = indexerService;
     }
-
-    public async Task CreateIndexerAsync(string indexerName, string dataSourceName, string targetIndexName)
+   
+    /// <summary>Creates the Hotel indexer</summary>
+    public async Task<bool> CreateAsync()
     {
-        
+        // How often should the indexer run?
         var schedule = new IndexingSchedule(TimeSpan.FromDays(1))
         {
             StartTime = DateTimeOffset.Now
         };
 
-        var parameters = new IndexingParameters()
+        var parameters = new IndexingParameters
         {
             BatchSize = 100,
             MaxFailedItems = 0,
@@ -32,9 +30,9 @@ public class HotelIndexerService : IHotelIndexerService
         // Common optional properties include a schedule, parameters, and field mappings
         // The field mappings below are redundant due to how the Hotel class is defined, but 
         // we included them anyway to show the syntax 
-        var indexer = new SearchIndexer(indexerName, dataSourceName, targetIndexName)
+        var indexer = new SearchIndexer(Settings.SearchAzureSqlIndexerName, Settings.SearchAzureSqlDataSourceName, Settings.SearchIndexName)
         {
-            Description = "Data indexer",
+            Description = "Hotel data indexer",
             Schedule = schedule,
             Parameters = parameters,
             FieldMappings =
@@ -44,7 +42,22 @@ public class HotelIndexerService : IHotelIndexerService
             }
         };
 
-        await _indexerService.ClientIndexer.CreateOrUpdateIndexerAsync(indexer);
+
+        var data = await ClientIndexer.CreateOrUpdateIndexerAsync(indexer);
+
+        return data != null;  // TODO: Is this a good check?
+    }
+
+    /// <summary>Deletes the hotel indexer</summary>
+    public async Task<bool> DeleteAsync()
+    {
+        return await DeleteAsync(Settings.SearchAzureSqlIndexerName);
+    }
+
+    /// <summary>Runs the hotel indexer now.</summary>
+    public async Task RunAsync()
+    {
+        await ClientIndexer.RunIndexerAsync(Settings.SearchAzureSqlIndexerName);
     }
 
 }
