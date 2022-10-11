@@ -40,13 +40,13 @@ public class Query4HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
 
         // Be careful here. The case must match the field names we used in the index.
         // Since I've lowercased my first characters with the [JsonPropertyName("hotelId")] attribute, it expects them to match.
-        options.Facets.Add("category");
-        options.Facets.Add("tags");
-
-        options.Select.Add("hotelId");
-        options.Select.Add("hotelName");
-        options.Select.Add("category");
-        options.Select.Add("tags");
+        options.Facets.Add(nameof(Hotel.Category).ConvertToCamelCase());
+        options.Facets.Add(nameof(Hotel.Tags).ConvertToCamelCase());
+        
+        options.Select.Add(nameof(Hotel.HotelId).ConvertToCamelCase());
+        options.Select.Add(nameof(Hotel.HotelName).ConvertToCamelCase());
+        options.Select.Add(nameof(Hotel.Category).ConvertToCamelCase());
+        options.Select.Add(nameof(Hotel.Tags).ConvertToCamelCase());
 
 
         SearchResults<Hotel> response = await _indexService.Search<Hotel>(indexName, searchText, options);

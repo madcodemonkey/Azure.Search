@@ -42,9 +42,10 @@ public class Query7HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
 
         // Be careful here. The case must match what is in the index.  Since I've lowercased my first characters with the 
         // [JsonPropertyName("hotelId")] attribute, it expects them to match.
-        options.Select.Add("hotelId");
-        options.Select.Add("hotelName");
-        options.Select.Add("rating");
+        options.Select.Add(nameof(Hotel.HotelId).ConvertToCamelCase());
+        options.Select.Add(nameof(Hotel.HotelName).ConvertToCamelCase());
+        options.Select.Add(nameof(Hotel.Rating).ConvertToCamelCase());
+
 
         await DoQueryWithoutScoringProfile(indexName, searchText, options);
         await DoQueryWithScoringProfile(indexName, searchText, options);

@@ -37,14 +37,13 @@ public class Query3HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
         // Since I've lowercased my first characters with the [JsonPropertyName("hotelId")] attribute, it expects them to match.
         var options = new SearchOptions
         {
-            SearchFields = { "tags" }
+            SearchFields = { nameof(Hotel.Tags).ConvertToCamelCase() }
         };
 
-        options.Select.Add("hotelId");
-        options.Select.Add("hotelName");
-        options.Select.Add("tags");
-
- 
+        options.Select.Add(nameof(Hotel.HotelId).ConvertToCamelCase());
+        options.Select.Add(nameof(Hotel.HotelName).ConvertToCamelCase());
+        options.Select.Add(nameof(Hotel.Tags).ConvertToCamelCase());
+        
         SearchResults<Hotel> response = await _indexService.Search<Hotel>(indexName, searchText, options);
 
         await WriteDocumentsAsync(response);

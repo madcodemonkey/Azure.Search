@@ -5,6 +5,7 @@ using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Azure.Search.Documents.Models;
+using Search.Model;
 
 namespace Search.Services;
 
@@ -35,8 +36,9 @@ public class SearchIndexService : ISearchIndexService
         var searchFields = fieldBuilder.Build(typeToCreate);
         var searchIndex = new SearchIndex(indexName, searchFields);
 
+        
         // This is needed for autocomplete.
-        var suggester = new SearchSuggester("sg", new[] { "hotelName", "category" });
+        var suggester = new SearchSuggester("sg", new[] { nameof(Hotel.HotelName).ConvertToCamelCase(), nameof(Hotel.Category).ConvertToCamelCase() });
         searchIndex.Suggesters.Add(suggester);
 
         // This is a scoring profile to boost results if used.  
@@ -44,7 +46,7 @@ public class SearchIndexService : ISearchIndexService
         var scoringProfile1 = new ScoringProfile("sp-hotel-name")
         {
             FunctionAggregation = ScoringFunctionAggregation.Sum,
-            TextWeights = new TextWeights(new Dictionary<string, double> { { "hotelName", 5.0 } })
+            TextWeights = new TextWeights(new Dictionary<string, double> { {  nameof(Hotel.HotelName).ConvertToCamelCase(), 5.0 } })
         };
 
         searchIndex.ScoringProfiles.Add(scoringProfile1);

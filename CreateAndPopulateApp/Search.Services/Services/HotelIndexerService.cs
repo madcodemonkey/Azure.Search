@@ -1,4 +1,5 @@
 ﻿using Azure.Search.Documents.Indexes.Models;
+using Search.Model;
 
 namespace Search.Services;
 
@@ -20,7 +21,7 @@ public class HotelIndexerService : IHotelIndexerService
             StartTime = DateTimeOffset.Now
         };
 
-        var parameters = new IndexingParameters()
+        var parameters = new IndexingParameters
         {
             BatchSize = 100,
             MaxFailedItems = 0,
@@ -38,8 +39,8 @@ public class HotelIndexerService : IHotelIndexerService
             Parameters = parameters,
             FieldMappings =
             {
-                new FieldMapping("Id") {TargetFieldName = "HotelId"},
-                new FieldMapping("Amenities") {TargetFieldName = "Tags"}
+                new FieldMapping("Id") {TargetFieldName = nameof(Hotel.HotelId)},
+                new FieldMapping("Amenities") {TargetFieldName = nameof(Hotel.Tags) }
             }
         };
 

@@ -1,4 +1,5 @@
 ﻿using Azure.Search.Documents.Indexes.Models;
+using Search.Model;
 
 namespace Search.Services;
 
@@ -14,17 +15,17 @@ public class HotelSynonymService : IHotelSynonymService
 
     public async Task<bool> AssociateSynonymMapToHotelFieldsAsync(string hotelIndexName, string synonymMapName)
     {
-        int MaxNumTries = 3;
+        const int maxNumTries = 3;
 
-        for (int i = 0; i < MaxNumTries; ++i)
+        for (int i = 0; i < maxNumTries; ++i)
         {
             try
             {
                 // Get the index
                 SearchIndex index = _indexService.Client.GetIndex(hotelIndexName);
-
-                index.Fields.First(f => f.Name == "category").SynonymMapNames.Add(synonymMapName);
-                index.Fields.First(f => f.Name == "tags").SynonymMapNames.Add(synonymMapName);
+                
+                index.Fields.First(f => f.Name == nameof(Hotel.Category).ConvertToCamelCase()).SynonymMapNames.Add(synonymMapName);
+                index.Fields.First(f => f.Name == nameof(Hotel.Tags).ConvertToCamelCase()).SynonymMapNames.Add(synonymMapName);
 
                 // The IfNotChanged condition ensures that the index is updated only if the ETags match.
                await _indexService.Client.CreateOrUpdateIndexAsync(index);
@@ -33,7 +34,7 @@ public class HotelSynonymService : IHotelSynonymService
             }
             catch
             {
-                Console.WriteLine($"Index update failed : . Attempt({i}/{MaxNumTries}).\n");
+                Console.WriteLine($"Index update failed : . Attempt({i}/{maxNumTries}).\n");
             }
         }
 
