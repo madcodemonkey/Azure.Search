@@ -1,5 +1,4 @@
 ﻿using ConsoleMenuHelper;
-using Microsoft.Extensions.Configuration;
 using Search.Services;
 
 namespace CreateAndPopulateApp;
@@ -7,33 +6,31 @@ namespace CreateAndPopulateApp;
 [ConsoleMenuItem("AzureSql", 2)]
 public class AzureSqlDataSourceCreateMenuItem : IConsoleMenuItem
 {
+    private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
     private readonly ISearchDataSourceService _dataSourceService;
-    private readonly string _defaultDataSourceName;
-    private readonly string _defaultTableName;
 
     /// <summary>Constructor</summary>
-    public AzureSqlDataSourceCreateMenuItem(IConfiguration configuration, IPromptHelper promptHelper, ISearchDataSourceService dataSourceService)
+    public AzureSqlDataSourceCreateMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, ISearchDataSourceService dataSourceService)
     {
+        _settings = settings;
         _promptHelper = promptHelper;
         _dataSourceService = dataSourceService;
-        
-        _defaultTableName = configuration["SearchServiceAzureSqlTableName"];
-        _defaultDataSourceName = configuration["SearchServiceAzureSqlDataSourceName"];
     }
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string dataSourceName = _promptHelper.GetText($"Name of the HOTEL Data Source (Default: {_defaultDataSourceName})?", true, true);
+
+        string dataSourceName = _promptHelper.GetText($"Name of the HOTEL Data Source (Default: {_settings.HotelDataSourceName})?", true, true);
         if (string.IsNullOrWhiteSpace(dataSourceName))
-            dataSourceName = _defaultDataSourceName;
+            dataSourceName = _settings.HotelDataSourceName;
 
         if (dataSourceName == "exit")
             return new ConsoleMenuItemResponse(false, false);
 
-        string tableName = _promptHelper.GetText($"Name of the Index (Default: {_defaultTableName})?", true, true);
+        string tableName = _promptHelper.GetText($"Name of the Index (Default: {_settings.HotelTableName})?", true, true);
         if (string.IsNullOrWhiteSpace(tableName))
-            tableName = _defaultTableName;
+            tableName = _settings.HotelTableName;
 
         if (tableName == "exit")
             return new ConsoleMenuItemResponse(false, false);

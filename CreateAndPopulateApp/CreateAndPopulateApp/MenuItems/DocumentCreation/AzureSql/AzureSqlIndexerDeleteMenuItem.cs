@@ -1,5 +1,4 @@
 ﻿using ConsoleMenuHelper;
-using Microsoft.Extensions.Configuration;
 using Search.Services;
 
 namespace CreateAndPopulateApp;
@@ -7,24 +6,23 @@ namespace CreateAndPopulateApp;
 [ConsoleMenuItem("AzureSql", 5)]
 public class AzureSqlIndexerDeleteMenuItem : IConsoleMenuItem
 {
+    private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
     private readonly ISearchIndexerService _indexerService;
-    private readonly string _defaultIndexerName;
 
     /// <summary>Constructor</summary>
-    public AzureSqlIndexerDeleteMenuItem(IConfiguration configuration, IPromptHelper promptHelper, ISearchIndexerService indexerService)
+    public AzureSqlIndexerDeleteMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, ISearchIndexerService indexerService)
     {
+        _settings = settings;
         _promptHelper = promptHelper;
         _indexerService = indexerService;
-     
-        _defaultIndexerName = configuration["SearchServiceAzureSqlIndexerName"];
     }
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string indexerName = _promptHelper.GetText($"Name of the Indexer to delete (Default: {_defaultIndexerName})?", true, true);
+        string indexerName = _promptHelper.GetText($"Name of the Indexer to delete (Default: {_settings.HotelIndexerName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexerName))
-            indexerName = _defaultIndexerName;
+            indexerName = _settings.HotelIndexerName;
 
         if (indexerName == "exit")
             return new ConsoleMenuItemResponse(false, false);

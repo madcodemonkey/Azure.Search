@@ -1,8 +1,6 @@
-﻿using Azure;
-using Azure.Search.Documents;
+﻿using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using ConsoleMenuHelper;
-using Microsoft.Extensions.Configuration;
 using Search.Model;
 using Search.Services;
 
@@ -12,27 +10,27 @@ namespace CreateAndPopulateApp;
 public class Query7HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMenuItem
 {
     private readonly ISearchIndexService _indexService;
+    private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
-    private readonly string _defaultIndexName;
 
-    public Query7HotelIndexMenuItem(ISearchIndexService indexService, IConfiguration configuration, IPromptHelper promptHelper)
+    public Query7HotelIndexMenuItem(ISearchIndexService indexService, SearchServiceSettings settings, IPromptHelper promptHelper)
     {
         _indexService = indexService;
+        _settings = settings;
         _promptHelper = promptHelper;
-        _defaultIndexName = configuration["SearchServiceIndexName"];
     }
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_defaultIndexName})?", true, true);
+        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_settings.HotelIndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexName))
-            indexName = _defaultIndexName;
+            indexName = _settings.HotelIndexName;
 
         string searchText = _promptHelper.GetText("Search text (Default: 'hotel')?", true, true);
         if (string.IsNullOrWhiteSpace(searchText))
             searchText = "hotel";
-        
-        
+
+
         var options = new SearchOptions
         {
             IncludeTotalCount = true,
@@ -64,7 +62,7 @@ public class Query7HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
         await WriteDocumentsAsync(response);
     }
 
-    
+
     private async Task DoQueryWithScoringProfile(string indexName, string searchText, SearchOptions options)
     {
         string scoringProfileName = _promptHelper.GetText("Scoring profile name (Default: 'sp-hotel-name')?", true, true);

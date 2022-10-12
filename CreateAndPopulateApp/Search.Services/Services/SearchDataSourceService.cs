@@ -22,7 +22,7 @@ public class SearchDataSourceService : ISearchDataSourceService
     {
         var dataSource = new SearchIndexerDataSourceConnection(
             dataSourceConnectionName, SearchIndexerDataSourceType.AzureSql,
-            _settings.SearchAzureSqlConnectionString,
+            _settings.DatabaseConnectionString,
             new SearchIndexerDataContainer(tableOrViewName));
 
         // The data source does not need to be deleted if it was already created,

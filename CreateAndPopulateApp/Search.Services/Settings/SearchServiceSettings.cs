@@ -3,12 +3,14 @@
 public class SearchServiceSettings
 {
     public string SearchEndPoint { get; set; }
-    public string SearchAdminApiKey { get; set; }
+    public string SearchApiKey { get; set; }
     public string SearchQueryApiKey { get; set; }
 
 
-    public string SearchAzureSqlConnectionString { get; set; }
-    public string SearchAzureSqlTableName { get; set; }
-    public string SearchAzureSqlDataSourceName { get; set; }
-    public string SearchAzureSqlIndexerName { get; set; }
+    public string DatabaseConnectionString { get; set; }
+    public string HotelTableName { get; set; }
+    public string HotelDataSourceName { get; set; }
+    public string HotelIndexerName { get; set; }
+    public string HotelSynonymMapName { get; set; }
+    public string HotelIndexName { get; set; }
 }

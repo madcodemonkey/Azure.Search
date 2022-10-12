@@ -1,5 +1,4 @@
 ﻿using ConsoleMenuHelper;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Spatial;
 using Search.Model;
 using Search.Services;
@@ -9,23 +8,23 @@ namespace CreateAndPopulateApp;
 [ConsoleMenuItem("DocumentCreation", 1)]
 public class ManualMenuItem : IConsoleMenuItem
 {
+    private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
     private readonly ISearchIndexService _indexService;
-    private readonly string _defaultIndexName;
 
     /// <summary>Constructor</summary>
-    public ManualMenuItem(IConfiguration configuration, IPromptHelper promptHelper, ISearchIndexService indexService)
+    public ManualMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, ISearchIndexService indexService)
     {
+        _settings = settings;
         _promptHelper = promptHelper;
         _indexService = indexService;
-        _defaultIndexName = configuration["SearchServiceIndexName"];
     }
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string hotelIndexName = _promptHelper.GetText($"Name of the HOTEL index (Default: {_defaultIndexName})?", true, true);
+        string hotelIndexName = _promptHelper.GetText($"Name of the HOTEL index (Default: {_settings.HotelIndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(hotelIndexName))
-            hotelIndexName = _defaultIndexName;
+            hotelIndexName = _settings.HotelIndexName;
 
         if (hotelIndexName != "exit")
         {
@@ -93,7 +92,7 @@ public class ManualMenuItem : IConsoleMenuItem
                 Rating = 4,
                 Roles = new[] { "nonmember", "admin", "member" },
                 Location = GeographyPoint.Create(33.84643, -84.362465),
-             
+
             },
             new()
             {
@@ -109,7 +108,7 @@ public class ManualMenuItem : IConsoleMenuItem
                 Rating = 4,
                 Roles = new[] { "nonmember", "admin", "member" },
                 Location = GeographyPoint.Create(36.09867, -115.17517),
-             
+
             },
             new()
             {
@@ -125,10 +124,10 @@ public class ManualMenuItem : IConsoleMenuItem
                 Roles = new[] { "nonmember", "admin", "member" },
                 Rating = 4,
                 Location = GeographyPoint.Create(36.09572, -115.17620),
-             
+
             }
         };
-        
+
         return result;
     }
 }

@@ -1,7 +1,4 @@
-﻿using Azure;
-using ConsoleMenuHelper;
-using Microsoft.Extensions.Configuration;
-using Search.Model;
+﻿using ConsoleMenuHelper;
 using Search.Services;
 
 namespace CreateAndPopulateApp;
@@ -10,21 +7,21 @@ namespace CreateAndPopulateApp;
 public class Query6HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMenuItem
 {
     private readonly ISearchIndexService _indexService;
+    private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
-    private readonly string _defaultIndexName;
 
-    public Query6HotelIndexMenuItem(ISearchIndexService indexService, IConfiguration configuration, IPromptHelper promptHelper)
+    public Query6HotelIndexMenuItem(ISearchIndexService indexService, SearchServiceSettings settings, IPromptHelper promptHelper)
     {
         _indexService = indexService;
+        _settings = settings;
         _promptHelper = promptHelper;
-        _defaultIndexName = configuration["SearchServiceIndexName"];
     }
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_defaultIndexName})?", true, true);
+        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_settings.HotelIndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexName))
-            indexName = _defaultIndexName;
+            indexName = _settings.HotelIndexName;
 
         while (true)
         {

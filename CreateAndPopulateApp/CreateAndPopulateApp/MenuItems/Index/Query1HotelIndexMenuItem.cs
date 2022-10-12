@@ -1,7 +1,6 @@
 ﻿using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using ConsoleMenuHelper;
-using Microsoft.Extensions.Configuration;
 using Search.Model;
 using Search.Services;
 
@@ -11,21 +10,21 @@ namespace CreateAndPopulateApp;
 public class Query1HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMenuItem
 {
     private readonly ISearchIndexService _indexService;
+    private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
-    private readonly string _defaultIndexName;
 
-    public Query1HotelIndexMenuItem(ISearchIndexService indexService, IConfiguration configuration, IPromptHelper promptHelper)
+    public Query1HotelIndexMenuItem(ISearchIndexService indexService, SearchServiceSettings settings, IPromptHelper promptHelper)
     {
         _indexService = indexService;
+        _settings = settings;
         _promptHelper = promptHelper;
-        _defaultIndexName = configuration["SearchServiceIndexName"];
     }
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_defaultIndexName})?", true, true);
+        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_settings.HotelIndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexName))
-            indexName = _defaultIndexName;
+            indexName = _settings.HotelIndexName;
 
         Console.WriteLine("Query #1: Search on empty term '*' to return all documents, showing a subset of fields...\n");
 
@@ -35,7 +34,7 @@ public class Query1HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
             Filter = "",
             OrderBy = { "" }
         };
-        
+
         // Be careful here. The case must match what is in the index.  Since I've lowercased my first characters with the 
         // [JsonPropertyName("hotelId")] attribute, it expects them to match.
         // If you only want to bring back these three fields, uncomment the next three lines; otherwise, all fields are returned:

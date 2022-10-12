@@ -1,5 +1,4 @@
 ﻿using ConsoleMenuHelper;
-using Microsoft.Extensions.Configuration;
 using Search.Model;
 using Search.Services;
 
@@ -8,22 +7,23 @@ namespace CreateAndPopulateApp;
 [ConsoleMenuItem("Index", 9)]
 public class CreateHotelsIndexMenuItem : IConsoleMenuItem
 {
+    private readonly SearchServiceSettings _settings;
     private readonly ISearchIndexService _indexService;
     private readonly IPromptHelper _promptHelper;
-    private readonly string _defaultIndexName;
 
-    public CreateHotelsIndexMenuItem(ISearchIndexService indexService, IConfiguration configuration, IPromptHelper promptHelper)
+    public CreateHotelsIndexMenuItem(SearchServiceSettings settings, ISearchIndexService indexService, IPromptHelper promptHelper)
     {
+        _settings = settings;
         _indexService = indexService;
         _promptHelper = promptHelper;
-        _defaultIndexName = configuration["SearchServiceIndexName"];
     }
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string indexName = _promptHelper.GetText($"Name of the index to create or update (Default: {_defaultIndexName})?", true, true);
+        
+        string indexName = _promptHelper.GetText($"Name of the index to create or update (Default: {_settings.HotelIndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexName))
-            indexName = _defaultIndexName;
+            indexName = _settings.HotelIndexName;
 
         if (indexName != "exit")
         {

@@ -1,5 +1,4 @@
 ﻿using ConsoleMenuHelper;
-using Microsoft.Extensions.Configuration;
 using Search.Services;
 
 namespace CreateAndPopulateApp;
@@ -7,24 +6,25 @@ namespace CreateAndPopulateApp;
 [ConsoleMenuItem("Synonyms")]
 public class SynonymCreateMenuItem : IConsoleMenuItem
 {
+    private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
     private readonly ISearchSynonymService _synonymService;
-    private readonly string _defaultMapName;
 
     /// <summary>Constructor</summary>
-    public SynonymCreateMenuItem(IConfiguration configuration, IPromptHelper promptHelper, ISearchSynonymService synonymService)
+    public SynonymCreateMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, ISearchSynonymService synonymService)
     {
+        _settings = settings;
         _promptHelper = promptHelper;
         _synonymService = synonymService;
-        _defaultMapName = configuration["SearchServiceSynonymMapName"];
     }
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string synonymMapName = _promptHelper.GetText($"Create of the synonym map (Default: {_defaultMapName})?", true, true);
+
+        string synonymMapName = _promptHelper.GetText($"Create of the synonym map (Default: {_settings.HotelSynonymMapName})?", true, true);
         if (string.IsNullOrWhiteSpace(synonymMapName))
-            synonymMapName = _defaultMapName;
-       
+            synonymMapName = _settings.HotelSynonymMapName;
+
         if (synonymMapName != "exit")
         {
             // Note that each synonym group is new line delimited!

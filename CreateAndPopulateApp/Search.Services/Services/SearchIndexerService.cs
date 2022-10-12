@@ -18,7 +18,7 @@ public class SearchIndexerService : ISearchIndexerService
     }
 
     public SearchIndexerClient ClientIndexer => _client ??= new SearchIndexerClient(
-        new Uri(_settings.SearchEndPoint), new AzureKeyCredential(_settings.SearchAdminApiKey));
+        new Uri(_settings.SearchEndPoint), new AzureKeyCredential(_settings.SearchApiKey));
 
 
     /// <summary>Gets a list of data sources</summary>

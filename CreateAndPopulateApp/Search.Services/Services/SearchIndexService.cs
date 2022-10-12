@@ -24,7 +24,7 @@ public class SearchIndexService : ISearchIndexService
     
     /// <summary>This is the Microsoft client that does all the work.</summary>
     public SearchIndexClient Client => _client ??= new SearchIndexClient(
-        new Uri(_settings.SearchEndPoint), new AzureKeyCredential(_settings.SearchAdminApiKey), _clientOptions);
+        new Uri(_settings.SearchEndPoint), new AzureKeyCredential(_settings.SearchApiKey), _clientOptions);
 
     /// <summary>Creates or updates an index.</summary>
     /// <param name="typeToCreate">The class type that represents the index.  This POCO will be decorated with Azure Search attributes

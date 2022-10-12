@@ -1,5 +1,4 @@
 ﻿using ConsoleMenuHelper;
-using Microsoft.Extensions.Configuration;
 using Search.Services;
 
 namespace CreateAndPopulateApp;
@@ -7,32 +6,31 @@ namespace CreateAndPopulateApp;
 [ConsoleMenuItem("AzureSql", 3)]
 public class AzureSqlDataSourceDeleteMenuItem : IConsoleMenuItem
 {
+    private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
     private readonly ISearchDataSourceService _dataSourceService;
-    private readonly string _defaultDataSourceName;
 
     /// <summary>Constructor</summary>
-    public AzureSqlDataSourceDeleteMenuItem(IConfiguration configuration, IPromptHelper promptHelper, ISearchDataSourceService dataSourceService)
+    public AzureSqlDataSourceDeleteMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, ISearchDataSourceService dataSourceService)
     {
+        _settings = settings;
         _promptHelper = promptHelper;
         _dataSourceService = dataSourceService;
-     
-        _defaultDataSourceName = configuration["SearchServiceAzureSqlDataSourceName"];
     }
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string dataSourceName = _promptHelper.GetText($"Name of the Data Source to delete (Default: {_defaultDataSourceName})?", true, true);
+        string dataSourceName = _promptHelper.GetText($"Name of the Data Source to delete (Default: {_settings.HotelDataSourceName})?", true, true);
         if (string.IsNullOrWhiteSpace(dataSourceName))
-            dataSourceName = _defaultDataSourceName;
+            dataSourceName = _settings.HotelDataSourceName;
 
         if (dataSourceName == "exit")
             return new ConsoleMenuItemResponse(false, false);
-        
+
         var result = await _dataSourceService.DeleteDataSourceAsync(dataSourceName);
         if (result)
             Console.WriteLine($"Deleted {dataSourceName}");
-        else  Console.WriteLine("NOTHING deleted");
+        else Console.WriteLine("NOTHING deleted");
 
         Console.WriteLine("-------------------------------");
 

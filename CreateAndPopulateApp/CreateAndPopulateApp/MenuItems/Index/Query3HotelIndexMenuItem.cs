@@ -1,7 +1,6 @@
 ﻿using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using ConsoleMenuHelper;
-using Microsoft.Extensions.Configuration;
 using Search.Model;
 using Search.Services;
 
@@ -11,21 +10,21 @@ namespace CreateAndPopulateApp;
 public class Query3HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMenuItem
 {
     private readonly ISearchIndexService _indexService;
+    private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
-    private readonly string _defaultIndexName;
 
-    public Query3HotelIndexMenuItem(ISearchIndexService indexService, IConfiguration configuration, IPromptHelper promptHelper)
+    public Query3HotelIndexMenuItem(ISearchIndexService indexService, SearchServiceSettings settings, IPromptHelper promptHelper)
     {
         _indexService = indexService;
+        _settings = settings;
         _promptHelper = promptHelper;
-        _defaultIndexName = configuration["SearchServiceIndexName"];
     }
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_defaultIndexName})?", true, true);
+        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_settings.HotelIndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexName))
-            indexName = _defaultIndexName;
+            indexName = _settings.HotelIndexName;
 
         string searchText = _promptHelper.GetText("Search text (Default: 'pool')?", true, true);
         if (string.IsNullOrWhiteSpace(searchText))
@@ -43,7 +42,7 @@ public class Query3HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
         options.Select.Add(nameof(Hotel.HotelId).ConvertToCamelCase());
         options.Select.Add(nameof(Hotel.HotelName).ConvertToCamelCase());
         options.Select.Add(nameof(Hotel.Tags).ConvertToCamelCase());
-        
+
         SearchResults<Hotel> response = await _indexService.Search<Hotel>(indexName, searchText, options);
 
         await WriteDocumentsAsync(response);

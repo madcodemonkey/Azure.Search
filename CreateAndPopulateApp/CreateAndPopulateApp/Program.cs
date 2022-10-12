@@ -44,14 +44,18 @@ static SearchServiceSettings GetSearchSettings(IConfiguration config )
 {
     return new SearchServiceSettings
     {
-        SearchAdminApiKey = config["SearchServiceAdminApiKey"],
-        SearchEndPoint = config["SearchServiceEndPoint"],
-        SearchQueryApiKey = config["SearchServiceQueryApiKey"],
+        SearchApiKey = config["SearchApiKey"],
+        SearchEndPoint = config["SearchEndPoint"],
+
+        // Database
+        DatabaseConnectionString= config["DatabaseConnectionString"],
 
         // Azure SQL Settings
-        SearchAzureSqlConnectionString= config["SearchServiceAzureSqlConnectionString"],
-        SearchAzureSqlTableName = config["SearchServiceAzureSqlTableName"],
-        SearchAzureSqlDataSourceName= config["SearchServiceAzureSqlDataSourceName"],
-        SearchAzureSqlIndexerName= config["SearchServiceAzureSqlIndexerName"],
+        HotelTableName = config["HotelTableName"],
+        HotelDataSourceName= config["HotelDataSourceName"],
+        HotelIndexerName= config["HotelIndexerName"],
+        HotelSynonymMapName= config["HotelSynonymMapName"],
+        HotelIndexName= config["HotelIndexName"],
     };
+
 }
