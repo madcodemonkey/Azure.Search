@@ -1,4 +1,8 @@
-﻿using Search.Model;
+﻿using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Search.Model;
+using static Azure.Search.Documents.Indexes.Models.LexicalAnalyzerName;
 
 namespace Search.Repositories;
 
@@ -16,81 +20,118 @@ public class SeedTableHotel
 
     private static void AddHotels(AcmeContext context)
     {
-        // TODO: Seed 125 hotels (25 of each rating, 12 should be admin on with 'Secret' in the name)
-        var hotel1 = new Hotel
+        Random rand = new Random(DateTime.Now.Millisecond);
+
+        context.Hotels.Add(CreateOne(rand, "Fancy Stay", "Best hotel in town", "Meilleur hôtel en ville", longitude: -122.131577d, latitude: 47.678581d, baseRate: 450.99));
+        context.Hotels.Add(CreateOne(rand, "Roach Motel", "Cheapest hotel in town", "Hôtel le moins cher en ville", longitude: -122.131577d, latitude: 49.678581d, baseRate: 79.99));
+        context.Hotels.Add(CreateOne(rand, "Downtown Motel", "Close to town hall and the river"));
+
+        context.Hotels.Add(CreateOne(rand, "Homewood Suites by Hilton", "Near the harbor"));
+        context.Hotels.Add(CreateOne(rand, "Fairmont Olympic Hotel", "It's grey!"));
+        context.Hotels.Add(CreateOne(rand, "Executive Hotel Pacific", "Near a stoplight"));
+
+        context.Hotels.Add(CreateOne(rand, "Hyatt House Seattle/Downtown", "It's downtown"));
+        context.Hotels.Add(CreateOne(rand, "Warwick Seattle", "We have balconies"));
+        context.Hotels.Add(CreateOne(rand, "Hilton Garden Inn Seattle Downtown", "Room with a view, but no murders!"));
+        context.Hotels.Add(CreateOne(rand, "Motif Seattle - Destination by Hyatt", "Skyviews"));
+        context.Hotels.Add(CreateOne(rand, "Moore Hotel", "Power lines are visible!"));
+        context.Hotels.Add(CreateOne(rand, "Sheraton Grand Seattle", "Triangles on the carpet"));
+        context.Hotels.Add(CreateOne(rand, "Mediterranean Inn", "It's yellow and white"));
+        context.Hotels.Add(CreateOne(rand, "Palihotel Seattle", "Looks like it's on main street"));
+        context.Hotels.Add(CreateOne(rand, "The Westin Seattle", "Big headboards"));
+        context.Hotels.Add(CreateOne(rand, "Green Tortoise Hostel Seattle", "You can see the space needle"));
+        context.Hotels.Add(CreateOne(rand, "The Inn at Virginia Mason", "It has a rooftop patio"));
+        context.Hotels.Add(CreateOne(rand, "Lotte Hotel Seattle", "Grey front that looks like a bank"));
+        context.Hotels.Add(CreateOne(rand, "Travelodge by Wyndham Seattle By The Space Needle", "That 60s vibe"));
+        context.Hotels.Add(CreateOne(rand, "ilver Cloud Hotel - Seattle Stadium", "Yup, it's a hotel"));
+
+        context.Hotels.Add(CreateOne(rand, "Embassy Suites by Hilton Washington DC Convention Center", "We have a flag!"));
+        context.Hotels.Add(CreateOne(rand, "Beacon Hotel & Corporate Quarters", "Cobblestone driveway.  Has a Vegas vibe!"));
+        context.Hotels.Add(CreateOne(rand, "YOTEL Washington DC", "We think we are cleaver with your hotel name"));
+        context.Hotels.Add(CreateOne(rand, "Days Inn by Wyndham Washington DC/Connecticut Avenue", "Plain and boring"));
+        context.Hotels.Add(CreateOne(rand, "Hyatt Place Washington Dc/Us Capitol", "It's another hotel!"));
+        
+        // Secret hotels
+        context.Hotels.Add(CreateOne(rand, "Super Motel", "Secret super hideout", isSecret: true));
+        context.Hotels.Add(CreateOne(rand, "The Ven at Embassy Row", "Secret view", isSecret: true));
+        context.Hotels.Add(CreateOne(rand, "Moxy Washington", "Secret spies stay here.  Shhh!!!", isSecret: true));
+        context.Hotels.Add(CreateOne(rand, "Omni Shoreham Hotel", "Secret They'll never know you stayed here!", isSecret: true));
+    }
+
+    private static Hotel CreateOne(Random rand, 
+        string hotelName, string? description, string? descriptionInFrench = null,
+        bool isSecret = false, 
+        double? longitude = null, double? latitude = null, double? baseRate = null)
+    {
+        double cost =  baseRate ?? rand.Next(80, 400) * 1.0d + rand.Next(0, 99) * .01d;
+      
+        return  new Hotel
         {
-            BaseRate = 199,
-            Category = "Luxury",
-            Description = "Best hotel in town",
-            DescriptionFr = "Meilleur hôtel en ville",
-            HotelName = "Fancy Stay",
-            Amenities = "[\"pool\", \"view\", \"wifi\", \"concierge\"]",
+            BaseRate = cost,
+            HotelName = hotelName,
+            Category = AddCategories(cost),
+            Description = description,
+            DescriptionFr = descriptionInFrench,
+            Amenities = AddAmenities(rand, cost),
             IsDeleted = false,
-            LastRenovationDate = new DateTimeOffset(2010, 6, 27, 0, 0, 0, 0, TimeSpan.FromSeconds(0)),
-            ParkingIncluded = false,
-            Rating = 5,
-            Roles = "[\"admin\", \"member\"]",
-            SmokingAllowed = false,
-            Location = new NetTopologySuite.Geometries.Point(-122.131577d, 47.678581d) { SRID = 4326 }
+            LastRenovationDate = AddLastRenovationDate(rand),
+            ParkingIncluded = rand.Next(1, 100) > 10,
+            Rating = rand.Next(1, 5),
+            Roles = AddRoles(rand, isSecret),
+            SmokingAllowed = cost < 100, // Cheap hotels let you smoke
+            Location = longitude != null && latitude != null ?
+                new NetTopologySuite.Geometries.Point(longitude.Value, latitude.Value) { SRID = 4326 } : null
         };
+    }
 
-        context.Hotels.Add(hotel1);
+    private static DateTimeOffset AddLastRenovationDate(Random rand)
+    {
+        var daysSinceLastRenovation = rand.Next(30, (365 * 8)) * -1;
+        DateTime renovationDate = DateTime.Now.AddDays(daysSinceLastRenovation);
+        return new DateTimeOffset(renovationDate.Year, renovationDate.Month, renovationDate.Day, 0, 0, 0, 0, TimeSpan.FromSeconds(0));
+    }
 
-        var hotel2 = new Hotel
+    private static string? AddAmenities(Random rand, double cost)
+    {
+        int aboveWhat = cost > 300 ? 10 : 50;  // The higher the cost the better the odds of having the amenity
+        var possibleAmenities = new List<string> { "pool", "view","wifi","concierge" };
+        var actualAmenities = new List<string>();
+        foreach (var possibleAmenity in possibleAmenities)
         {
-            BaseRate = 79.99,
-            Category = "Budget",
-            Description = "Cheapest hotel in town",
-            DescriptionFr = "Hôtel le moins cher en ville",
-            HotelName = "Roach Motel",
-            Amenities = "[\"motel\", \"budget\"]",
-            IsDeleted = false,
-            LastRenovationDate = new DateTimeOffset(1982, 4, 28, 0, 0, 0, 0, TimeSpan.FromSeconds(0)),
-            ParkingIncluded = true,
-            Rating = 1,
-            Roles = "[\"nonmember\", \"admin\", \"member\"]",
-            SmokingAllowed = true,
-            Location = new NetTopologySuite.Geometries.Point(-122.131577d, 49.678581d) { SRID = 4326 }
-        };
+            if (rand.Next(1, 100) > aboveWhat)
+                actualAmenities.Add(possibleAmenity);
+        }
+        
+        return actualAmenities.Count > 0 ? JsonSerializer.Serialize(actualAmenities) : null;
+    }
 
-        context.Hotels.Add(hotel2);
 
-        var hotel3 = new Hotel
+    private static string AddRoles(Random rand, bool isSecret)
+    {
+        var possibleNonAdminRoles = new List<string> { "nonmember", "member" };
+        var actualRoles = new List<string> { "admin" };  // Admin is always in the list
+
+        if (isSecret == false)
         {
-            BaseRate = 129.99,
-            Category = null,
-            Description = "Close to town hall and the river",
-            DescriptionFr = null,
-            HotelName = "Downtown Hotel",
-            Amenities = null,
-            IsDeleted = false,
-            LastRenovationDate = null,
-            ParkingIncluded = null,
-            Rating = null,
-            Roles = "[\"nonmember\", \"admin\", \"member\"]",
-            SmokingAllowed = null,
-            Location = null
-        };
+            foreach (var possibleRole in possibleNonAdminRoles)
+            {
+                if (rand.Next(1, 100) > 50)
+                    actualRoles.Add(possibleRole);
+            }
+        }
+        
+        return JsonSerializer.Serialize(actualRoles);
+    }
 
-        context.Hotels.Add(hotel3);
+    
 
-        var hotel4 = new Hotel
+    private static string? AddCategories(double cost)
+    {
+        return cost switch
         {
-            BaseRate = 247.19,
-            Category = null,
-            Description = "Super secret hideout",
-            DescriptionFr = null,
-            HotelName = "Secret Motel",
-            Amenities = null,
-            IsDeleted = false,
-            LastRenovationDate = null,
-            ParkingIncluded = null,
-            Rating = null,
-            Roles = "[\"admin\"]",
-            SmokingAllowed = null,
-            Location = null
+            < 100 => "Budget",
+            >= 300 => "Luxury",
+            _ => null
         };
-
-        context.Hotels.Add(hotel4);
     }
 }

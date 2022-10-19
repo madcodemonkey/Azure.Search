@@ -13,7 +13,7 @@ using Search.Repositories;
 namespace Search.Repositories.Migrations
 {
     [DbContext(typeof(AcmeContext))]
-    [Migration("20221011230654_Initial")]
+    [Migration("20221018221040_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,11 +43,11 @@ namespace Search.Repositories.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Description_fr");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionFr")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Description_fr");
 
                     b.Property<string>("HotelName")
                         .IsRequired()

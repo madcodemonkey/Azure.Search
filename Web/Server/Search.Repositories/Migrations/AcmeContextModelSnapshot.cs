@@ -41,11 +41,11 @@ namespace Search.Repositories.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Description_fr");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionFr")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Description_fr");
 
                     b.Property<string>("HotelName")
                         .IsRequired()
