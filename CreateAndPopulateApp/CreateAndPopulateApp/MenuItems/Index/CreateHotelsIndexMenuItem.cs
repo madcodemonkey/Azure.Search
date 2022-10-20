@@ -8,13 +8,13 @@ namespace CreateAndPopulateApp;
 public class CreateHotelsIndexMenuItem : IConsoleMenuItem
 {
     private readonly SearchServiceSettings _settings;
-    private readonly IAcmeSearchIndexService _indexService;
+    private readonly IHotelIndexService _hotelIndexService;
     private readonly IPromptHelper _promptHelper;
 
-    public CreateHotelsIndexMenuItem(SearchServiceSettings settings, IAcmeSearchIndexService indexService, IPromptHelper promptHelper)
+    public CreateHotelsIndexMenuItem(SearchServiceSettings settings, IHotelIndexService hotelIndexService, IPromptHelper promptHelper)
     {
         _settings = settings;
-        _indexService = indexService;
+        _hotelIndexService = hotelIndexService;
         _promptHelper = promptHelper;
     }
 
@@ -27,7 +27,7 @@ public class CreateHotelsIndexMenuItem : IConsoleMenuItem
 
         if (indexName != "exit")
         {
-            await _indexService.CreateOrUpdateAsync(typeof(Hotel), indexName);
+            await _hotelIndexService.CreateOrUpdateAsync();
         }
         
         Console.WriteLine("-------------------------------");

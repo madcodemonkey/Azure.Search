@@ -1,6 +1,6 @@
 ﻿namespace Search.Services;
 
-public interface IHotelDataSourceService : ISearchDataSourceService
+public interface IHotelDataSourceService : IAcmeSearchDataSourceService
 {
     /// <summary>Creates a hotel data source if it doesn't exist.</summary>
     Task<bool> CreateAsync();

@@ -51,6 +51,7 @@ static SearchServiceSettings GetSearchSettings(IConfiguration config )
         DatabaseConnectionString= config["DatabaseConnectionString"],
 
         // Azure SQL Settings
+        HotelSuggestorName = config["HotelSuggestorName"],
         HotelTableName = config["HotelTableName"],
         HotelDataSourceName= config["HotelDataSourceName"],
         HotelIndexerName= config["HotelIndexerName"],

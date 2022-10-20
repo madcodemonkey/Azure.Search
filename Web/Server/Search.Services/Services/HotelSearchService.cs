@@ -8,14 +8,14 @@ namespace Search.Services;
 public class HotelSearchService : IHotelSearchService
 {
     private readonly SearchServiceSettings _settings;
-    private readonly ISearchIndexService _searchIndexService;
+    private readonly IAcmeSearchIndexService _acmeSearchIndexService;
     private readonly IHotelFilterService _hotelFilterService;
 
     /// <summary>Constructor</summary>
-    public HotelSearchService(SearchServiceSettings settings, ISearchIndexService searchIndexService, IHotelFilterService hotelFilterService)
+    public HotelSearchService(SearchServiceSettings settings, IAcmeSearchIndexService acmeSearchIndexService, IHotelFilterService hotelFilterService)
     {
         _settings = settings;
-        _searchIndexService = searchIndexService;
+        _acmeSearchIndexService = acmeSearchIndexService;
         _hotelFilterService = hotelFilterService;
     }
     
@@ -27,7 +27,7 @@ public class HotelSearchService : IHotelSearchService
         var options = CreateDefaultSearchOptions(numberOfItemsPerPage, pageNumber);
 
         // SEARCH!!!!!
-        SearchResults<SearchHotel> searchResults = await _searchIndexService.Search<SearchHotel>(_settings.HotelIndexName, "*", options);
+        SearchResults<SearchHotel> searchResults = await _acmeSearchIndexService.Search<SearchHotel>(_settings.HotelIndexName, "*", options);
 
         return await ConvertSearchResultsAsync(pageNumber, searchResults);
     }
@@ -60,7 +60,7 @@ public class HotelSearchService : IHotelSearchService
             UseFuzzyMatching = false // false for performance reasons
         };
 
-        var suggestions = await _searchIndexService.SuggestAsync<SearchHotel>(_settings.HotelIndexName, request.Query, _settings.HotelSuggestorName, options);
+        var suggestions = await _acmeSearchIndexService.SuggestAsync<SearchHotel>(_settings.HotelIndexName, request.Query, _settings.HotelSuggestorName, options);
 
         return suggestions.Results.Select(s => s.Text).ToList();
     }
@@ -69,7 +69,7 @@ public class HotelSearchService : IHotelSearchService
     {
         SearchOptions parameters = BuildParameters(request, rolesTheUserIsAssigned);
 
-        var azSearchResult = await _searchIndexService.SearchAsync<SearchHotel>(_settings.HotelIndexName, request.Query, parameters);
+        var azSearchResult = await _acmeSearchIndexService.SearchAsync<SearchHotel>(_settings.HotelIndexName, request.Query, parameters);
 
         var result = new AcmeSearchQueryResult<SearchHotel>
         {
@@ -153,7 +153,7 @@ public class HotelSearchService : IHotelSearchService
         options.OrderBy.Add($"{ratingField} desc");
 
         // SEARCH!!!!!
-        SearchResults<SearchHotel> searchResults = await _searchIndexService.Search<SearchHotel>(_settings.HotelIndexName, "*", options);
+        SearchResults<SearchHotel> searchResults = await _acmeSearchIndexService.Search<SearchHotel>(_settings.HotelIndexName, "*", options);
 
         return await ConvertSearchResultsAsync(pageNumber, searchResults);
     }

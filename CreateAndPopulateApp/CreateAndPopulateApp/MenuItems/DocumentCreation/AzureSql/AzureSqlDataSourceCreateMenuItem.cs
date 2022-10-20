@@ -36,7 +36,7 @@ public class AzureSqlDataSourceCreateMenuItem : IConsoleMenuItem
             return new ConsoleMenuItemResponse(false, false);
 
         Console.WriteLine("Creating the data source that is needed for the indexer...");
-        await _dataSourceService.CreateAzureSqlDataSourceAsync(dataSourceName, tableName);
+        await _dataSourceService.CreateForAzureSqlAsync(dataSourceName, tableName, _settings.DatabaseConnectionString);
 
         Console.WriteLine("-------------------------------");
 

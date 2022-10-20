@@ -1,6 +1,6 @@
 ﻿namespace Search.Services;
 
-public interface IHotelIndexerService : ISearchIndexerService
+public interface IHotelIndexerService : IAcmeSearchIndexerService
 {
     /// <summary>Creates the Hotel indexer</summary>
     public Task<bool> CreateAsync();

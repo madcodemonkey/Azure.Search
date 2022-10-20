@@ -16,7 +16,7 @@ public class AzureSqlIndexerListMenuItem : IConsoleMenuItem
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        List<string> indexerList = await _indexerService.GetIndexerListAsync();
+        List<string> indexerList = await _indexerService.GetListAsync();
         
         if (indexerList.Count == 0)
             Console.WriteLine("Nothing found.");

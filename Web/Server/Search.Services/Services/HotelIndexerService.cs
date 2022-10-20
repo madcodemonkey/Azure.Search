@@ -3,7 +3,7 @@ using Search.Model;
 
 namespace Search.Services;
 
-public class HotelIndexerService : SearchIndexerService, IHotelIndexerService
+public class HotelIndexerService : AcmeSearchIndexerService, IHotelIndexerService
 {
     /// <summary>Constructor</summary>
     public HotelIndexerService(SearchServiceSettings settings) : base(settings)

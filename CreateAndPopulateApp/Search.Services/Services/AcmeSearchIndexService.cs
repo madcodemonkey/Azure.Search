@@ -1,17 +1,15 @@
-﻿using System.Text.Json;
-using Azure;
+﻿using Azure;
 using Azure.Core.Serialization;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
-using Azure.Search.Documents.Indexes.Models;
 using Azure.Search.Documents.Models;
-using Search.Model;
+using System.Text.Json;
 
 namespace Search.Services;
 
 public class AcmeSearchIndexService : IAcmeSearchIndexService
 {
-    private readonly SearchServiceSettings _settings;
+    protected readonly SearchServiceSettings _settings;
     private SearchIndexClient? _client;
     private readonly SearchClientOptions _clientOptions;
 
@@ -19,44 +17,16 @@ public class AcmeSearchIndexService : IAcmeSearchIndexService
     public AcmeSearchIndexService(SearchServiceSettings settings)
     {
         _settings = settings;
-        _clientOptions =  CreateSearchClientOptions();
+        _clientOptions = CreateSearchClientOptions();
     }
-    
+
     /// <summary>This is the Microsoft client that does all the work.</summary>
     public SearchIndexClient Client => _client ??= new SearchIndexClient(
         new Uri(_settings.SearchEndPoint), new AzureKeyCredential(_settings.SearchApiKey), _clientOptions);
 
-    /// <summary>Creates or updates an index.</summary>
-    /// <param name="typeToCreate">The class type that represents the index.  This POCO will be decorated with Azure Search attributes
-    /// indicating how the field can be used.</param>
-    /// <param name="indexName">The name you want to give the index.</param>
-    public async Task<bool> CreateOrUpdateAsync(Type typeToCreate, string indexName)
-    {
-        FieldBuilder fieldBuilder = new FieldBuilder();
-        var searchFields = fieldBuilder.Build(typeToCreate);
-        var searchIndex = new SearchIndex(indexName, searchFields);
-
-        
-        // This is needed for autocomplete.
-        var suggester = new SearchSuggester("sg", new[] { nameof(Hotel.HotelName).ConvertToCamelCase(), nameof(Hotel.Category).ConvertToCamelCase() });
-        searchIndex.Suggesters.Add(suggester);
-
-        // This is a scoring profile to boost results if used.  
-        // We can mark one as default if desired.
-        var scoringProfile1 = new ScoringProfile("sp-hotel-name")
-        {
-            FunctionAggregation = ScoringFunctionAggregation.Sum,
-            TextWeights = new TextWeights(new Dictionary<string, double> { {  nameof(Hotel.HotelName).ConvertToCamelCase(), 5.0 } })
-        };
-
-        searchIndex.ScoringProfiles.Add(scoringProfile1);
-        
-        Response<SearchIndex>? result = await Client.CreateOrUpdateIndexAsync(searchIndex);
-
-        return result != null && result.Value != null;
-    }
 
     /// <summary>Deletes an index.</summary>
+    /// <param name="indexName">The name of the index to delete</param>
     public async Task<bool> DeleteAsync(string indexName)
     {
         if (await ExistsAsync(indexName) == false)
@@ -91,7 +61,7 @@ public class AcmeSearchIndexService : IAcmeSearchIndexService
         catch (RequestFailedException ex)
         {
             if (ex.Status == 404)
-              return null;
+                return null;
             throw;
         }
     }
@@ -142,6 +112,35 @@ public class AcmeSearchIndexService : IAcmeSearchIndexService
         var searchClient = Client.GetSearchClient(indexName);
         return await searchClient.SearchAsync<T>(searchText, options);
     }
+
+
+
+    /// <summary>Used for autocomplete to get a suggestion.</summary>
+    /// <typeparam name="T">The type of data being returned.</typeparam>
+    /// <param name="indexName">The name of the index</param>
+    /// <param name="searchText">The text to find</param>
+    /// <param name="options">The search options to apply</param>
+    /// <param name="suggesterName">The name of the suggestor</param>
+    public async Task<SuggestResults<T>> SuggestAsync<T>(string indexName, string searchText, string suggesterName, SuggestOptions options)
+    {
+        var searchClient = Client.GetSearchClient(indexName);
+        return await searchClient.SuggestAsync<T>(searchText, suggesterName, options);
+    }
+
+
+
+    /// <summary>Searches for documents</summary>
+    /// <typeparam name="T">The type of data being returned.</typeparam>
+    /// <param name="indexName">The name of the index</param>
+    /// <param name="searchText">The text to find</param>
+    /// <param name="options">The search options to apply</param>
+    public async Task<Response<SearchResults<T>>> SearchAsync<T>(string indexName, string searchText, SearchOptions options)
+    {
+        var searchClient = Client.GetSearchClient(indexName);
+        var response = await searchClient.SearchAsync<T>(searchText, options);
+        return response;
+    }
+
 
     /// <summary>Uploads documents to an index.</summary>
     /// <typeparam name="T">The class type that we are uploading.</typeparam>

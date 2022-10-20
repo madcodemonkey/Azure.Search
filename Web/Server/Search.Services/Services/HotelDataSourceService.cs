@@ -1,11 +1,11 @@
 ﻿namespace Search.Services;
 
-public class HotelDataSourceService : SearchDataSourceService, IHotelDataSourceService
+public class HotelDataSourceService : AcmeSearchDataSourceService, IHotelDataSourceService
 {
     private readonly SearchServiceSettings _settings;
 
     /// <summary>Constructor</summary>
-    public HotelDataSourceService(SearchServiceSettings settings, ISearchIndexerService indexerService) : base(indexerService)
+    public HotelDataSourceService(SearchServiceSettings settings, IAcmeSearchIndexerService indexerService) : base(indexerService)
     {
         _settings = settings;
     }

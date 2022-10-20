@@ -4,13 +4,13 @@ using Azure.Search.Documents.Indexes;
 
 namespace Search.Services;
 
-public class SearchIndexerService : ISearchIndexerService
+public class AcmeSearchIndexerService : IAcmeSearchIndexerService
 {
     protected SearchServiceSettings Settings { get; }
     private SearchIndexerClient? _client;
 
     /// <summary>Constructor</summary>
-    public SearchIndexerService(SearchServiceSettings settings)
+    public AcmeSearchIndexerService(SearchServiceSettings settings)
     {
         Settings = settings;
     }

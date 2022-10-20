@@ -51,7 +51,7 @@ public class AzureSqlIndexerCreateMenuItem : IConsoleMenuItem
         if (_promptHelper.GetYorN("Do you want to run the indexer now?", true))
         {
             Console.WriteLine("Running the index now....");
-            await _indexerService.RunIndexerAsync(indexerName);
+            await _indexerService.RunAsync(indexerName);
         }
 
         Console.WriteLine("-------------------------------");

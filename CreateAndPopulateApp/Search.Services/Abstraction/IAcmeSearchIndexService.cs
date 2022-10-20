@@ -14,9 +14,8 @@ public interface IAcmeSearchIndexService
     /// <param name="searchText">The partial bit of text to search upon</param>
     /// <param name="suggesterName">The name of the suggester</param>
     Task<Response<AutocompleteResults>> AutocompleteAsync(string indexName, string searchText, string suggesterName);
-    
-    Task<bool> CreateOrUpdateAsync(Type typeToCreate, string indexName);
-    Task<bool> DeleteAsync(string indexName);
+   
+     Task<bool> DeleteAsync(string indexName);
 
     /// <summary>Retrieves a single document.</summary>
     /// <typeparam name="T">The type of data being returned.</typeparam>

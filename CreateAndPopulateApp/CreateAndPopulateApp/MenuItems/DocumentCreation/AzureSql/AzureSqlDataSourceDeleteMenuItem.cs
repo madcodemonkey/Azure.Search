@@ -27,7 +27,7 @@ public class AzureSqlDataSourceDeleteMenuItem : IConsoleMenuItem
         if (dataSourceName == "exit")
             return new ConsoleMenuItemResponse(false, false);
 
-        var result = await _dataSourceService.DeleteDataSourceAsync(dataSourceName);
+        var result = await _dataSourceService.DeleteAsync(dataSourceName);
         if (result)
             Console.WriteLine($"Deleted {dataSourceName}");
         else Console.WriteLine("NOTHING deleted");

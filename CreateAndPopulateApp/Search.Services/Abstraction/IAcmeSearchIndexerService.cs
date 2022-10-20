@@ -5,12 +5,12 @@ namespace Search.Services;
 public interface IAcmeSearchIndexerService
 {
     SearchIndexerClient ClientIndexer { get; }
-    Task RunIndexerAsync(string indexerName);
+    Task RunAsync(string indexerName);
 
     /// <summary>Gets a list of data sources</summary>
     /// <param name="indexerName">The name of the indexer</param>
-    Task<bool> DeleteIndexerAsync(string indexerName);
+    Task<bool> DeleteAsync(string indexerName);
 
     /// <summary>Gets a list of indexers</summary>
-    Task<List<string>> GetIndexerListAsync();
+    Task<List<string>> GetListAsync();
 }

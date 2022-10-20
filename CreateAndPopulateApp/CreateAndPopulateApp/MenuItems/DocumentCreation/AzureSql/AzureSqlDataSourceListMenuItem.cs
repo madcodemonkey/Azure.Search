@@ -16,7 +16,7 @@ public class AzureSqlDataSourceListMenuItem : IConsoleMenuItem
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        List<string> dataSourceNameList = await _dataSourceService.GetDataSourceListAsync();
+        List<string> dataSourceNameList = await _dataSourceService.GetListAsync();
         
         if (dataSourceNameList.Count == 0)
             Console.WriteLine("Nothing found.");

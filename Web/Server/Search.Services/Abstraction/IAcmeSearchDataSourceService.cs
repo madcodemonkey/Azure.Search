@@ -1,6 +1,6 @@
 ﻿namespace Search.Services;
 
-public interface ISearchDataSourceService
+public interface IAcmeSearchDataSourceService
 {
     /// <summary>Creates a Azure SQL data source that will be used by an indexer.</summary>
     /// <param name="name">The name of the data source</param>

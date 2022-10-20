@@ -1,6 +1,6 @@
 ﻿namespace Search.Services;
 
-public interface IHotelSynonymService : ISearchSynonymService
+public interface IHotelSynonymService : IAcmeSearchSynonymService
 {
     /// <summary>Creates all the synonym lists used by the hotel index.</summary>
     Task<string> CreateAsync();

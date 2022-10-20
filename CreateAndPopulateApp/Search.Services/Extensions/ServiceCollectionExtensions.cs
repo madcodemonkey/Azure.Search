@@ -8,10 +8,10 @@ public static class ServiceCollectionExtensions
     {
         sc.AddSingleton(settings);
             
-            
         sc.AddTransient<IHotelIndexerService, HotelIndexerService>();
         sc.AddTransient<IHotelSynonymService, HotelSynonymService>();
-            
+        sc.AddTransient<IHotelIndexService, HotelIndexService>();
+
         sc.AddScoped<IAcmeSearchDataSourceService, AcmeSearchDataSourceService>();
         sc.AddScoped<IAcmeSearchIndexService, AcmeSearchIndexService>();
         sc.AddScoped<IAcmeSearchIndexerService, AcmeSearchIndexerService>();

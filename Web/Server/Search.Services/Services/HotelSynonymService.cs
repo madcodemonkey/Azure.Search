@@ -3,12 +3,12 @@ using Search.Model;
 
 namespace Search.Services;
 
-public class HotelSynonymService : SearchSynonymService, IHotelSynonymService
+public class HotelSynonymService : AcmeSearchSynonymService, IHotelSynonymService
 {
     private readonly SearchServiceSettings _searchServiceSettings;
 
     /// <summary>Constructor</summary>
-    public HotelSynonymService(ISearchIndexService indexService, SearchServiceSettings searchServiceSettings) : base(indexService)
+    public HotelSynonymService(IAcmeSearchIndexService indexService, SearchServiceSettings searchServiceSettings) : base(indexService)
     {
         _searchServiceSettings = searchServiceSettings;
     }

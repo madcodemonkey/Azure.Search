@@ -27,7 +27,7 @@ public class AzureSqlIndexerDeleteMenuItem : IConsoleMenuItem
         if (indexerName == "exit")
             return new ConsoleMenuItemResponse(false, false);
         
-        var result = await _indexerService.DeleteIndexerAsync(indexerName);
+        var result = await _indexerService.DeleteAsync(indexerName);
         if (result)
             Console.WriteLine($"Deleted {indexerName}");
         else  Console.WriteLine("NOTHING deleted");
