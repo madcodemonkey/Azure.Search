@@ -5,10 +5,10 @@ namespace Search.Services;
 
 public class HotelIndexerService : IHotelIndexerService
 {
-    private readonly ISearchIndexerService _indexerService;
+    private readonly IAcmeSearchIndexerService _indexerService;
 
     /// <summary>Constructor</summary>
-    public HotelIndexerService(ISearchIndexerService indexerService)
+    public HotelIndexerService(IAcmeSearchIndexerService indexerService)
     {
         _indexerService = indexerService;
     }

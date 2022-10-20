@@ -8,10 +8,10 @@ public class SynonymDeleteMenuItem : IConsoleMenuItem
 {
     private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
-    private readonly ISearchSynonymService _synonymService;
+    private readonly IAcmeSearchSynonymService _synonymService;
 
     /// <summary>Constructor</summary>
-    public SynonymDeleteMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, ISearchSynonymService synonymService)
+    public SynonymDeleteMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, IAcmeSearchSynonymService synonymService)
     {
         _settings = settings;
         _promptHelper = promptHelper;

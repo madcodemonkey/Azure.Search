@@ -4,9 +4,7 @@ public class SearchServiceSettings
 {
     public string SearchEndPoint { get; set; }
     public string SearchApiKey { get; set; }
-    public string SearchQueryApiKey { get; set; }
-
-
+    
     public string DatabaseConnectionString { get; set; }
     public string HotelTableName { get; set; }
     public string HotelDataSourceName { get; set; }

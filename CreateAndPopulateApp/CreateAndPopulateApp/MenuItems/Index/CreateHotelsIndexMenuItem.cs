@@ -8,10 +8,10 @@ namespace CreateAndPopulateApp;
 public class CreateHotelsIndexMenuItem : IConsoleMenuItem
 {
     private readonly SearchServiceSettings _settings;
-    private readonly ISearchIndexService _indexService;
+    private readonly IAcmeSearchIndexService _indexService;
     private readonly IPromptHelper _promptHelper;
 
-    public CreateHotelsIndexMenuItem(SearchServiceSettings settings, ISearchIndexService indexService, IPromptHelper promptHelper)
+    public CreateHotelsIndexMenuItem(SearchServiceSettings settings, IAcmeSearchIndexService indexService, IPromptHelper promptHelper)
     {
         _settings = settings;
         _indexService = indexService;

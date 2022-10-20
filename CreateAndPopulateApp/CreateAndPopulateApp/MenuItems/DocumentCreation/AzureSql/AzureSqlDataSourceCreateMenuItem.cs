@@ -8,10 +8,10 @@ public class AzureSqlDataSourceCreateMenuItem : IConsoleMenuItem
 {
     private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
-    private readonly ISearchDataSourceService _dataSourceService;
+    private readonly IAcmeSearchDataSourceService _dataSourceService;
 
     /// <summary>Constructor</summary>
-    public AzureSqlDataSourceCreateMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, ISearchDataSourceService dataSourceService)
+    public AzureSqlDataSourceCreateMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, IAcmeSearchDataSourceService dataSourceService)
     {
         _settings = settings;
         _promptHelper = promptHelper;

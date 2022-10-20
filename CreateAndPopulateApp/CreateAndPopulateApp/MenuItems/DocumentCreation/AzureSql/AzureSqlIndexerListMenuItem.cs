@@ -6,10 +6,10 @@ namespace CreateAndPopulateApp;
 [ConsoleMenuItem("AzureSql", 4)]
 public class AzureSqlIndexerListMenuItem : IConsoleMenuItem
 {
-    private readonly ISearchIndexerService _indexerService;
+    private readonly IAcmeSearchIndexerService _indexerService;
 
     /// <summary>Constructor</summary>
-    public AzureSqlIndexerListMenuItem(ISearchIndexerService indexerService)
+    public AzureSqlIndexerListMenuItem(IAcmeSearchIndexerService indexerService)
     {
         _indexerService = indexerService;
     }

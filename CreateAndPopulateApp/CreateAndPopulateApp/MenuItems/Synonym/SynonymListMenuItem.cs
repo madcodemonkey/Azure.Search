@@ -6,12 +6,12 @@ namespace CreateAndPopulateApp;
 [ConsoleMenuItem("Synonyms")]
 public class SynonymListMenuItem : IConsoleMenuItem
 {
-    private readonly ISearchSynonymService _synonymService;
+    private readonly IAcmeSearchSynonymService _synonymService;
     private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
 
     /// <summary>Constructor</summary>
-    public SynonymListMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, ISearchSynonymService synonymService)
+    public SynonymListMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, IAcmeSearchSynonymService synonymService)
     {
         _settings = settings;
         _promptHelper = promptHelper;

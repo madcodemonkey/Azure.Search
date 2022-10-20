@@ -3,13 +3,13 @@ using Azure.Search.Documents.Indexes.Models;
 
 namespace Search.Services;
 
-public class SearchDataSourceService : ISearchDataSourceService
+public class AcmeSearchDataSourceService : IAcmeSearchDataSourceService
 {
     private readonly SearchServiceSettings _settings;
-    private readonly ISearchIndexerService _indexerService;
+    private readonly IAcmeSearchIndexerService _indexerService;
 
     /// <summary>Constructor</summary>
-    public SearchDataSourceService(SearchServiceSettings settings, ISearchIndexerService indexerService)
+    public AcmeSearchDataSourceService(SearchServiceSettings settings, IAcmeSearchIndexerService indexerService)
     {
         _settings = settings;
         _indexerService = indexerService;

@@ -1,6 +1,6 @@
 ﻿namespace Search.Services;
 
-public interface ISearchDataSourceService
+public interface IAcmeSearchDataSourceService
 {
     Task CreateAzureSqlDataSourceAsync(string dataSourceConnectionName, string tableOrViewName);
 

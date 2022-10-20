@@ -3,13 +3,13 @@ using Azure.Search.Documents.Indexes.Models;
 
 namespace Search.Services;
 
-public class SearchSynonymService : ISearchSynonymService
+public class AcmeSearchSynonymService : IAcmeSearchSynonymService
 {
-    private readonly ISearchIndexService _indexService;
+    private readonly IAcmeSearchIndexService _indexService;
 
     /// <summary>Constructor</summary>
     /// <param name="indexService"></param>
-    public SearchSynonymService(ISearchIndexService indexService)
+    public AcmeSearchSynonymService(IAcmeSearchIndexService indexService)
     {
         _indexService = indexService;
     }

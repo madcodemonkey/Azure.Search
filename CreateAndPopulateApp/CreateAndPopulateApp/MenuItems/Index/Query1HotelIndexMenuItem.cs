@@ -9,11 +9,11 @@ namespace CreateAndPopulateApp;
 [ConsoleMenuItem("Index", 1)]
 public class Query1HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMenuItem
 {
-    private readonly ISearchIndexService _indexService;
+    private readonly IAcmeSearchIndexService _indexService;
     private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
 
-    public Query1HotelIndexMenuItem(ISearchIndexService indexService, SearchServiceSettings settings, IPromptHelper promptHelper)
+    public Query1HotelIndexMenuItem(IAcmeSearchIndexService indexService, SearchServiceSettings settings, IPromptHelper promptHelper)
     {
         _indexService = indexService;
         _settings = settings;

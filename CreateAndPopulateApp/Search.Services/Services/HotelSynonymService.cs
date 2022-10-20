@@ -5,9 +5,9 @@ namespace Search.Services;
 
 public class HotelSynonymService : IHotelSynonymService
 {
-    private readonly ISearchIndexService _indexService;
+    private readonly IAcmeSearchIndexService _indexService;
 
-    public HotelSynonymService(ISearchIndexService indexService)
+    public HotelSynonymService(IAcmeSearchIndexService indexService)
     {
         _indexService = indexService;
     }

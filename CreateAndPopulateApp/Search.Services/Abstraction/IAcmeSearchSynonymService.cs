@@ -1,6 +1,6 @@
 ﻿namespace Search.Services;
 
-public interface ISearchSynonymService
+public interface IAcmeSearchSynonymService
 {
     /// <summary>Gets a list of synonym maps names</summary>
     Task<IReadOnlyList<string>> GetSynonymMapNamesAsync();

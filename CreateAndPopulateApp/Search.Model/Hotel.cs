@@ -1,9 +1,7 @@
-﻿using System.Text;
-using Azure.Search.Documents.Indexes;
+﻿using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
-using System.Text.Json.Serialization;
 using Microsoft.Spatial;
-using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Search.Model;
 
@@ -57,13 +55,13 @@ public partial class Hotel
     public int? Rating { get; set; }
 
     [SearchableField(IsFilterable = true)]
-    [JsonPropertyName("roles")] 
+    [JsonPropertyName("roles")]
     public string[] Roles { get; set; }
-    
+
     /// <summary>Location</summary>
     /// <remarks>Requires Microsoft.Azure.Core.Spatial NuGet package for GeographyPoint</remarks>
     [SimpleField(IsFilterable = true, IsSortable = true)]
-  //  [FieldBuilderIgnore]
+    //  [FieldBuilderIgnore]
     [JsonPropertyName("location")]
     public GeographyPoint Location { get; set; }
 
@@ -71,7 +69,7 @@ public partial class Hotel
     public override string ToString()
     {
         string tags = Tags != null ? string.Join(',', Tags) : string.Empty;
-        
+
         return $"Hotel id: {HotelId} | Name: {HotelName} | Rating: {Rating} | Tags: {tags} | Category: {Category}";
     }
 }

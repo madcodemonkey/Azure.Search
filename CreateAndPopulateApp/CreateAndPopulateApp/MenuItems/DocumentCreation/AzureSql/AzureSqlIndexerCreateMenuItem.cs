@@ -8,11 +8,11 @@ public class AzureSqlIndexerCreateMenuItem : IConsoleMenuItem
 {
     private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
-    private readonly ISearchIndexerService _indexerService;
+    private readonly IAcmeSearchIndexerService _indexerService;
     private readonly IHotelIndexerService _hotelIndexerService;
 
     /// <summary>Constructor</summary>
-    public AzureSqlIndexerCreateMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, ISearchIndexerService indexerService,
+    public AzureSqlIndexerCreateMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, IAcmeSearchIndexerService indexerService,
         IHotelIndexerService hotelIndexerService)
     {
         _settings = settings;

@@ -8,10 +8,10 @@ public class AzureSqlDataSourceDeleteMenuItem : IConsoleMenuItem
 {
     private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
-    private readonly ISearchDataSourceService _dataSourceService;
+    private readonly IAcmeSearchDataSourceService _dataSourceService;
 
     /// <summary>Constructor</summary>
-    public AzureSqlDataSourceDeleteMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, ISearchDataSourceService dataSourceService)
+    public AzureSqlDataSourceDeleteMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, IAcmeSearchDataSourceService dataSourceService)
     {
         _settings = settings;
         _promptHelper = promptHelper;

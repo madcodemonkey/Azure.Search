@@ -6,10 +6,10 @@ namespace CreateAndPopulateApp;
 [ConsoleMenuItem("AzureSql", 1)]
 public class AzureSqlDataSourceListMenuItem : IConsoleMenuItem
 {
-    private readonly ISearchDataSourceService _dataSourceService;
+    private readonly IAcmeSearchDataSourceService _dataSourceService;
 
     /// <summary>Constructor</summary>
-    public AzureSqlDataSourceListMenuItem(ISearchDataSourceService dataSourceService)
+    public AzureSqlDataSourceListMenuItem(IAcmeSearchDataSourceService dataSourceService)
     {
         _dataSourceService = dataSourceService;
     }

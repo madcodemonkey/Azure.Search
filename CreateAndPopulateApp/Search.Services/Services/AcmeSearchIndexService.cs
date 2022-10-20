@@ -9,14 +9,14 @@ using Search.Model;
 
 namespace Search.Services;
 
-public class SearchIndexService : ISearchIndexService
+public class AcmeSearchIndexService : IAcmeSearchIndexService
 {
     private readonly SearchServiceSettings _settings;
     private SearchIndexClient? _client;
     private readonly SearchClientOptions _clientOptions;
 
     /// <summary>Constructor</summary>
-    public SearchIndexService(SearchServiceSettings settings)
+    public AcmeSearchIndexService(SearchServiceSettings settings)
     {
         _settings = settings;
         _clientOptions =  CreateSearchClientOptions();

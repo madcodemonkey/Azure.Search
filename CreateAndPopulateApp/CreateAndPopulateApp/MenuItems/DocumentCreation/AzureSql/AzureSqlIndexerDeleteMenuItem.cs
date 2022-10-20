@@ -8,10 +8,10 @@ public class AzureSqlIndexerDeleteMenuItem : IConsoleMenuItem
 {
     private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
-    private readonly ISearchIndexerService _indexerService;
+    private readonly IAcmeSearchIndexerService _indexerService;
 
     /// <summary>Constructor</summary>
-    public AzureSqlIndexerDeleteMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, ISearchIndexerService indexerService)
+    public AzureSqlIndexerDeleteMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, IAcmeSearchIndexerService indexerService)
     {
         _settings = settings;
         _promptHelper = promptHelper;

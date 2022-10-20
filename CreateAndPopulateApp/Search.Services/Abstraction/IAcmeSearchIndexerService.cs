@@ -2,7 +2,7 @@
 
 namespace Search.Services;
 
-public interface ISearchIndexerService
+public interface IAcmeSearchIndexerService
 {
     SearchIndexerClient ClientIndexer { get; }
     Task RunIndexerAsync(string indexerName);

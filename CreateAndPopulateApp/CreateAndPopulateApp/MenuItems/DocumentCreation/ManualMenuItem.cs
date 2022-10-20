@@ -10,10 +10,10 @@ public class ManualMenuItem : IConsoleMenuItem
 {
     private readonly SearchServiceSettings _settings;
     private readonly IPromptHelper _promptHelper;
-    private readonly ISearchIndexService _indexService;
+    private readonly IAcmeSearchIndexService _indexService;
 
     /// <summary>Constructor</summary>
-    public ManualMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, ISearchIndexService indexService)
+    public ManualMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, IAcmeSearchIndexService indexService)
     {
         _settings = settings;
         _promptHelper = promptHelper;

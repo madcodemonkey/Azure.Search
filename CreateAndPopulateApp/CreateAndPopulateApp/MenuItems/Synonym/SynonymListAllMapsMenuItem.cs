@@ -6,10 +6,10 @@ namespace CreateAndPopulateApp;
 [ConsoleMenuItem("Synonyms")]
 public class SynonymListAllMapsMenuItem : IConsoleMenuItem
 {
-    private readonly ISearchSynonymService _synonymService;
+    private readonly IAcmeSearchSynonymService _synonymService;
 
     /// <summary>Constructor</summary>
-    public SynonymListAllMapsMenuItem(ISearchSynonymService synonymService)
+    public SynonymListAllMapsMenuItem(IAcmeSearchSynonymService synonymService)
     {
         _synonymService = synonymService;
     }

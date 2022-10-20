@@ -6,9 +6,9 @@ namespace CreateAndPopulateApp;
 [ConsoleMenuItem("Index", 8)]
 public class ListAllIndexesMenuItem : IConsoleMenuItem
 {
-    private readonly ISearchIndexService _indexService;
+    private readonly IAcmeSearchIndexService _indexService;
 
-    public ListAllIndexesMenuItem(ISearchIndexService indexService)
+    public ListAllIndexesMenuItem(IAcmeSearchIndexService indexService)
     {
         _indexService = indexService;
     }
