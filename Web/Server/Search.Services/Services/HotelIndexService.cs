@@ -23,9 +23,8 @@ public class HotelIndexService : SearchIndexService, IHotelIndexService
         // This is needed for autocomplete.
         string hotelNameFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(SearchHotel.HotelName));
         string categoryFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(SearchHotel.Category));
-
-
-        var suggester = new SearchSuggester("sg", new[] { hotelNameFieldName, categoryFieldName });
+        
+        var suggester = new SearchSuggester(_settings.HotelSuggestorName, new[] { hotelNameFieldName, categoryFieldName });
         searchIndex.Suggesters.Add(suggester);
 
         // This is a scoring profile to boost results if used.  

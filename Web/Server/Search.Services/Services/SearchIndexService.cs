@@ -112,6 +112,35 @@ public class SearchIndexService : ISearchIndexService
         return await searchClient.SearchAsync<T>(searchText, options);
     }
 
+
+
+    /// <summary>Used for autocomplete to get a suggestion.</summary>
+    /// <typeparam name="T">The type of data being returned.</typeparam>
+    /// <param name="indexName">The name of the index</param>
+    /// <param name="searchText">The text to find</param>
+    /// <param name="options">The search options to apply</param>
+    /// <param name="suggesterName">The name of the suggestor</param>
+    public async Task<SuggestResults<T>> SuggestAsync<T>(string indexName, string searchText,string suggesterName, SuggestOptions options)
+    {
+        var searchClient = Client.GetSearchClient(indexName);
+        return await searchClient.SuggestAsync<T>(searchText, suggesterName, options);
+    }
+
+    
+  
+    /// <summary>Searches for documents</summary>
+    /// <typeparam name="T">The type of data being returned.</typeparam>
+    /// <param name="indexName">The name of the index</param>
+    /// <param name="searchText">The text to find</param>
+    /// <param name="options">The search options to apply</param>
+    public async Task<Response<SearchResults<T>>> SearchAsync<T>(string indexName, string searchText, SearchOptions options)
+    {
+        var searchClient = Client.GetSearchClient(indexName);
+        var response = await searchClient.SearchAsync<T>(searchText, options);
+        return response;
+    }
+
+
     /// <summary>Uploads documents to an index.</summary>
     /// <typeparam name="T">The class type that we are uploading.</typeparam>
     /// <param name="indexName">The name of the index</param>

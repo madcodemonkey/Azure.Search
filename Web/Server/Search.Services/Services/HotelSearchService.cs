@@ -9,12 +9,14 @@ public class HotelSearchService : IHotelSearchService
 {
     private readonly SearchServiceSettings _settings;
     private readonly ISearchIndexService _searchIndexService;
+    private readonly IHotelFilterService _hotelFilterService;
 
     /// <summary>Constructor</summary>
-    public HotelSearchService(SearchServiceSettings settings, ISearchIndexService searchIndexService)
+    public HotelSearchService(SearchServiceSettings settings, ISearchIndexService searchIndexService, IHotelFilterService hotelFilterService)
     {
         _settings = settings;
         _searchIndexService = searchIndexService;
+        _hotelFilterService = hotelFilterService;
     }
     
     /// <summary>Returns all hotels</summary>
@@ -28,6 +30,113 @@ public class HotelSearchService : IHotelSearchService
         SearchResults<SearchHotel> searchResults = await _searchIndexService.Search<SearchHotel>(_settings.HotelIndexName, "*", options);
 
         return await ConvertSearchResultsAsync(pageNumber, searchResults);
+    }
+
+    /// <summary>Suggest</summary>
+    /// <param name="request">A request for a suggestion</param>
+    /// <param name="rolesTheUserIsAssigned">Case sensitive list of roles that for search trimming.</param>
+    /// <returns>List of suggestions</returns>
+    public async Task<List<string>> SuggestAsync(AcmeSearchQuery request, string[] rolesTheUserIsAssigned)
+    {
+        //var parameters = new SuggestParameters
+        //{                
+        //    Filter = _filterService.BuildODataFilter(request.Filters, rolesTheUserIsAssigned),
+        //    UseFuzzyMatching = false, // false for performance reasons
+        //    // OrderBy = new List<string> { _suggesterFieldName }, // Field must be sortable and you probably want ranking sort anyway!
+        //    Select = new List<string> { nameof(SearchHotel.HotelName).ConvertToCamelCase() },
+        //    Top = 10
+        //};
+
+        var options = new SuggestOptions
+        {
+            Filter = _hotelFilterService.BuildODataFilter(request.Filters, rolesTheUserIsAssigned),
+            HighlightPreTag = "<b>",
+            HighlightPostTag = "</b>",
+            MinimumCoverage = 33.3,
+            OrderBy = { nameof(SearchHotel.HotelName).ConvertToCamelCase() },
+            //SearchFields = {  },
+            Select = { nameof(SearchHotel.HotelName).ConvertToCamelCase() },
+            Size = 10,
+            UseFuzzyMatching = false // false for performance reasons
+        };
+
+        var suggestions = await _searchIndexService.SuggestAsync<SearchHotel>(_settings.HotelIndexName, request.Query, _settings.HotelSuggestorName, options);
+
+        return suggestions.Results.Select(s => s.Text).ToList();
+    }
+
+    public async Task<AcmeSearchQueryResult<SearchHotel>> SearchAsync(AcmeSearchQuery request, string[] rolesTheUserIsAssigned)
+    {
+        SearchOptions parameters = BuildParameters(request, rolesTheUserIsAssigned);
+
+        var azSearchResult = await _searchIndexService.SearchAsync<SearchHotel>(_settings.HotelIndexName, request.Query, parameters);
+
+        var result = new AcmeSearchQueryResult<SearchHotel>
+        {
+            Query = request.Query,
+            Filters = request.Filters,
+            Facets = _hotelFilterService.ConvertFacets(azSearchResult.Value.Facets, request.Filters),
+            IncludeAllWords = request.IncludeAllWords,
+            IncludeCount = request.IncludeCount,
+            TotalCount = azSearchResult.Value.TotalCount ?? 0,
+            ItemsPerPage = request.ItemsPerPage,
+            PageNumber = request.PageNumber,
+            Docs = await ConvertDocumentsAsync(azSearchResult.Value),
+        };
+               
+        result.Diagnostics.Query = request.Query;
+        result.Diagnostics.Filter = parameters.Filter;
+
+        return result;
+    }
+
+    private async Task<List<SearchHotel>> ConvertDocumentsAsync(SearchResults<SearchHotel> searchResults)
+    {
+        var result = new List<SearchHotel>();
+
+        AsyncPageable<SearchResult<SearchHotel>> resultList = searchResults.GetResultsAsync();
+
+        await foreach (SearchResult<SearchHotel> item in resultList)
+        {
+            result.Add(item.Document);
+            // Console.WriteLine($"Score: {item.Score} - {item.Document}");
+        }
+
+        return result;
+    }
+
+    private SearchOptions BuildParameters(AcmeSearchQuery request, string[] rolesTheUserIsAssigned)
+    {            
+        string filter = _hotelFilterService.BuildODataFilter(request.Filters, rolesTheUserIsAssigned);
+        int skip = (request.PageNumber - 1) * request.ItemsPerPage;
+        
+        var parameters = new SearchOptions()
+        {
+            Filter = filter,
+            IncludeTotalCount = request.IncludeCount,
+            HighlightPreTag = "<b>",
+            HighlightPostTag = "</b>",                
+            Skip = skip < 1 ? (int?)null : skip,
+            Size = request.ItemsPerPage,
+            SearchMode = request.IncludeAllWords ? SearchMode.All : SearchMode.Any
+        };
+
+        List<string> facets = _hotelFilterService.BuildFacetList();
+        facets.ForEach(s => parameters.Facets.Add(s));
+
+        return parameters;
+    }
+        
+    private List<SearchHotel> ConvertDocuments(IList<SearchResult<SearchHotel>> results)
+    {
+        return results.Select(item => ConvertDocument(item)).ToList();
+    }
+
+    private SearchHotel ConvertDocument(SearchResult<SearchHotel> item)
+    {
+        //item.Document.Score = item.Score;
+        //item.Document.Roles = null; // clear the roles!  Don't send them back to the user!
+        return item.Document;
     }
 
     /// <summary>Returns all hotels</summary>
