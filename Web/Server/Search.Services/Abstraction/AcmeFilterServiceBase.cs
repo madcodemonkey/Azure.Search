@@ -1,36 +1,41 @@
 ﻿using Azure.Search.Documents.Models;
 using Search.Model;
 using System.Text;
+using Azure.Search.Documents;
 
 namespace Search.Services;
 
 public abstract class AcmeFilterServiceBase : IAcmeFilterService
 {
-    private const int MaximNumberOfFacets = 20;
     private readonly List<IAcmeSearchFilter> _filterList;
-    private readonly IAcmeSearchFilter _securityTrimmingFilter;
-   
-    public AcmeFilterServiceBase()
+    private readonly IAcmeSearchFilter? _securityTrimmingFilter;
+
+    /// <summary>Constructor</summary>
+    protected AcmeFilterServiceBase()
     {
         _filterList = RegisterFilters();
         _securityTrimmingFilter = _filterList.FirstOrDefault(w => w.IsSecurityFilter);
     }
+    protected virtual int MaximNumberOfFacets => 20;
 
-    public IAcmeSearchFilter FindById(int id)
+    /// <summary>Finds a filter by the id it was given when it was created.</summary>
+    /// <param name="id">The id to find</param>
+    public IAcmeSearchFilter? FindById(int id)
     {
         return _filterList.FirstOrDefault(w => w.Id == id);
     }
-    public IAcmeSearchFilter FindByFieldName(string fieldName)
+
+    /// <summary>Finds a filter by its name it was given when it was created.</summary>
+    /// <param name="fieldName">The field name to find.</param>
+    public IAcmeSearchFilter? FindByFieldName(string fieldName)
     {
         return _filterList.FirstOrDefault(w => w.FieldName == fieldName);
     }
-
-    /// <summary>Builds a filter list for Azure Search</summary>
-    /// <returns>Facet list</returns>
-    public List<string> BuildFacetList()
+    
+    /// <summary>Adds facets to your SearchOptions instance.</summary>
+    /// <param name="options">The options that need facets</param>
+    public void AddFacets(SearchOptions options)
     {
-        var results = new List<string>();
-
         foreach (var field in _filterList)
         {
             if (field.IsFacetable == false)
@@ -39,10 +44,8 @@ public abstract class AcmeFilterServiceBase : IAcmeFilterService
             // The default is 10, but you can increase or decrease this value using the
             // count parameter on the facet attribute. 
             // See 5th example here https://docs.microsoft.com/en-us/rest/api/searchservice/search-documents#bkmk_examples
-            results.Add($"{field.FieldName},count:{MaximNumberOfFacets}");
+            options.Facets.Add($"{field.FieldName},count:{MaximNumberOfFacets}");
         }
-
-        return results.Count == 0 ? null : results;
     }
 
     /// <summary>Builds and OData filter for Azure Search based on user specified filters and the roles that user has been assigned.</summary>
@@ -98,13 +101,13 @@ public abstract class AcmeFilterServiceBase : IAcmeFilterService
     /// <param name="facets">Facets from an Azure Search call</param>
     /// <param name="filters">Filters that we are currently using</param>
     /// <returns></returns>
-    public List<AcmeSearchFacet> ConvertFacets(IDictionary<string, IList<FacetResult>> facets, List<AcmeSearchFilterItem> filters)
+    public List<AcmeSearchFacet> ConvertFacets(IDictionary<string, IList<FacetResult>>? facets, List<AcmeSearchFilterItem> filters)
     {
-        if (facets == null)
-            return null;
-
         var result = new List<AcmeSearchFacet>();
 
+        if (facets == null)
+            return result;
+        
         foreach (KeyValuePair<string, IList<FacetResult>> facet in facets)
         {
             var oneFacet = new AcmeSearchFacet();
@@ -142,5 +145,4 @@ public abstract class AcmeFilterServiceBase : IAcmeFilterService
     /// query text.  This avoids injection attacks where the client can see anything in the
     /// index.  If they could build them, they could avoid security trimming.</summary>
     protected abstract List<IAcmeSearchFilter> RegisterFilters();
-   
 }

@@ -1,13 +1,14 @@
-﻿using Azure.Search.Documents.Models;
+﻿using Azure.Search.Documents;
+using Azure.Search.Documents.Models;
 using Search.Model;
 
 namespace Search.Services;
 
 public interface IAcmeFilterService
 {
-    /// <summary>Builds a filter list for Azure Search</summary>
-    /// <returns>Facet list</returns>
-    List<string> BuildFacetList();
+    /// <summary>Adds facets to your SearchOptions instance.</summary>
+    /// <param name="options">The options that need facets</param>
+    void AddFacets(SearchOptions options);
         
     /// <summary>Builds and OData filter based on user specified filters and the roles that user has been assigned.</summary>
     /// <param name="filters">Filters to use</param>
@@ -23,6 +24,11 @@ public interface IAcmeFilterService
     /// <returns></returns>
     List<AcmeSearchFacet> ConvertFacets(IDictionary<string, IList<FacetResult>> facets, List<AcmeSearchFilterItem> filters);
         
-    IAcmeSearchFilter FindByFieldName(string fieldName);
-    IAcmeSearchFilter FindById(int id);
+    /// <summary>Finds a filter by its name it was given when it was created.</summary>
+    /// <param name="fieldName">The field name to find.</param>
+    IAcmeSearchFilter? FindByFieldName(string fieldName);
+
+    /// <summary>Finds a filter by the id it was given when it was created.</summary>
+    /// <param name="id">The id to find</param>
+    IAcmeSearchFilter? FindById(int id);
 }

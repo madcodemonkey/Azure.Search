@@ -9,27 +9,20 @@ namespace Search.Controllers;
 public class HotelSearchController : ControllerBase
 {
     private readonly IHotelSearchService _hotelSearchService;
-    
+    private readonly IHotelSuggestorService _hotelSuggestorService;
+
     /// <summary>Constructor</summary>
-    public HotelSearchController(IHotelSearchService hotelSearchService)
+    public HotelSearchController(IHotelSearchService hotelSearchService, IHotelSuggestorService hotelSuggestorService)
     {
         _hotelSearchService = hotelSearchService;
+        _hotelSuggestorService = hotelSuggestorService;
     }
     
-    [HttpGet("[action]")]
-    public async Task<IActionResult> ShowAll(int pageNumber = 1, int pageSize = 30)
-    {
-        var response = await _hotelSearchService.GetAllHotelsAsync(pageSize, pageNumber);
-        return Ok(response);
-    }
-
-    // TODO: Flush out remaining queries and figure out pattern to them.  Potentially pull in filter classes from other project.
-     
     
     [HttpPost("Suggest/")] 
-    public async Task<List<string>> Suggest(AcmeSearchQuery query)
+    public async Task<List<HotelSuggestorResult>> Suggest(AcmeSearchQuery query)
     {
-        var result = await _hotelSearchService.SuggestAsync(query, GetRoles());
+        var result = await _hotelSuggestorService.SuggestAsync(query, GetRoles());
 
         return result;
     }
