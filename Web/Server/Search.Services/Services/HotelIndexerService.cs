@@ -30,7 +30,7 @@ public class HotelIndexerService : AcmeSearchIndexerService, IHotelIndexerServic
         // Common optional properties include a schedule, parameters, and field mappings
         // The field mappings below are redundant due to how the SearchHotel class is defined, but 
         // we included them anyway to show the syntax 
-        var indexer = new SearchIndexer(Settings.HotelIndexerName, Settings.HotelDataSourceName, Settings.HotelIndexName)
+        var indexer = new SearchIndexer(Settings.Hotel.IndexerName, Settings.Hotel.DataSourceName, Settings.Hotel.IndexName)
         {
             Description = "Hotel data indexer",
             Schedule = schedule,
@@ -51,13 +51,13 @@ public class HotelIndexerService : AcmeSearchIndexerService, IHotelIndexerServic
     /// <summary>Deletes the hotel indexer</summary>
     public async Task<bool> DeleteAsync()
     {
-        return await DeleteAsync(Settings.HotelIndexerName);
+        return await DeleteAsync(Settings.Hotel.IndexerName);
     }
 
     /// <summary>Runs the hotel indexer now.</summary>
     public async Task RunAsync()
     {
-        await ClientIndexer.RunIndexerAsync(Settings.HotelIndexerName);
+        await ClientIndexer.RunIndexerAsync(Settings.Hotel.IndexerName);
     }
 
 }

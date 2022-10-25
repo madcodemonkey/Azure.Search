@@ -11,8 +11,11 @@ namespace Search.Web.Extensions
             var settings = new SearchServiceSettings();
             config.GetSection("SearchService").Bind(settings);
 
-            services.AddSearchServices(settings);
-            services.AddAcmeRepositories(options => config.GetSection("AcmeDatabaseOptions").Bind(options));
+            var databaseOptions = new AcmeDatabaseOptions();
+            config.GetSection("AcmeDatabaseOptions").Bind(databaseOptions);
+
+            services.AddSearchServices(settings, databaseOptions);
+            services.AddAcmeRepositories(databaseOptions);
 
             return services;
 

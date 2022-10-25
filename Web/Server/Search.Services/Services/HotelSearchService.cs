@@ -15,7 +15,7 @@ public class HotelSearchService : AcmeSearchServiceBase<SearchHotel, SearchHotel
         _settings = settings;
     }
 
-    protected override string IndexName => _settings.HotelIndexName;
+    protected override string IndexName => _settings.Hotel.IndexName;
 
 
     /// <summary>Converts a item (TInputClass) that was found by calling the Azure Search API into

@@ -7,16 +7,15 @@ namespace Search.Repositories;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAcmeRepositories(this IServiceCollection services, Action<AcmeDatabaseOptions> databaseOptions)
+    public static IServiceCollection AddAcmeRepositories(this IServiceCollection services, AcmeDatabaseOptions databaseOptions)
     {
 
-        services.Configure(databaseOptions);
+        services.AddSingleton(databaseOptions);
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IValidateOptions<AcmeDatabaseOptions>, ValidateAcmeDatabaseOptions>());
 
         services.AddDbContext<AcmeContext>((serviceProvider, dbContextOptions) =>
         {
-            var dbOptions = serviceProvider.GetRequiredService<IOptionsSnapshot<AcmeDatabaseOptions>>().Value;
-            dbContextOptions.UseSqlServer(dbOptions.ConnectionString, sqlServerContextOptions =>
+            dbContextOptions.UseSqlServer(databaseOptions.ConnectionString, sqlServerContextOptions =>
             {
                 sqlServerContextOptions.EnableRetryOnFailure();
                 sqlServerContextOptions.UseNetTopologySuite();

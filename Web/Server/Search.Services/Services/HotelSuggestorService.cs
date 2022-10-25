@@ -15,8 +15,8 @@ public class HotelSuggestorService : AcmeSuggestorServiceBase<HotelSuggestorResu
         _settings = settings;
     }
 
-    protected override string IndexName => _settings.HotelIndexName;
-    protected override string SuggestorName => _settings.HotelSuggestorName;
+    protected override string IndexName => _settings.Hotel.IndexName;
+    protected override string SuggestorName => _settings.Hotel.SuggestorName;
 
 
     /// <summary>Converts the results of calling the Azure Search API SuggestAsync method to a custom result.</summary>

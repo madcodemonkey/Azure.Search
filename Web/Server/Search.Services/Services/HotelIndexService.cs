@@ -18,13 +18,13 @@ public class HotelIndexService : AcmeSearchIndexService, IHotelIndexService
     {
         FieldBuilder fieldBuilder = new FieldBuilder();
         var searchFields = fieldBuilder.Build(typeof(SearchHotel));
-        var searchIndex = new SearchIndex(_settings.HotelIndexName, searchFields);
+        var searchIndex = new SearchIndex(_settings.Hotel.IndexName, searchFields);
 
         // This is needed for autocomplete.
         string hotelNameFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(SearchHotel.HotelName));
         string categoryFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(SearchHotel.Category));
         
-        var suggester = new SearchSuggester(_settings.HotelSuggestorName, new[] { hotelNameFieldName, categoryFieldName });
+        var suggester = new SearchSuggester(_settings.Hotel.SuggestorName, new[] { hotelNameFieldName, categoryFieldName });
         searchIndex.Suggesters.Add(suggester);
 
         // This is a scoring profile to boost results if used.  
@@ -45,6 +45,6 @@ public class HotelIndexService : AcmeSearchIndexService, IHotelIndexService
     /// <summary>Deletes the hotel index.</summary>
     public async Task<bool> DeleteAsync()
     {
-        return await DeleteAsync(_settings.HotelIndexName);
+        return await DeleteAsync(_settings.Hotel.IndexName);
     }
 }

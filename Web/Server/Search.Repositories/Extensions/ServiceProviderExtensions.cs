@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Search.Repositories;
 
@@ -8,11 +7,11 @@ public static class ServiceProviderExtensions
 {
     public static async Task ApplyDatabaseMigrationsAsync(this IServiceProvider serviceProvider)
     {
-        var connectionsConfig = serviceProvider.GetRequiredService<IOptions<AcmeDatabaseOptions>>().Value;
+        var databaseOptions = serviceProvider.GetRequiredService<AcmeDatabaseOptions>();
 
         // Should the migration be run?
-        if (connectionsConfig?.RunMigrationsOnStartup == false ||
-            string.IsNullOrWhiteSpace(connectionsConfig?.ConnectionString))
+        if (databaseOptions?.RunMigrationsOnStartup == false ||
+            string.IsNullOrWhiteSpace(databaseOptions?.ConnectionString))
         {
             return;
         }
