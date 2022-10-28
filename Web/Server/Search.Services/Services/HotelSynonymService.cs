@@ -1,4 +1,5 @@
 ﻿using Azure.Search.Documents.Indexes.Models;
+using Search.CogServices;
 using Search.Model;
 
 namespace Search.Services;
@@ -48,8 +49,8 @@ public class HotelSynonymService : AcmeSearchSynonymService, IHotelSynonymServic
                 // Get the index
                 SearchIndex index = await IndexService.Client.GetIndexAsync(_searchServiceSettings.Hotel.IndexName);
 
-                AddSynonymToField(index, nameof(SearchHotel.Category).ConvertToCamelCase(), _searchServiceSettings.Synonyms.HotelMapName);
-                AddSynonymToField(index, nameof(SearchHotel.Tags).ConvertToCamelCase(), _searchServiceSettings.Synonyms.HotelMapName);
+                AddSynonymToField(index, nameof(HotelDocument.Category).ConvertToCamelCase(), _searchServiceSettings.Synonyms.HotelMapName);
+                AddSynonymToField(index, nameof(HotelDocument.Tags).ConvertToCamelCase(), _searchServiceSettings.Synonyms.HotelMapName);
 
                 // The IfNotChanged condition ensures that the index is updated only if the ETags match.
                 await IndexService.Client.CreateOrUpdateIndexAsync(index);

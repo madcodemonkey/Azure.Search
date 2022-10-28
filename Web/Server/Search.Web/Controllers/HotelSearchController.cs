@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Search.CogServices;
 using Search.Model;
 using Search.Services;
 
@@ -19,7 +20,7 @@ public class HotelSearchController : ControllerBase
     }
     
     
-    [HttpPost("Suggest/")] 
+    [HttpPost("Suggest")] 
     public async Task<List<HotelSuggestorResult>> Suggest(AcmeSearchQuery query)
     {
         var result = await _hotelSuggestorService.SuggestAsync(query, GetRoles());
@@ -27,8 +28,8 @@ public class HotelSearchController : ControllerBase
         return result;
     }
 
-    [HttpPost("Search/")] 
-    public async Task<AcmeSearchQueryResult<SearchHotel>> Search(AcmeSearchQuery query)
+    [HttpPost("Search")] 
+    public async Task<AcmeSearchQueryResult<HotelDocument>> Search(AcmeSearchQuery query)
     {
       
         // Reference to paging: https://docs.microsoft.com/en-us/azure/search/tutorial-csharp-paging#extend-your-app-with-numbered-paging

@@ -17,10 +17,5 @@ public static class ServiceCollectionExtensions
         sc.AddTransient<IHotelSearchService, HotelSearchService>();
         sc.AddTransient<IHotelSuggestorService, HotelSuggestorService>();
         sc.AddTransient<IHotelSynonymService, HotelSynonymService>();
-        
-        sc.AddScoped<IAcmeSearchDataSourceService, AcmeSearchDataSourceService>();
-        sc.AddScoped<IAcmeSearchIndexService, AcmeSearchIndexService>();
-        sc.AddScoped<IAcmeSearchIndexerService, AcmeSearchIndexerService>();
-        sc.AddTransient<IAcmeSearchSynonymService, AcmeSearchSynonymService>();
     }
 }

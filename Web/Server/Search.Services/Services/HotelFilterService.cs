@@ -1,4 +1,4 @@
-﻿using Search.Model;
+﻿using Search.CogServices;
 
 namespace Search.Services;
 
@@ -15,15 +15,15 @@ public class HotelFilterService : AcmeFilterServiceBase, IHotelFilterService
         int id = 1;
 
         filterList.Add(new AcmeSearchFilterForStringField(id++, "hotelId", "Id", false, false));
-        filterList.Add(new AcmeSearchFilterForDoubleField(id++, "baseRate", "Base Rate", true, false));
-        filterList.Add(new AcmeSearchFilterForStringField(id++, "description", "Description", false, false)); 
+        filterList.Add(new AcmeSearchFilterForNumberField(id++, "baseRate", "Base Rate", true, false));
+        filterList.Add(new AcmeSearchFilterForStringField(id++, "description", "Description", false, false));
         filterList.Add(new AcmeSearchFilterForStringField(id++, "hotelName", "Hotel Name", false, false));
         filterList.Add(new AcmeSearchFilterForStringField(id++, "category", "Category", true, false));
         filterList.Add(new AcmeSearchFilterForStringField(id++, "tags", "Tags", true, false));
         filterList.Add(new AcmeSearchFilterForBooleanField(id++, "parkingIncluded", "Parking Included", true, false));
         filterList.Add(new AcmeSearchFilterForBooleanField(id++, "smokingAllowed", "Smoking Allowed", true, false));
-        filterList.Add(new AcmeSearchFilterForStringField(id++, "rating", "Rating", true, false)); 
-        
+        filterList.Add(new AcmeSearchFilterForStringField(id++, "rating", "Rating", true, false));
+
         filterList.Add(new AcmeSearchFilterForStringCollection(id++, "Roles", "roles", false, true)); // Security Trimming field
 
         return filterList;

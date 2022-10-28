@@ -1,4 +1,5 @@
-﻿using Search.Model;
+﻿using Search.CogServices;
+using Search.Model;
 
 namespace Search.Services;
 

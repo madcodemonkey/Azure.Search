@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Search.Model", "Search.Mode
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Search.Services", "Search.Services\Search.Services.csproj", "{40CEA9E4-537F-4E38-A660-ECB1F0ADD8DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Search.Repositories", "Search.Repositories\Search.Repositories.csproj", "{468727BA-30FC-4112-8FB8-675AA5D51078}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Search.Repositories", "Search.Repositories\Search.Repositories.csproj", "{468727BA-30FC-4112-8FB8-675AA5D51078}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Search.CogServices", "Search.CogServices\Search.CogServices.csproj", "{C3C56D00-F3DA-49D6-8912-1C31AB4A3947}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{468727BA-30FC-4112-8FB8-675AA5D51078}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{468727BA-30FC-4112-8FB8-675AA5D51078}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{468727BA-30FC-4112-8FB8-675AA5D51078}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3C56D00-F3DA-49D6-8912-1C31AB4A3947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3C56D00-F3DA-49D6-8912-1C31AB4A3947}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3C56D00-F3DA-49D6-8912-1C31AB4A3947}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3C56D00-F3DA-49D6-8912-1C31AB4A3947}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

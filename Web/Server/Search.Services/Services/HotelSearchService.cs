@@ -1,9 +1,10 @@
 ﻿using Azure.Search.Documents.Models;
+using Search.CogServices;
 using Search.Model;
 
 namespace Search.Services;
 
-public class HotelSearchService : AcmeSearchServiceBase<SearchHotel, SearchHotel>, IHotelSearchService
+public class HotelSearchService : AcmeSearchServiceBase<HotelDocument, HotelDocument>, IHotelSearchService
 {
     private readonly SearchServiceSettings _settings;
 
@@ -21,7 +22,7 @@ public class HotelSearchService : AcmeSearchServiceBase<SearchHotel, SearchHotel
     /// <summary>Converts a item (TInputClass) that was found by calling the Azure Search API into
     /// a desired return class (TResultClass).</summary>
     /// <param name="azSearchDocument">The item to convert</param>
-    protected override SearchHotel ConvertOneDocument(SearchResult<SearchHotel> azSearchDocument)
+    protected override HotelDocument ConvertOneDocument(SearchResult<HotelDocument> azSearchDocument)
     {
         return azSearchDocument.Document;
     }

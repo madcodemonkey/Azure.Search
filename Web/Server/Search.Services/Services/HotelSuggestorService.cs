@@ -1,9 +1,11 @@
-﻿using Azure.Search.Documents.Models;
+﻿using Azure.Search.Documents;
+using Azure.Search.Documents.Models;
+using Search.CogServices;
 using Search.Model;
 
 namespace Search.Services;
 
-public class HotelSuggestorService : AcmeSuggestorServiceBase<HotelSuggestorResult, SearchHotel>, IHotelSuggestorService
+public class HotelSuggestorService : AcmeSuggestorServiceBase<HotelSuggestorResult, HotelDocument>, IHotelSuggestorService
 {
     private readonly SearchServiceSettings _settings;
 
@@ -21,11 +23,11 @@ public class HotelSuggestorService : AcmeSuggestorServiceBase<HotelSuggestorResu
 
     /// <summary>Converts the results of calling the Azure Search API SuggestAsync method to a custom result.</summary>
     /// <param name="azSuggestResults">The Azure Search API methods return result</param>
-    protected override List<HotelSuggestorResult> ConvertResults(SuggestResults<SearchHotel> azSuggestResults)
+    protected override List<HotelSuggestorResult> ConvertResults(SuggestResults<HotelDocument> azSuggestResults)
     {
         var result = new List<HotelSuggestorResult>();
 
-        foreach (SearchSuggestion<SearchHotel>? azSuggestion in azSuggestResults.Results)
+        foreach (SearchSuggestion<HotelDocument>? azSuggestion in azSuggestResults.Results)
         {
             result.Add(new HotelSuggestorResult
             {
@@ -44,8 +46,21 @@ public class HotelSuggestorService : AcmeSuggestorServiceBase<HotelSuggestorResu
     {
         return new List<string>
         {
-            nameof(SearchHotel.HotelName).ConvertToCamelCase(),
-            nameof(SearchHotel.Category).ConvertToCamelCase()
+            nameof(HotelDocument.HotelName).ConvertToCamelCase(),
+            nameof(HotelDocument.Category).ConvertToCamelCase()
         };
+    }
+
+    /// <summary>Creates a set of default options you can then override if necessary.</summary>
+    /// <param name="request">The request from the user.</param>
+    /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
+    protected override SuggestOptions CreateDefaultOptions(AcmeSearchQuery request, string[] rolesTheUserIsAssigned)
+    {
+        var result = base.CreateDefaultOptions(request, rolesTheUserIsAssigned);
+        
+        result.Select.Clear();
+        result.Select.Add(nameof(HotelDocument.HotelName).ConvertToCamelCase());
+
+        return result;
     }
 }

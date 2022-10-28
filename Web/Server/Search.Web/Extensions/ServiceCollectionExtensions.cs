@@ -1,4 +1,5 @@
-﻿using Search.Repositories;
+﻿using Search.CogServices;
+using Search.Repositories;
 using Search.Services;
 
 namespace Search.Web.Extensions
@@ -14,6 +15,7 @@ namespace Search.Web.Extensions
             var databaseOptions = new AcmeDatabaseOptions();
             config.GetSection("AcmeDatabaseOptions").Bind(databaseOptions);
 
+            services.AddCogServices(settings);
             services.AddSearchServices(settings, databaseOptions);
             services.AddAcmeRepositories(databaseOptions);
 

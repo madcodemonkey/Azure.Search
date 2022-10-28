@@ -1,4 +1,6 @@
-﻿namespace Search.Services;
+﻿using Search.CogServices;
+
+namespace Search.Services;
 
 public interface IHotelDataSourceService : IAcmeSearchDataSourceService
 {

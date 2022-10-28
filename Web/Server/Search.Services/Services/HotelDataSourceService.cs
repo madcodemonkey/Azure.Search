@@ -1,4 +1,5 @@
-﻿using Search.Repositories;
+﻿using Search.CogServices;
+using Search.Repositories;
 
 namespace Search.Services;
 
