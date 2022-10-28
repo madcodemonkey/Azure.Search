@@ -22,7 +22,7 @@ public abstract class AcmeSuggestorServiceBase<TResultClass, TIndexClass> where 
     /// <param name="request">A request for a suggestion</param>
     /// <param name="rolesTheUserIsAssigned">Case sensitive list of roles that for search trimming.</param>
     /// <returns>List of suggestions</returns>
-    public virtual async Task<List<TResultClass>> SuggestAsync(AcmeSearchQuery request, string[] rolesTheUserIsAssigned)
+    public virtual async Task<List<TResultClass>> SuggestAsync(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
     {
 
         var options = CreateDefaultOptions(request, rolesTheUserIsAssigned);
@@ -39,7 +39,7 @@ public abstract class AcmeSuggestorServiceBase<TResultClass, TIndexClass> where 
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
-    protected virtual SuggestOptions CreateDefaultOptions(AcmeSearchQuery request, string[] rolesTheUserIsAssigned)
+    protected virtual SuggestOptions CreateDefaultOptions(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
     {
         var options = new SuggestOptions
         {

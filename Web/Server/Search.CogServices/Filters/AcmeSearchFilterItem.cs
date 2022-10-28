@@ -6,5 +6,5 @@ public class AcmeSearchFilterItem
 
     public AcmeSearchFilterOperatorEnum Operator { get; set; } = AcmeSearchFilterOperatorEnum.Equal;
 
-    public string Value { get; set; }
+    public List<string> Values { get; set; }
 }

@@ -13,7 +13,7 @@ public interface IAcmeFilterService
     /// <param name="filters">Filters to use</param>
     /// <param name="rolesTheUserIsAssigned">Roles assigned to the current user.</param>
     /// <returns>An OData Filter</returns>
-    string BuildODataFilter(List<AcmeSearchFilterItem> filters, string[] rolesTheUserIsAssigned);
+    string BuildODataFilter(List<AcmeSearchFilterItem> filters, List<string> rolesTheUserIsAssigned);
 
     /// <summary>Avoiding a leaky abstraction by converting Azure Search facets to our format.
     /// Given a list of facets from Azure Search compare them to the filter list we are using and 

@@ -54,7 +54,7 @@ public class HotelSuggestorService : AcmeSuggestorServiceBase<HotelSuggestorResu
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
-    protected override SuggestOptions CreateDefaultOptions(AcmeSearchQuery request, string[] rolesTheUserIsAssigned)
+    protected override SuggestOptions CreateDefaultOptions(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
     {
         var result = base.CreateDefaultOptions(request, rolesTheUserIsAssigned);
         

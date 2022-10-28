@@ -17,15 +17,15 @@ public abstract class AcmeSearchFilterBase : IAcmeSearchFilter
     public bool IsFacetable { get; private set; }
     public bool IsSecurityFilter { get; private set; }
 
-    public string CreateFilter(AcmeSearchFilterOperatorEnum searchOperator, params string[] values)
+    public string CreateFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string> values)
     {
-        if (values == null || values.Length == 0)
+        if (values == null || values.Count == 0)
             throw new ArgumentException("You must specify one or more values for a filter!");
         ValidateFilters(values);
         return GetFilter(searchOperator, values);
     }
 
-    protected abstract string GetFilter(AcmeSearchFilterOperatorEnum searchOperator, params string[] values);
+    protected abstract string GetFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string> values);
 
     protected string OperatorToString(AcmeSearchFilterOperatorEnum searchOperator)
     {
@@ -49,10 +49,12 @@ public abstract class AcmeSearchFilterBase : IAcmeSearchFilter
         }
     }
 
-    private void ValidateFilters(string[] values)
+    private void ValidateFilters(List<string> values)
     {
-        for (int i = 0; i < values.Length; i++)
+        for (int i = 0; i < values.Count; i++)
         {
+            if (values[i] == null) continue;
+
             if (values[i].IndexOf('"') != -1)
                 throw new UnauthorizedAccessException("A filter contains in illegal character (double quote)");
             if (values[i].IndexOf("'") != -1)

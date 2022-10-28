@@ -11,9 +11,9 @@ public class AcmeSearchFilterForStringCollection : AcmeSearchFilterBase
     /// <summary>Get Filter</summary>
     /// <param name="searchOperator">Currently only handles equal.  There are other options</param>
     /// <param name="values"></param>
-    protected override string GetFilter(AcmeSearchFilterOperatorEnum searchOperator, params string[] values)
+    protected override string GetFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string> values)
     {
-        if (values == null || values.Length == 0)
+        if (values == null || values.Count == 0)
             return string.Empty;
 
         if (searchOperator != AcmeSearchFilterOperatorEnum.Equal)

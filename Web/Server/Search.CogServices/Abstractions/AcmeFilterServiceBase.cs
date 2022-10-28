@@ -51,7 +51,7 @@ public abstract class AcmeFilterServiceBase : IAcmeFilterService
     /// <param name="filters">Filters to use</param>
     /// <param name="rolesTheUserIsAssigned">Roles assigned to the current user.</param>
     /// <returns>An OData Filter</returns>
-    public string BuildODataFilter(List<AcmeSearchFilterItem> filters, string[] rolesTheUserIsAssigned)
+    public string BuildODataFilter(List<AcmeSearchFilterItem> filters, List<string> rolesTheUserIsAssigned)
     {
         // All Filters are case SENSITIVE
         // All Filters are case SENSITIVE
@@ -76,7 +76,7 @@ public abstract class AcmeFilterServiceBase : IAcmeFilterService
             if (searchFilter.IsSecurityFilter)
                 throw new ArgumentException("User is trying to specify a security trimming filter which is illegal!");
 
-            sbFilter.Append(searchFilter.CreateFilter(filter.Operator, filter.Value));
+            sbFilter.Append(searchFilter.CreateFilter(filter.Operator, filter.Values));
         }
 
         // Warning!! If the object of T that you're passing into the Azure Suggest or Azure Search methods does not have the Roles property on it, 
@@ -128,7 +128,7 @@ public abstract class AcmeFilterServiceBase : IAcmeFilterService
                 {
                     Text = text,
                     Count = item.Count ?? 0,
-                    Selected = filters.Any(w => string.Compare(w.Value, text, true) == 0)
+                    Selected = filters.Any(w => string.Compare(w.Values[0], text, true) == 0)
 
                 });
             }

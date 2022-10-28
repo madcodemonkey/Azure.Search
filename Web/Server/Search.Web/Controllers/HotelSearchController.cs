@@ -40,9 +40,9 @@ public class HotelSearchController : ControllerBase
     }
 
     
-    private string[] GetRoles()
+    private List<string> GetRoles()
     {
-        return new string[] { "admin" };
+        return new List<string>() { "admin" };
         //ClaimsPrincipal currentUser = this.User;
         //return currentUser.FindAll(ClaimTypes.Role).Select(s => s.Value.ToLower()).ToArray();
     }

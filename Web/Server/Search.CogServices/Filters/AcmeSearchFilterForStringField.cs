@@ -6,8 +6,10 @@ public class AcmeSearchFilterForStringField : AcmeSearchFilterBase
         base(id, displayName, fieldName, isFacetable, isSecurityFilter)
     { }
 
-    protected override string GetFilter(AcmeSearchFilterOperatorEnum searchOperator, params string[] values)
+    protected override string GetFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string> values)
     {
+        // TODO: Null is allowed for values but not taken into account here!
+
         return $"{this.FieldName} {OperatorToString(searchOperator)} '{values[0]}'";
     }
 }
