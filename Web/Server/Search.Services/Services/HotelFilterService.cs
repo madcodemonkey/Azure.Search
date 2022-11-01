@@ -24,7 +24,7 @@ public class HotelFilterService : AcmeFilterServiceBase, IHotelFilterService
         filterList.Add(new AcmeSearchFilterForBooleanField(id++, "smokingAllowed", "Smoking Allowed", true, false));
         filterList.Add(new AcmeSearchFilterForStringField(id++, "rating", "Rating", true, false));
 
-        filterList.Add(new AcmeSearchFilterForStringCollection(id++, "Roles", "roles", false, true)); // Security Trimming field
+        filterList.Add(new AcmeSearchFilterForStringCollection(id++, "roles", "Roles", false, true)); // Security Trimming field
 
         return filterList;
     }

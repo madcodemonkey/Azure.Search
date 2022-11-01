@@ -22,5 +22,5 @@ public interface IAcmeSearchFilter
     /// <param name="searchOperator">The operator (eq, ne, gt, lt, ge, le)</param>
     /// <param name="values">string values for the filter.  Remember that this is an OData filter and it IS CASE SENSTIVE!</param>
     /// <returns>OData filter string</returns>
-    string CreateFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string> values);
+    string CreateFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string?> values);
 }

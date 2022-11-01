@@ -4,14 +4,17 @@ namespace Search.CogServices;
 
 public class AcmeSearchFilterForStringCollection : AcmeSearchFilterBase
 {
-    public AcmeSearchFilterForStringCollection(int id, string displayName, string fieldName, bool isFacetable, bool isSecurityFilter)
+    /// <summary>Constructor</summary>
+    public AcmeSearchFilterForStringCollection(int id, string fieldName, string displayName, bool isFacetable, bool isSecurityFilter)
         : base(id, displayName, fieldName, isFacetable, isSecurityFilter)
     {
     }
-    /// <summary>Get Filter</summary>
-    /// <param name="searchOperator">Currently only handles equal.  There are other options</param>
-    /// <param name="values"></param>
-    protected override string GetFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string> values)
+
+    /// <summary>This protected method builds the filter for the string collection type.</summary>
+    /// <param name="searchOperator">The operator to use while building the filter.</param>
+    /// <param name="values">The values to use while building the filter.</param>
+    /// <returns>An OData filer</returns>
+    protected override string GetFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string?> values)
     {
         if (values == null || values.Count == 0)
             return string.Empty;
@@ -31,8 +34,11 @@ public class AcmeSearchFilterForStringCollection : AcmeSearchFilterBase
 
         // Length of string is greater than zero now, so need a way of tracking when a comma is needed.
         bool commaNeeded = false;
-        foreach (string item in values)
+        foreach (string? item in values)
         {
+            if (item == null) 
+                continue;
+
             if (commaNeeded)
                 sb.Append(",");
             sb.Append($"{item}");

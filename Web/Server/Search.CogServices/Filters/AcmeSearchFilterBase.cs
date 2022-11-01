@@ -2,7 +2,8 @@
 
 public abstract class AcmeSearchFilterBase : IAcmeSearchFilter
 {
-    public AcmeSearchFilterBase(int id, string displayName, string fieldName, bool isFacetable, bool isSecurityFilter)
+    /// <summary>Constructor</summary>
+    protected AcmeSearchFilterBase(int id, string displayName, string fieldName, bool isFacetable, bool isSecurityFilter)
     {
         Id = id;
         DisplayName = displayName;
@@ -17,7 +18,11 @@ public abstract class AcmeSearchFilterBase : IAcmeSearchFilter
     public bool IsFacetable { get; private set; }
     public bool IsSecurityFilter { get; private set; }
 
-    public string CreateFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string> values)
+    /// <summary>Creates an OData filter string.</summary>
+    /// <param name="searchOperator">The operator to use while building the filter.</param>
+    /// <param name="values">The values to use while building the filter.</param>
+    /// <returns>An OData filer</returns>
+    public string CreateFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string?> values)
     {
         if (values == null || values.Count == 0)
             throw new ArgumentException("You must specify one or more values for a filter!");
@@ -25,7 +30,11 @@ public abstract class AcmeSearchFilterBase : IAcmeSearchFilter
         return GetFilter(searchOperator, values);
     }
 
-    protected abstract string GetFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string> values);
+    /// <summary>The method that is overriden by the superclass that will be specific to the type specified by the class name.</summary>
+    /// <param name="searchOperator">The operator to use while building the filter.</param>
+    /// <param name="values">The values to use while building the filter.</param>
+    /// <returns>An OData filer</returns>
+    protected abstract string GetFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string?> values);
 
     protected string OperatorToString(AcmeSearchFilterOperatorEnum searchOperator)
     {
@@ -49,15 +58,15 @@ public abstract class AcmeSearchFilterBase : IAcmeSearchFilter
         }
     }
 
-    private void ValidateFilters(List<string> values)
+    private void ValidateFilters(List<string?> values)
     {
         for (int i = 0; i < values.Count; i++)
         {
             if (values[i] == null) continue;
 
-            if (values[i].IndexOf('"') != -1)
+            if (values[i]?.IndexOf('"') != -1)
                 throw new UnauthorizedAccessException("A filter contains in illegal character (double quote)");
-            if (values[i].IndexOf("'") != -1)
+            if (values[i]?.IndexOf("'") != -1)
                 throw new UnauthorizedAccessException("A filter contains in illegal character (single quote)");
         }
     }

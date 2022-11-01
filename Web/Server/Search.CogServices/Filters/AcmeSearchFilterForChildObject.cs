@@ -5,7 +5,8 @@ public class AcmeSearchFilterForChildObject : AcmeSearchFilterBase
     private readonly string _parentFieldName;
     private readonly string _childFieldName;
 
-    public AcmeSearchFilterForChildObject(int id, string displayName, string fieldName, bool isFacetable, bool isSecurityFilter)
+    /// <summary>Constructor</summary>
+    public AcmeSearchFilterForChildObject(int id, string fieldName, string displayName, bool isFacetable, bool isSecurityFilter)
         : base(id, displayName, fieldName, isFacetable, isSecurityFilter)
     {
         string[] fields = fieldName.Split('/');
@@ -15,7 +16,11 @@ public class AcmeSearchFilterForChildObject : AcmeSearchFilterBase
         _childFieldName = fields[1];
     }
 
-    protected override string GetFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string> values)
+    /// <summary>This protected method builds the filter for the child object type.</summary>
+    /// <param name="searchOperator">The operator to use while building the filter.</param>
+    /// <param name="values">The values to use while building the filter.</param>
+    /// <returns>An OData filer</returns>
+    protected override string GetFilter(AcmeSearchFilterOperatorEnum searchOperator, List<string?> values)
     {
         if (values == null || values.Count == 0)
             return string.Empty;
