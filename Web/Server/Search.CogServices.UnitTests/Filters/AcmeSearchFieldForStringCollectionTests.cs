@@ -1,7 +1,7 @@
 namespace Search.CogServices.UnitTests;
 
 [TestClass]
-public class AcmeSearchFilterForStringCollectionTests
+public class AcmeSearchFieldForStringCollectionTests
 {
     private const string FieldName = "myField";
 
@@ -12,9 +12,9 @@ public class AcmeSearchFilterForStringCollectionTests
     public void CreateFilter_EqualAndNotEqualFiltersWork_FilterCreated(AcmeSearchFilterOperatorEnum theOperator, string theValue, string expectedFilter)
     {
         // Arrange
-        var cut = new AcmeSearchFilterForStringCollection(1, FieldName, "Display Name", false, false);
+        var cut = new AcmeSearchFieldForStringCollection(1, FieldName, "Display Name", false, false, false, false);
 
-        var values = new List<string?> { theValue};
+        var values = new List<string?> { theValue };
 
         // Act
         var actualResult = cut.CreateFilter(theOperator, values);
@@ -33,13 +33,13 @@ public class AcmeSearchFilterForStringCollectionTests
     public void CreateFilter_OtherOperatorsDoNotBuildFilters_AnExceptionIsRaised(AcmeSearchFilterOperatorEnum theOperator)
     {
         // Arrange
-        var cut = new AcmeSearchFilterForStringCollection(1,  FieldName, "Display Name", false, false);
+        var cut = new AcmeSearchFieldForStringCollection(1, FieldName, "Display Name", false, false, false, false);
 
         var values = new List<string?> { "true" };
 
         // Act
         Exception ex = Assert.ThrowsException<ArgumentException>(() => cut.CreateFilter(theOperator, values));
-        
+
         // Assert
         if (ex == null)
             Assert.Fail($"An exception should have been generated for the '{theOperator}'!");

@@ -25,9 +25,9 @@ public interface IAcmeFilterService
 
     /// <summary>Finds a filter by its name it was given when it was created.</summary>
     /// <param name="fieldName">The field name to find.</param>
-    IAcmeSearchFilter? FindByFieldName(string fieldName);
+    IAcmeSearchField? FindByFieldName(string fieldName);
 
     /// <summary>Finds a filter by the id it was given when it was created.</summary>
     /// <param name="id">The id to find</param>
-    IAcmeSearchFilter? FindById(int id);
+    IAcmeSearchField? FindById(int id);
 }

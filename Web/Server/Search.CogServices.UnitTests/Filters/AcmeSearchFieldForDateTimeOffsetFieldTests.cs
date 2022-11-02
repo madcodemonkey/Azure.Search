@@ -1,7 +1,7 @@
 namespace Search.CogServices.UnitTests;
 
 [TestClass]
-public class AcmeSearchFilterForDateTimeOffsetFieldTests
+public class AcmeSearchFieldForDateTimeOffsetFieldTests
 {
     private const string FieldName = "myField";
 
@@ -21,9 +21,9 @@ public class AcmeSearchFilterForDateTimeOffsetFieldTests
     public void CreateFilter_AllOperatorsWorkWithOneValue_FilterCreated(AcmeSearchFilterOperatorEnum theOperator, string theValue, string expectedFilter)
     {
         // Arrange
-        var cut = new AcmeSearchFilterForDateTimeOffsetField(1, FieldName, "Display Name", false, false);
+        var cut = new AcmeSearchFieldForDateTimeOffsetField(1, FieldName, "Display Name", false, false, false, false);
 
-        var values = new List<string?> { theValue};
+        var values = new List<string?> { theValue };
 
         // Act
         var actualResult = cut.CreateFilter(theOperator, values);
@@ -42,7 +42,7 @@ public class AcmeSearchFilterForDateTimeOffsetFieldTests
     public void CreateFilter_TheWithinOperatorWorksWhenTwoValuesArePassedIn_FilterCreated(string value1, string value2, string expectedFilter)
     {
         // Arrange
-        var cut = new AcmeSearchFilterForDateTimeOffsetField(1, FieldName, "Display Name", false, false);
+        var cut = new AcmeSearchFieldForDateTimeOffsetField(1, FieldName, "Display Name", false, false, false, false);
 
         var values = new List<string?> { value1, value2 };
 
@@ -60,9 +60,9 @@ public class AcmeSearchFilterForDateTimeOffsetFieldTests
     public void CreateFilter_TheWithinOperatorWillThrowAnExceptionIfOnlyOneValueIsPassedIn_AnExceptionIsThrown()
     {
         // Arrange
-        var cut = new AcmeSearchFilterForDateTimeOffsetField(1, FieldName, "Display Name", false, false);
+        var cut = new AcmeSearchFieldForDateTimeOffsetField(1, FieldName, "Display Name", false, false, false, false);
 
-        var values = new List<string?> { "05/27/2014"};
+        var values = new List<string?> { "05/27/2014" };
 
         // Act
         cut.CreateFilter(AcmeSearchFilterOperatorEnum.WithinRange, values);

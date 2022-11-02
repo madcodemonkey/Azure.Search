@@ -7,13 +7,13 @@ namespace Search.CogServices;
 public abstract class AcmeSearchServiceBase<TResultClass, TIndexClass> where TResultClass : class where TIndexClass : class
 {
     /// <summary>Constructor</summary>
-    protected AcmeSearchServiceBase(IAcmeSearchIndexService searchIndexService, IAcmeFilterService filterService)
+    protected AcmeSearchServiceBase(IAcmeSearchIndexService searchIndexService, IAcmeFilterService fieldService)
     {
         SearchIndexService = searchIndexService;
-        FilterService = filterService;
+        FieldService = fieldService;
     }
     protected IAcmeSearchIndexService SearchIndexService { get; }
-    protected IAcmeFilterService FilterService { get; }
+    protected IAcmeFilterService FieldService { get; }
     protected abstract string IndexName { get; }
 
     /// <summary>Searches using the Azure Search API.</summary>
@@ -36,7 +36,7 @@ public abstract class AcmeSearchServiceBase<TResultClass, TIndexClass> where TRe
         {
             Query = request.Query,
             Filters = request.Filters,
-            Facets = FilterService.ConvertFacets(azSearchResult.Value.Facets, request.Filters),
+            Facets = FieldService.ConvertFacets(azSearchResult.Value.Facets, request.Filters),
             IncludeAllWords = request.IncludeAllWords,
             IncludeCount = request.IncludeCount,
             TotalCount = azSearchResult.Value.TotalCount ?? 0,
@@ -75,7 +75,7 @@ public abstract class AcmeSearchServiceBase<TResultClass, TIndexClass> where TRe
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
     protected virtual SearchOptions CreateDefaultOptions(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
     {
-        string filter = FilterService.BuildODataFilter(request.Filters, rolesTheUserIsAssigned);
+        string filter = FieldService.BuildODataFilter(request.Filters, rolesTheUserIsAssigned);
         int skip = (request.PageNumber - 1) * request.ItemsPerPage;
 
         var options = new SearchOptions
@@ -90,7 +90,7 @@ public abstract class AcmeSearchServiceBase<TResultClass, TIndexClass> where TRe
             Size = request.ItemsPerPage,
         };
 
-        FilterService.AddFacets(options);
+        FieldService.AddFacets(options);
 
         return options;
     }

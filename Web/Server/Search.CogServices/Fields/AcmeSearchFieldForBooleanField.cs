@@ -1,11 +1,12 @@
 ﻿namespace Search.CogServices;
 
-public class AcmeSearchFilterForBooleanField : AcmeSearchFilterBase
+public class AcmeSearchFieldForBooleanField : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
-    public AcmeSearchFilterForBooleanField(int id, string fieldName, string displayName, bool isFacetable, bool isSecurityFilter) :
-        base(id, displayName, fieldName, isFacetable, isSecurityFilter)
-    { }
+    public AcmeSearchFieldForBooleanField(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isSecurityFilter) :
+        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isSecurityFilter)
+    {
+    }
 
     /// <summary>This protected method builds the filter for the boolean type.</summary>
     /// <param name="searchOperator">The operator to use while building the filter.</param>

@@ -10,7 +10,7 @@ namespace Search.Model;
 // field names in the index.
 public partial class HotelDocument
 {
-    [SimpleField(IsKey = true, IsFilterable = true)]
+    [SearchableField(IsKey = true, IsFilterable = true)]
     [JsonPropertyName("hotelId")]
     public string HotelId { get; set; }
 
@@ -46,7 +46,7 @@ public partial class HotelDocument
     [JsonPropertyName("smokingAllowed")]
     public bool? SmokingAllowed { get; set; }
 
-    [SimpleField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
+    [SimpleField(IsFilterable = true, IsSortable = true)]
     [JsonPropertyName("lastRenovationDate")]
     public DateTimeOffset? LastRenovationDate { get; set; }
 

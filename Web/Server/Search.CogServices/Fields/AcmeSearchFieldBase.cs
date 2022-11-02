@@ -1,22 +1,39 @@
 ﻿namespace Search.CogServices;
 
-public abstract class AcmeSearchFilterBase : IAcmeSearchFilter
+public abstract class AcmeSearchFieldBase : IAcmeSearchField
 {
     /// <summary>Constructor</summary>
-    protected AcmeSearchFilterBase(int id, string displayName, string fieldName, bool isFacetable, bool isSecurityFilter)
+    protected AcmeSearchFieldBase(int id, string displayName, string fieldName, bool isFilterable, bool isSortable, bool isFacetable, bool isSecurityFilter)
     {
         Id = id;
         DisplayName = displayName;
         FieldName = fieldName;
         IsFacetable = isFacetable;
+        IsFilterable = isFilterable;
         IsSecurityFilter = isSecurityFilter;
+        IsSortable = isSortable;
     }
-    /// <summary>A unique number identifying this facet.</summary>
+
+    /// <summary>A unique number identifying for a document.</summary>
     public int Id { get; private set; }
+
+    /// <summary>The name you would display in the UI.</summary>
     public string DisplayName { get; private set; }
+    
+    /// <summary>The actual field name that we would NEVER send to the user.</summary>
     public string FieldName { get; private set; }
+
+    /// <summary>Indicates if the filter can also be used as a facet.</summary>
     public bool IsFacetable { get; private set; }
+    
+    /// <summary>Indicates if the field can be used in a filter statement (e.g,. $filter=fieldName eq 'value')</summary>
+    public bool IsFilterable { get; private set; }
+    
+    /// <summary>Indicates that this filter is used for security trimming</summary>
     public bool IsSecurityFilter { get; private set; }
+    
+    /// <summary>Indicates if the field can be used in an order by statement (e.g,. $orderby=fieldName desc)</summary>
+    public bool IsSortable { get; private set; }
 
     /// <summary>Creates an OData filter string.</summary>
     /// <param name="searchOperator">The operator to use while building the filter.</param>

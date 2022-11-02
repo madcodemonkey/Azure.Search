@@ -1,12 +1,13 @@
 ﻿namespace Search.CogServices;
 
-public class AcmeSearchFilterForNumberField : AcmeSearchFilterBase
+public class AcmeSearchFieldForNumberField : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
-    public AcmeSearchFilterForNumberField(int id, string fieldName, string displayName, bool isFacetable, bool isSecurityFilter) :
-        base(id, displayName, fieldName, isFacetable, isSecurityFilter)
-    { }
-
+    public AcmeSearchFieldForNumberField(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isSecurityFilter) : 
+        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isSecurityFilter)
+    {
+    }
+    
     /// <summary>This protected method builds the filter for numeric (double, decimal, float, etc.) types.</summary>
     /// <param name="searchOperator">The operator to use while building the filter.</param>
     /// <param name="values">The values to use while building the filter.</param>

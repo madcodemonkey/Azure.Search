@@ -1,13 +1,13 @@
 ﻿namespace Search.CogServices;
 
-public class AcmeSearchFilterForChildObject : AcmeSearchFilterBase
+public class AcmeSearchFieldForChildObject : AcmeSearchFieldBase
 {
     private readonly string _parentFieldName;
     private readonly string _childFieldName;
 
     /// <summary>Constructor</summary>
-    public AcmeSearchFilterForChildObject(int id, string fieldName, string displayName, bool isFacetable, bool isSecurityFilter)
-        : base(id, displayName, fieldName, isFacetable, isSecurityFilter)
+    public AcmeSearchFieldForChildObject(int id,  string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isSecurityFilter) : 
+        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isSecurityFilter)
     {
         string[] fields = fieldName.Split('/');
         if (fields == null || fields.Length != 2)

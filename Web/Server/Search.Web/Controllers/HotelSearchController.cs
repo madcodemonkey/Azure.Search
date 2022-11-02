@@ -21,7 +21,7 @@ public class HotelSearchController : ControllerBase
     
     
     [HttpPost("Suggest")] 
-    public async Task<List<HotelSuggestorResult>> Suggest(AcmeSearchQuery query)
+    public async Task<List<HotelSuggestorResult>> Suggest(AcmeSuggestQuery query)
     {
         var result = await _hotelSuggestorService.SuggestAsync(query, GetRoles());
 

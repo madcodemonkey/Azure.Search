@@ -11,7 +11,7 @@ public class HotelSearchService : AcmeSearchServiceBase<HotelDocument, HotelDocu
     /// <summary>Constructor</summary>
     public HotelSearchService(SearchServiceSettings settings,
         IAcmeSearchIndexService acmeSearchIndexService,
-        IHotelFilterService hotelFilterService) : base(acmeSearchIndexService, hotelFilterService)
+        IHotelFieldService hotelFieldService) : base(acmeSearchIndexService, hotelFieldService)
     {
         _settings = settings;
     }

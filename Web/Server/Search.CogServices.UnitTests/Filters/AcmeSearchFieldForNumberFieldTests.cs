@@ -1,7 +1,7 @@
 namespace Search.CogServices.UnitTests;
 
 [TestClass]
-public class AcmeSearchFilterForNumberFieldTests
+public class AcmeSearchFieldForNumberFieldTests
 {
     private const string FieldName = "myField";
 
@@ -21,7 +21,7 @@ public class AcmeSearchFilterForNumberFieldTests
     public void CreateFilter_AllOperatorsWorkWithOneValue_FilterCreated(AcmeSearchFilterOperatorEnum theOperator, string theValue, string expectedFilter)
     {
         // Arrange
-        var cut = new AcmeSearchFilterForNumberField(1, FieldName, "Display Name", false, false);
+        var cut = new AcmeSearchFieldForNumberField(1, FieldName, "Display Name", false, false, false, false);
 
         var values = new List<string?> { theValue };
 
@@ -42,7 +42,7 @@ public class AcmeSearchFilterForNumberFieldTests
     public void CreateFilter_TheWithinOperatorWorksWhenTwoValuesArePassedIn_FilterCreated(string value1, string value2, string expectedFilter)
     {
         // Arrange
-        var cut = new AcmeSearchFilterForNumberField(1, FieldName, "Display Name", false, false);
+        var cut = new AcmeSearchFieldForNumberField(1, FieldName, "Display Name", false, false, false, false);
 
         var values = new List<string?> { value1, value2 };
 
@@ -60,7 +60,7 @@ public class AcmeSearchFilterForNumberFieldTests
     public void CreateFilter_TheWithinOperatorWillThrowAnExceptionIfOnlyOneValueIsPassedIn_AnExceptionIsThrown()
     {
         // Arrange
-        var cut = new AcmeSearchFilterForNumberField(1, FieldName, "Display Name", false, false);
+        var cut = new AcmeSearchFieldForNumberField(1, FieldName, "Display Name", false, false, false, false);
 
         var values = new List<string?> { "34" };
 

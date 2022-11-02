@@ -1,7 +1,7 @@
 namespace Search.CogServices.UnitTests;
 
 [TestClass]
-public class AcmeSearchFilterForBooleanFieldTests
+public class AcmeSearchFieldForBooleanFieldTests
 {
     private const string FieldName = "myField";
 
@@ -20,7 +20,7 @@ public class AcmeSearchFilterForBooleanFieldTests
     public void CreateFilter_EqualAndNotEqualFiltersWork_FilterCreated(AcmeSearchFilterOperatorEnum theOperator, string theValue, string expectedFilter)
     {
         // Arrange
-        var cut = new AcmeSearchFilterForBooleanField(1, FieldName, "Display Name", false, false);
+        var cut = new AcmeSearchFieldForBooleanField(1, FieldName, "Display Name", false, false, false, false);
 
         var values = new List<string?> { theValue};
 
@@ -40,7 +40,7 @@ public class AcmeSearchFilterForBooleanFieldTests
     public void CreateFilter_OtherOperatorsDoNotBuildFilters_AnExceptionIsRaised(AcmeSearchFilterOperatorEnum theOperator)
     {
         // Arrange
-        var cut = new AcmeSearchFilterForBooleanField(1, FieldName, "Display Name", false, false);
+        var cut = new AcmeSearchFieldForBooleanField(1, FieldName, "Display Name", false, false, false, false);
 
         var values = new List<string?> { "true" };
 

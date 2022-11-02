@@ -2,11 +2,11 @@
 
 namespace Search.CogServices;
 
-public class AcmeSearchFilterForStringCollection : AcmeSearchFilterBase
+public class AcmeSearchFieldForStringCollection : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
-    public AcmeSearchFilterForStringCollection(int id, string fieldName, string displayName, bool isFacetable, bool isSecurityFilter)
-        : base(id, displayName, fieldName, isFacetable, isSecurityFilter)
+    public AcmeSearchFieldForStringCollection(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isSecurityFilter) : 
+        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isSecurityFilter)
     {
     }
 

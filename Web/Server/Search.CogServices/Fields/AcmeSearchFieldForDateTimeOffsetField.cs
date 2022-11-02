@@ -1,11 +1,13 @@
 ﻿namespace Search.CogServices;
 
-public class AcmeSearchFilterForDateTimeOffsetField : AcmeSearchFilterBase
+public class AcmeSearchFieldForDateTimeOffsetField : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
-    public AcmeSearchFilterForDateTimeOffsetField(int id, string fieldName, string displayName, bool isFacetable, bool isSecurityFilter) :
-        base(id, displayName, fieldName, isFacetable, isSecurityFilter)
-    { }
+    public AcmeSearchFieldForDateTimeOffsetField(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isSecurityFilter) : 
+        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isSecurityFilter)
+    {
+    }
+
 
     /// <summary>This protected method builds the filter for the DateTimeOffset type.</summary>
     /// <param name="searchOperator">The operator to use while building the filter.</param>

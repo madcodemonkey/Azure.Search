@@ -1,12 +1,13 @@
 ﻿namespace Search.CogServices;
 
-public class AcmeSearchFilterForStringField : AcmeSearchFilterBase
+public class AcmeSearchFieldForStringField : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
-    public AcmeSearchFilterForStringField(int id, string fieldName, string displayName, bool isFacetable, bool isSecurityFilter) :
-        base(id, displayName, fieldName, isFacetable, isSecurityFilter)
-    { }
-
+    public AcmeSearchFieldForStringField(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isSecurityFilter) : 
+        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isSecurityFilter)
+    {
+    }
+   
     /// <summary>This protected method builds the filter for the string type.</summary>
     /// <param name="searchOperator">The operator to use while building the filter.</param>
     /// <param name="values">The values to use while building the filter.</param>
@@ -17,4 +18,5 @@ public class AcmeSearchFilterForStringField : AcmeSearchFilterBase
 
         return $"{this.FieldName} {OperatorToString(searchOperator)} {theValue}";
     }
+
 }

@@ -4,38 +4,72 @@ using Azure.Search.Documents;
 
 namespace Search.CogServices;
 
-public abstract class AcmeFilterServiceBase : IAcmeFilterService
+public abstract class AcmeFieldServiceBase : IAcmeFilterService
 {
-    private readonly List<IAcmeSearchFilter> _filterList;
-    private readonly IAcmeSearchFilter? _securityTrimmingFilter;
+    private readonly List<IAcmeSearchField> _fieldList;
+    private readonly IAcmeSearchField? _securityTrimmingField;
 
     /// <summary>Constructor</summary>
-    protected AcmeFilterServiceBase()
+    protected AcmeFieldServiceBase()
     {
-        _filterList = RegisterFilters();
-        _securityTrimmingFilter = _filterList.FirstOrDefault(w => w.IsSecurityFilter);
+        _fieldList = RegisterFields();
+        _securityTrimmingField = _fieldList.FirstOrDefault(w => w.IsSecurityFilter);
     }
     protected virtual int MaximNumberOfFacets => 20;
 
     /// <summary>Finds a filter by the id it was given when it was created.</summary>
     /// <param name="id">The id to find</param>
-    public IAcmeSearchFilter? FindById(int id)
+    public IAcmeSearchField? FindById(int id)
     {
-        return _filterList.FirstOrDefault(w => w.Id == id);
+        return _fieldList.FirstOrDefault(w => w.Id == id);
     }
 
     /// <summary>Finds a filter by its name it was given when it was created.</summary>
     /// <param name="fieldName">The field name to find.</param>
-    public IAcmeSearchFilter? FindByFieldName(string fieldName)
+    public IAcmeSearchField? FindByFieldName(string fieldName)
     {
-        return _filterList.FirstOrDefault(w => w.FieldName == fieldName);
+        return _fieldList.FirstOrDefault(w => w.FieldName == fieldName);
     }
-    
+
+    /// <summary>Adds an orderby statement for a field</summary>
+    /// <param name="options">The options to add orderby statement to</param>
+    /// <param name="fieldId">The id of the field.  If it's not found, you will receive an exception.</param>
+    /// <param name="descending">If true, the sort order is descending; otherwise, it ascending</param>
+    /// <param name="clearOrderByList">Indicates if you want the order by list cleared before adding a new order by clause.
+    /// Most of the time you are only adding one order by statement so this is defaulted to true to clear out anything else that was there.</param>
+    public void AddOrderBy(SearchOptions options, int fieldId, bool descending, bool clearOrderByList = true)
+    {
+        var field = FindById(fieldId);
+        if (field == null) throw new ArgumentException($"While trying to add an orderby statement, we were unable to find a field with an id of {fieldId}!");
+        if (field.IsSortable == false) throw new ArgumentException("You cannot sort by a field that is not marked as sortable!");
+
+        if (clearOrderByList) options.OrderBy.Clear();
+
+        string sortOrder = descending ? "desc" : "asc";
+        
+        options.OrderBy.Add($"{field.FieldName} {sortOrder}");
+    }
+
+    /// <summary>Adds an search score to the order by statement</summary>
+    /// <param name="options">The options to add orderby statement to</param>
+    /// <param name="descending">If true, the sort order is descending; otherwise, it ascending</param>
+    /// <param name="clearOrderByList">Indicates if you want the order by list cleared before adding a new order by clause.
+    /// Most of the time you are only adding one order by statement so this is defaulted to true to clear out anything else that was there.</param>
+    public void AddScoreToOrderBy(SearchOptions options, bool descending = true, bool clearOrderByList = true)
+    {
+        if (clearOrderByList) options.OrderBy.Clear();
+
+        string sortOrder = descending ? "desc" : "asc";
+        
+        options.OrderBy.Add($"search.score() {sortOrder}");
+    }
+
+
     /// <summary>Adds facets to your SearchOptions instance.</summary>
     /// <param name="options">The options that need facets</param>
     public void AddFacets(SearchOptions options)
     {
-        foreach (var field in _filterList)
+        foreach (var field in _fieldList)
         {
             if (field.IsFacetable == false)
                 continue;
@@ -82,12 +116,12 @@ public abstract class AcmeFilterServiceBase : IAcmeFilterService
         // Warning!! If the object of T that you're passing into the Azure Suggest or Azure Search methods does not have the Roles property on it, 
         //           using roles here will do NOTHING!!!  In other words, I didn't want to return roles to the user
         //           so I removed it from by BookDocumentBrief class. Afterwards, this filter STOPPED working!  No ERRORS!
-        if (_securityTrimmingFilter != null)
+        if (_securityTrimmingField != null)
         {
             if (sbFilter.Length > 0)
                 sbFilter.Append(" and ");
 
-            sbFilter.Append(_securityTrimmingFilter.CreateFilter(AcmeSearchFilterOperatorEnum.Equal, rolesTheUserIsAssigned));
+            sbFilter.Append(_securityTrimmingField.CreateFilter(AcmeSearchFilterOperatorEnum.Equal, rolesTheUserIsAssigned));
         }
 
 
@@ -124,7 +158,7 @@ public abstract class AcmeFilterServiceBase : IAcmeFilterService
             {
                 var text = item.Value.ToString();
 
-                oneFacet.Items.Add(new AcmeSearchFacetItem()
+                oneFacet.Items.Add(new AcmeSearchFacetItem
                 {
                     Text = text,
                     Count = item.Count ?? 0,
@@ -143,5 +177,5 @@ public abstract class AcmeFilterServiceBase : IAcmeFilterService
     /// here.  We do NOT want the client side building filters.  It can only pass in
     /// query text.  This avoids injection attacks where the client can see anything in the
     /// index.  If they could build them, they could avoid security trimming.</summary>
-    protected abstract List<IAcmeSearchFilter> RegisterFilters();
+    protected abstract List<IAcmeSearchField> RegisterFields();
 }

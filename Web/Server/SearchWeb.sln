@@ -13,7 +13,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Search.Repositories", "Sear
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Search.CogServices", "Search.CogServices\Search.CogServices.csproj", "{C3C56D00-F3DA-49D6-8912-1C31AB4A3947}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Search.CogServices.UnitTests", "Search.CogServices.UnitTests\Search.CogServices.UnitTests.csproj", "{76FA574F-B9C2-41BE-9A52-A364E8C0FE2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Search.CogServices.UnitTests", "Search.CogServices.UnitTests\Search.CogServices.UnitTests.csproj", "{76FA574F-B9C2-41BE-9A52-A364E8C0FE2F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05 - UnitTests", "05 - UnitTests", "{CFEE2B87-AEAB-4971-822B-EA4726FD906C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - Web API", "01 - Web API", "{4BEC6D7C-B662-4174-AED0-34D9AC28835F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 - Core", "02 - Core", "{C3532366-92A1-417A-8386-780A6643866C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04 - Reusable Code", "04 - Reusable Code", "{C7A439AD-86A6-4F2A-A45F-897FF37E9E36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +56,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B50127FE-BE44-4D57-A1EE-11540F6B7EE5} = {4BEC6D7C-B662-4174-AED0-34D9AC28835F}
+		{B221F9EE-3A25-494B-9667-51D95C60707F} = {C3532366-92A1-417A-8386-780A6643866C}
+		{40CEA9E4-537F-4E38-A660-ECB1F0ADD8DA} = {C3532366-92A1-417A-8386-780A6643866C}
+		{468727BA-30FC-4112-8FB8-675AA5D51078} = {C3532366-92A1-417A-8386-780A6643866C}
+		{C3C56D00-F3DA-49D6-8912-1C31AB4A3947} = {C7A439AD-86A6-4F2A-A45F-897FF37E9E36}
+		{76FA574F-B9C2-41BE-9A52-A364E8C0FE2F} = {CFEE2B87-AEAB-4971-822B-EA4726FD906C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CD66042-3D24-4BE8-897D-800C90D29CF5}

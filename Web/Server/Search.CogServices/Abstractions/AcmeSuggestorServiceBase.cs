@@ -6,15 +6,15 @@ namespace Search.CogServices;
 public abstract class AcmeSuggestorServiceBase<TResultClass, TIndexClass> where TResultClass : class where TIndexClass : class
 {
     /// <summary>Constructor</summary>
-    protected AcmeSuggestorServiceBase(IAcmeSearchIndexService searchIndexService, IAcmeFilterService filterService)
+    protected AcmeSuggestorServiceBase(IAcmeSearchIndexService searchIndexService, IAcmeFilterService fieldService)
     {
         SearchIndexService = searchIndexService;
-        FilterService = filterService;
+        FieldService = fieldService;
     }
 
 
     protected IAcmeSearchIndexService SearchIndexService { get; }
-    protected IAcmeFilterService FilterService { get; }
+    protected IAcmeFilterService FieldService { get; }
     protected abstract string IndexName { get; }
     protected abstract string SuggestorName { get; }
 
@@ -22,9 +22,8 @@ public abstract class AcmeSuggestorServiceBase<TResultClass, TIndexClass> where 
     /// <param name="request">A request for a suggestion</param>
     /// <param name="rolesTheUserIsAssigned">Case sensitive list of roles that for search trimming.</param>
     /// <returns>List of suggestions</returns>
-    public virtual async Task<List<TResultClass>> SuggestAsync(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
+    public virtual async Task<List<TResultClass>> SuggestAsync(AcmeSuggestQuery request, List<string> rolesTheUserIsAssigned)
     {
-
         var options = CreateDefaultOptions(request, rolesTheUserIsAssigned);
 
         var suggestions = await SearchIndexService.SuggestAsync<TIndexClass>(IndexName, request.Query, SuggestorName, options);
@@ -39,24 +38,38 @@ public abstract class AcmeSuggestorServiceBase<TResultClass, TIndexClass> where 
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
-    protected virtual SuggestOptions CreateDefaultOptions(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
+    protected virtual SuggestOptions CreateDefaultOptions(AcmeSuggestQuery request, List<string> rolesTheUserIsAssigned)
     {
         var options = new SuggestOptions
         {
-            Filter = FilterService.BuildODataFilter(request.Filters, rolesTheUserIsAssigned),
+            Filter = FieldService.BuildODataFilter(request.Filters, rolesTheUserIsAssigned),
             HighlightPreTag = "<b>",
             HighlightPostTag = "</b>",
-            MinimumCoverage = 33.3,
+            // MinimumCoverage = 33.3,
             OrderBy = { "search.score() desc" },
             //SearchFields = {  },
             // Select = { },
-            Size = 10,
+            Size = request.NumberOfSuggestionsToRetrieve,
             UseFuzzyMatching = false // false for performance reasons
         };
 
-        GetFieldNamesToSelect().ForEach(fieldName => options.Select.Add(fieldName));
+        AddFieldNamesToSelect(GetFieldNamesToSelect(), options);
 
         return options;
+    }
+
+    /// <summary>Adds a list of fields to the Select property.  This determines which of the document
+    /// fields are returned along with the suggestion.</summary>
+    /// <param name="fieldNames">The document field names to retrieve.</param>
+    /// <param name="options">The options to add the field names to.</param>
+    protected virtual void AddFieldNamesToSelect(List<string> fieldNames, SuggestOptions options)
+    {
+        options.Select.Clear();
+
+        foreach (string fieldName in fieldNames)
+        {
+            options.Select.Add(fieldName);
+        }
     }
 
     /// <summary>Gets a list of fields that we should be returned with the document found with the suggestion. If left blank, it will return the key field.

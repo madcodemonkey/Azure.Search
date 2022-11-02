@@ -12,7 +12,7 @@ public class HotelSuggestorService : AcmeSuggestorServiceBase<HotelSuggestorResu
     /// <summary>Constructor</summary>
     public HotelSuggestorService(SearchServiceSettings settings,
         IAcmeSearchIndexService searchIndexService,
-        IHotelFilterService filterService) : base(searchIndexService, filterService)
+        IHotelFieldService fieldService) : base(searchIndexService, fieldService)
     {
         _settings = settings;
     }
@@ -49,18 +49,5 @@ public class HotelSuggestorService : AcmeSuggestorServiceBase<HotelSuggestorResu
             nameof(HotelDocument.HotelName).ConvertToCamelCase(),
             nameof(HotelDocument.Category).ConvertToCamelCase()
         };
-    }
-
-    /// <summary>Creates a set of default options you can then override if necessary.</summary>
-    /// <param name="request">The request from the user.</param>
-    /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
-    protected override SuggestOptions CreateDefaultOptions(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
-    {
-        var result = base.CreateDefaultOptions(request, rolesTheUserIsAssigned);
-        
-        result.Select.Clear();
-        result.Select.Add(nameof(HotelDocument.HotelName).ConvertToCamelCase());
-
-        return result;
     }
 }
