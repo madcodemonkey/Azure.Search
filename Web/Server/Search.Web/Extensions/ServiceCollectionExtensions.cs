@@ -15,7 +15,7 @@ namespace Search.Web.Extensions
             var databaseOptions = new AcmeDatabaseOptions();
             config.GetSection("AcmeDatabaseOptions").Bind(databaseOptions);
 
-            services.AddCogServices(settings);
+            services.AddCogServices(settings); // Do this first in case we override an interface registered here in AddSearchServices!
             services.AddSearchServices(settings, databaseOptions);
             services.AddAcmeRepositories(databaseOptions);
 

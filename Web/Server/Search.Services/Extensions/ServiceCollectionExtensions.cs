@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Search.CogServices;
 using Search.Repositories;
 
 namespace Search.Services;
@@ -9,7 +10,10 @@ public static class ServiceCollectionExtensions
     {
         sc.AddSingleton(settings);
         sc.AddSingleton(databaseOptions);
+
+        sc.AddTransient<IAcmeOptionsService, AppOptionsService>(); // overriding an item in Search.CogServices!
         
+
         sc.AddTransient<IHotelDataSourceService, HotelDataSourceService>();
         sc.AddTransient<IHotelIndexService, HotelIndexService>();
         sc.AddTransient<IHotelIndexerService, HotelIndexerService>();

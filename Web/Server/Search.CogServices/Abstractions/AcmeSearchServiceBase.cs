@@ -36,6 +36,7 @@ public abstract class AcmeSearchServiceBase<TResultClass, TIndexClass> where TRe
         {
             Query = request.Query,
             Filters = request.Filters,
+            OrderByFields = request.OrderByFields,
             Facets = FieldService.ConvertFacets(azSearchResult.Value.Facets, request.Filters),
             IncludeAllWords = request.IncludeAllWords,
             IncludeCount = request.IncludeCount,
@@ -91,6 +92,11 @@ public abstract class AcmeSearchServiceBase<TResultClass, TIndexClass> where TRe
         };
 
         FieldService.AddFacets(options);
+
+        if (request.OrderByFields.Count == 0)
+            FieldService.AddScoreToOrderBy(options);
+        else FieldService.AddOrderBy(options, request.OrderByFields);
+
 
         return options;
     }

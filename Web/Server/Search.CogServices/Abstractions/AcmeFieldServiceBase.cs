@@ -50,6 +50,19 @@ public abstract class AcmeFieldServiceBase : IAcmeFilterService
         options.OrderBy.Add($"{field.FieldName} {sortOrder}");
     }
 
+    /// <summary>Adds an orderby statement for a field</summary>
+    /// <param name="options">The options to add orderby statement to</param>
+    /// <param name="items">A list of order by fields to add</param>
+    /// <param name="clearOrderByList">Indicates if you want the order by list cleared before adding a new  items to the order by clause.</param>
+    public void AddOrderBy(SearchOptions options, List<AcmeSearchOrderBy> items, bool clearOrderByList = true)
+    {
+        if (clearOrderByList) options.OrderBy.Clear();
+        foreach (var item in items)
+        {
+            AddOrderBy(options, item.FieldId, item.SortDescending, false);
+        }
+    }
+
     /// <summary>Adds an search score to the order by statement</summary>
     /// <param name="options">The options to add orderby statement to</param>
     /// <param name="descending">If true, the sort order is descending; otherwise, it ascending</param>
