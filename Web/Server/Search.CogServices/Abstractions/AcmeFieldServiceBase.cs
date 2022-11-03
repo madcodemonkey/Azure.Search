@@ -6,14 +6,14 @@ namespace Search.CogServices;
 
 public abstract class AcmeFieldServiceBase : IAcmeFilterService
 {
-    private readonly List<IAcmeSearchField> _fieldList;
+    public List<IAcmeSearchField> FieldList { get; private set; }
     private readonly IAcmeSearchField? _securityTrimmingField;
 
     /// <summary>Constructor</summary>
     protected AcmeFieldServiceBase()
     {
-        _fieldList = RegisterFields();
-        _securityTrimmingField = _fieldList.FirstOrDefault(w => w.IsSecurityFilter);
+        FieldList = RegisterFields();
+        _securityTrimmingField = FieldList.FirstOrDefault(w => w.IsSecurityFilter);
     }
     protected virtual int MaximNumberOfFacets => 20;
 
@@ -21,14 +21,14 @@ public abstract class AcmeFieldServiceBase : IAcmeFilterService
     /// <param name="id">The id to find</param>
     public IAcmeSearchField? FindById(int id)
     {
-        return _fieldList.FirstOrDefault(w => w.Id == id);
+        return FieldList.FirstOrDefault(w => w.Id == id);
     }
 
     /// <summary>Finds a filter by its name it was given when it was created.</summary>
     /// <param name="fieldName">The field name to find.</param>
     public IAcmeSearchField? FindByFieldName(string fieldName)
     {
-        return _fieldList.FirstOrDefault(w => w.FieldName == fieldName);
+        return FieldList.FirstOrDefault(w => w.FieldName == fieldName);
     }
 
     /// <summary>Adds an orderby statement for a field</summary>
@@ -82,7 +82,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFilterService
     /// <param name="options">The options that need facets</param>
     public void AddFacets(SearchOptions options)
     {
-        foreach (var field in _fieldList)
+        foreach (var field in FieldList)
         {
             if (field.IsFacetable == false)
                 continue;

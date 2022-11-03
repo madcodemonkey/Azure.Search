@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 - Core", "02 - Core", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04 - Reusable Code", "04 - Reusable Code", "{C7A439AD-86A6-4F2A-A45F-897FF37E9E36}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Search.Services.UnitTests", "Search.Services.UnitTests\Search.Services.UnitTests.csproj", "{1867F903-EDEB-47A2-AB01-7368FF004DBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{76FA574F-B9C2-41BE-9A52-A364E8C0FE2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76FA574F-B9C2-41BE-9A52-A364E8C0FE2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76FA574F-B9C2-41BE-9A52-A364E8C0FE2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1867F903-EDEB-47A2-AB01-7368FF004DBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1867F903-EDEB-47A2-AB01-7368FF004DBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1867F903-EDEB-47A2-AB01-7368FF004DBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1867F903-EDEB-47A2-AB01-7368FF004DBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
