@@ -3,7 +3,7 @@ using Azure.Search.Documents.Models;
 
 namespace Search.CogServices;
 
-public abstract class AcmeSuggestorServiceBase<TResultClass, TIndexClass> where TResultClass : class where TIndexClass : class
+public abstract class AcmeSuggestorServiceBase<TIndexClass> where TIndexClass : class
 {
     /// <summary>Constructor</summary>
     protected AcmeSuggestorServiceBase(IAcmeSearchIndexService searchIndexService, IAcmeFilterService fieldService)
@@ -22,19 +22,15 @@ public abstract class AcmeSuggestorServiceBase<TResultClass, TIndexClass> where 
     /// <param name="request">A request for a suggestion</param>
     /// <param name="rolesTheUserIsAssigned">Case sensitive list of roles that for search trimming.</param>
     /// <returns>List of suggestions</returns>
-    public virtual async Task<List<TResultClass>> SuggestAsync(AcmeSuggestQuery request, List<string> rolesTheUserIsAssigned)
+    public virtual async Task<SuggestResults<TIndexClass>> SuggestAsync(AcmeSuggestQuery request, List<string> rolesTheUserIsAssigned)
     {
         var options = CreateDefaultOptions(request, rolesTheUserIsAssigned);
 
-        var suggestions = await SearchIndexService.SuggestAsync<TIndexClass>(IndexName, request.Query, SuggestorName, options);
+        var suggestResult = await SearchIndexService.SuggestAsync<TIndexClass>(IndexName, request.Query, SuggestorName, options);
 
-        return ConvertResults(suggestions);
+        return suggestResult;
     }
-
-    /// <summary>Converts the results of calling the Azure Search API SuggestAsync method to a custom result.</summary>
-    /// <param name="azSuggestResults">The Azure Search API methods return result</param>
-    protected abstract List<TResultClass> ConvertResults(SuggestResults<TIndexClass> azSuggestResults);
-
+     
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>

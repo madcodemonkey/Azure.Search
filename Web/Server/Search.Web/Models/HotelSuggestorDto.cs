@@ -1,6 +1,6 @@
-﻿namespace Search.Model;
+﻿namespace Search.Web.Models;
 
-public class HotelSuggestorResult
+public class HotelSuggestorDto
 {
     public string Text { get; set; }
     public string HotelName { get; set; }

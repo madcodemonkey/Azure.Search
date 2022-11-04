@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Azure.Search.Documents.Models;
+using Microsoft.AspNetCore.Mvc;
 using Search.CogServices;
 using Search.Model;
 using Search.Services;
+using Search.Web.Models;
 
 namespace Search.Controllers;
 
@@ -11,32 +14,38 @@ public class HotelSearchController : ControllerBase
 {
     private readonly IHotelSearchService _hotelSearchService;
     private readonly IHotelSuggestorService _hotelSuggestorService;
+    private readonly IMapper _mapper;
 
     /// <summary>Constructor</summary>
-    public HotelSearchController(IHotelSearchService hotelSearchService, IHotelSuggestorService hotelSuggestorService)
+    public HotelSearchController(IHotelSearchService hotelSearchService,
+        IHotelSuggestorService hotelSuggestorService, IMapper mapper)
     {
         _hotelSearchService = hotelSearchService;
         _hotelSuggestorService = hotelSuggestorService;
+        _mapper = mapper;
     }
     
     
     [HttpPost("Suggest")] 
-    public async Task<List<HotelSuggestorResult>> Suggest(AcmeSuggestQuery query)
+    public async Task<IActionResult> Suggest(AcmeSuggestQuery query)
     {
-        var result = await _hotelSuggestorService.SuggestAsync(query, GetRoles());
+        SuggestResults<HotelDocument> suggestResult = await _hotelSuggestorService.SuggestAsync(query, GetRoles());
 
-        return result;
+        List<HotelSuggestorDto> mapResult = _mapper.Map<List<HotelSuggestorDto>>(suggestResult.Results);
+        
+        return new OkObjectResult(mapResult);
     }
 
     [HttpPost("Search")] 
-    public async Task<AcmeSearchQueryResult<HotelDocument>> Search(AcmeSearchQuery query)
+    public async Task<IActionResult> Search(AcmeSearchQuery query)
     {
-      
         // Reference to paging: https://docs.microsoft.com/en-us/azure/search/tutorial-csharp-paging#extend-your-app-with-numbered-paging
         // Note on how continuation is really used https://stackoverflow.com/questions/33826731/how-to-use-microsoft-azure-search-searchcontinuationtoken
-        var result = await _hotelSearchService.SearchAsync(query, GetRoles());
-            
-        return result;
+        AcmeSearchQueryResult<SearchResult<HotelDocument>> searchResult = await _hotelSearchService.SearchAsync(query, GetRoles());
+
+        AcmeSearchQueryResult<HotelDocumentDto>? mapResult = _mapper.Map<AcmeSearchQueryResult<HotelDocumentDto>>(searchResult);
+
+        return new OkObjectResult(mapResult);
     }
 
     

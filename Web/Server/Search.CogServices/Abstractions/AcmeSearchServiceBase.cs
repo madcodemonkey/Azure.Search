@@ -4,7 +4,7 @@ using Azure.Search.Documents.Models;
 
 namespace Search.CogServices;
 
-public abstract class AcmeSearchServiceBase<TResultClass, TIndexClass> where TResultClass : class where TIndexClass : class
+public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : class
 {
     /// <summary>Constructor</summary>
     protected AcmeSearchServiceBase(IAcmeSearchIndexService searchIndexService, IAcmeFilterService fieldService)
@@ -19,7 +19,7 @@ public abstract class AcmeSearchServiceBase<TResultClass, TIndexClass> where TRe
     /// <summary>Searches using the Azure Search API.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
-    public async Task<AcmeSearchQueryResult<TResultClass>> SearchAsync(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
+    public async Task<AcmeSearchQueryResult<SearchResult<TIndexClass>>> SearchAsync(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
     {
         SearchOptions options = CreateDefaultOptions(request, rolesTheUserIsAssigned);
 
@@ -30,9 +30,14 @@ public abstract class AcmeSearchServiceBase<TResultClass, TIndexClass> where TRe
         return result;
     }
 
-    private async Task<AcmeSearchQueryResult<TResultClass>> ConvertResultsAsync(AcmeSearchQuery request, Response<SearchResults<TIndexClass>> azSearchResult)
+    
+    /// <summary>Converts the result that came back from the Azure Search Index.</summary>
+    /// <param name="request">The search request from the client side.</param>
+    /// <param name="azSearchResult">The response from the Azure Search index.</param>
+    /// <returns></returns>
+    private async Task<AcmeSearchQueryResult<SearchResult<TIndexClass>>> ConvertResultsAsync(AcmeSearchQuery request, Response<SearchResults<TIndexClass>> azSearchResult)
     {
-        var result = new AcmeSearchQueryResult<TResultClass>
+        var result = new AcmeSearchQueryResult<SearchResult<TIndexClass>>
         {
             Query = request.Query,
             Filters = request.Filters,
@@ -43,34 +48,29 @@ public abstract class AcmeSearchServiceBase<TResultClass, TIndexClass> where TRe
             TotalCount = azSearchResult.Value.TotalCount ?? 0,
             ItemsPerPage = request.ItemsPerPage,
             PageNumber = request.PageNumber,
-            Docs = await ConvertDocumentsAsync(azSearchResult.Value),
+            Docs = await ConvertResultDocumentsAsync(azSearchResult.Value),
         };
 
         return result;
     }
 
-    /// <summary>Converts one page of documents from a SearchResults to the specified list of TResultClass.
-    /// This method is called by ConvertResultsAsync</summary>
+    /// <summary>Converts one page of documents. This method is called by <see cref="ConvertResultsAsync"/> </summary>
     /// <param name="azSearchResults">The search results from the call to the Azure Search PAI.</param>
-    protected virtual async Task<List<TResultClass>> ConvertDocumentsAsync(SearchResults<TIndexClass> azSearchResults)
+    protected virtual async Task<List<SearchResult<TIndexClass>>> ConvertResultDocumentsAsync(SearchResults<TIndexClass> azSearchResults)
     {
-        var result = new List<TResultClass>();
+        var result = new List<SearchResult<TIndexClass>>();
 
         AsyncPageable<SearchResult<TIndexClass>> azOnePageOfSearchDocuments = azSearchResults.GetResultsAsync();
 
         await foreach (SearchResult<TIndexClass> item in azOnePageOfSearchDocuments)
         {
-            result.Add(ConvertOneDocument(item));
+            result.Add(item);
         }
 
         return result;
     }
 
-    /// <summary>Converts a item (TInputClass) that was found by calling the Azure Search API into
-    /// a desired return class (TResultClass).</summary>
-    /// <param name="azSearchDocument">The item to convert</param>
-    protected abstract TResultClass ConvertOneDocument(SearchResult<TIndexClass> azSearchDocument);
-
+   
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
