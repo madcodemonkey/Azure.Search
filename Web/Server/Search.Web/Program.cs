@@ -3,7 +3,7 @@ using Search.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHotelServices(builder.Configuration);
+builder.Services.AddSearchWebServices(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
