@@ -4,7 +4,7 @@ using Azure.Search.Documents;
 
 namespace Search.CogServices;
 
-public abstract class AcmeFieldServiceBase : IAcmeFilterService
+public abstract class AcmeFieldServiceBase : IAcmeFieldService
 {
     public List<IAcmeSearchField> FieldList { get; private set; }
     private readonly IAcmeSearchField? _securityTrimmingField;

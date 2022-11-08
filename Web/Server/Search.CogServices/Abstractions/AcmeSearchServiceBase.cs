@@ -7,13 +7,13 @@ namespace Search.CogServices;
 public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : class
 {
     /// <summary>Constructor</summary>
-    protected AcmeSearchServiceBase(IAcmeSearchIndexService searchIndexService, IAcmeFilterService fieldService)
+    protected AcmeSearchServiceBase(IAcmeSearchIndexService searchIndexService, IAcmeFieldService fieldService)
     {
         SearchIndexService = searchIndexService;
         FieldService = fieldService;
     }
     protected IAcmeSearchIndexService SearchIndexService { get; }
-    protected IAcmeFilterService FieldService { get; }
+    protected IAcmeFieldService FieldService { get; }
     protected abstract string IndexName { get; }
 
     /// <summary>Searches using the Azure Search API.</summary>

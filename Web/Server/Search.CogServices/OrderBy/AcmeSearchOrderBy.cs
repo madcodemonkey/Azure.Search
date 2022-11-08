@@ -7,5 +7,4 @@ public class AcmeSearchOrderBy
 
     /// <summary>If true, indicates we want to sort in descending order</summary>
     public bool SortDescending { get; set; }
-    
 }

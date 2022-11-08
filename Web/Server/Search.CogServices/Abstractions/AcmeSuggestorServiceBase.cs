@@ -6,7 +6,7 @@ namespace Search.CogServices;
 public abstract class AcmeSuggestorServiceBase<TIndexClass> where TIndexClass : class
 {
     /// <summary>Constructor</summary>
-    protected AcmeSuggestorServiceBase(IAcmeSearchIndexService searchIndexService, IAcmeFilterService fieldService)
+    protected AcmeSuggestorServiceBase(IAcmeSearchIndexService searchIndexService, IAcmeFieldService fieldService)
     {
         SearchIndexService = searchIndexService;
         FieldService = fieldService;
@@ -14,7 +14,7 @@ public abstract class AcmeSuggestorServiceBase<TIndexClass> where TIndexClass : 
 
 
     protected IAcmeSearchIndexService SearchIndexService { get; }
-    protected IAcmeFilterService FieldService { get; }
+    protected IAcmeFieldService FieldService { get; }
     protected abstract string IndexName { get; }
     protected abstract string SuggestorName { get; }
 

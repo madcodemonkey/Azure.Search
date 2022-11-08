@@ -3,7 +3,7 @@ using Azure.Search.Documents.Models;
 
 namespace Search.CogServices;
 
-public interface IAcmeFilterService
+public interface IAcmeFieldService
 {
     /// <summary>Adds facets to your SearchOptions instance.</summary>
     /// <param name="options">The options that need facets</param>

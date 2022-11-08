@@ -2,7 +2,7 @@
 
 namespace Search.Services;
 
-public interface IHotelFieldService : IAcmeFilterService
+public interface IHotelFieldService : IAcmeFieldService
 {
 
 }

@@ -2,6 +2,7 @@
 using Search.Repositories;
 using Search.Services;
 using Search.Web.Configuration;
+using FluentValidation;
 
 namespace Search.Web.Extensions
 {
@@ -11,7 +12,10 @@ namespace Search.Web.Extensions
         public static IServiceCollection AddSearchWebServices(this IServiceCollection services, IConfiguration config)
         {
             // Automapper docs on DI: https://docs.automapper.org/en/stable/Dependency-injection.html
-            services.AddAutoMapper(typeof(MappingProfiles).Assembly); 
+            services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+
+            // Add Fluent validation
+            services.AddValidatorsFromAssemblyContaining<AcmeSearchFilterItemValidator>();
 
             var settings = new SearchServiceSettings();
             config.GetSection("SearchService").Bind(settings);
