@@ -6,8 +6,8 @@ public class AcmeSearchFieldForChildObject : AcmeSearchFieldBase
     private readonly string _childFieldName;
 
     /// <summary>Constructor</summary>
-    public AcmeSearchFieldForChildObject(int id,  string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isSecurityFilter) : 
-        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isSecurityFilter)
+    public AcmeSearchFieldForChildObject(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
+        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
     {
         string[] fields = fieldName.Split('/');
         if (fields == null || fields.Length != 2)

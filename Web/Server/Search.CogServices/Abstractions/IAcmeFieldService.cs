@@ -9,6 +9,11 @@ public interface IAcmeFieldService
     /// <param name="options">The options that need facets</param>
     void AddFacets(SearchOptions options);
 
+    /// <summary>Adds facets to your SearchOptions instance.</summary>
+    /// <param name="options">The options that need facets</param>
+    /// <param name="clearBeforeAdding">Indicates if we should clear out the highlight fields before adding more.</param>
+    void AddHighlightFields(SearchOptions options, bool clearBeforeAdding = true);
+
     /// <summary>Adds an orderby statement for a field</summary>
     /// <param name="options">The options to add orderby statement to</param>
     /// <param name="fieldId">The id of the field.  If it's not found, you will receive an exception.</param>

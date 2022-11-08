@@ -3,8 +3,8 @@
 public class AcmeSearchFieldForBooleanField : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
-    public AcmeSearchFieldForBooleanField(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isSecurityFilter) :
-        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isSecurityFilter)
+    public AcmeSearchFieldForBooleanField(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) :
+        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
     {
     }
 

@@ -12,7 +12,7 @@ public class AcmeSearchFieldForStringCollectionTests
     public void CreateFilter_EqualAndNotEqualFiltersWork_FilterCreated(AcmeSearchFilterOperatorEnum theOperator, string theValue, string expectedFilter)
     {
         // Arrange
-        var cut = new AcmeSearchFieldForStringCollection(1, FieldName, "Display Name", false, false, false, false);
+        var cut = new AcmeSearchFieldForStringCollection(1, FieldName, "Display Name", false, false, false, false, false);
 
         var values = new List<string?> { theValue };
 
@@ -33,7 +33,7 @@ public class AcmeSearchFieldForStringCollectionTests
     public void CreateFilter_OtherOperatorsDoNotBuildFilters_AnExceptionIsRaised(AcmeSearchFilterOperatorEnum theOperator)
     {
         // Arrange
-        var cut = new AcmeSearchFieldForStringCollection(1, FieldName, "Display Name", false, false, false, false);
+        var cut = new AcmeSearchFieldForStringCollection(1, FieldName, "Display Name", false, false, false, false, false);
 
         var values = new List<string?> { "true" };
 

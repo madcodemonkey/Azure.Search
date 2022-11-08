@@ -17,6 +17,10 @@ public interface IAcmeSearchField
     /// <summary>Indicates if the field can be used in a filter statement (e.g,. $filter=fieldName eq 'value')</summary>
     bool IsFilterable { get; }
 
+    /// <summary>Indicates if the field's data is highlighted when doing a search.  Realize that highlights come back in there on collection and
+    /// are not part of the document.</summary>
+    public bool IsHighlighted { get; }
+    
     /// <summary>Indicates that this filter is used for security trimming</summary>
     public bool IsSecurityFilter { get; }
     

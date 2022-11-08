@@ -3,8 +3,8 @@
 public class AcmeSearchFieldForDateTimeOffsetField : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
-    public AcmeSearchFieldForDateTimeOffsetField(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isSecurityFilter) : 
-        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isSecurityFilter)
+    public AcmeSearchFieldForDateTimeOffsetField(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
+        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
     {
     }
 

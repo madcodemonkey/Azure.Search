@@ -11,7 +11,7 @@ public class AcmeSearchFieldForChildObjectTests
     public void CreateFilter_EqualAndNotEqualFiltersWork_FilterCreated(AcmeSearchFilterOperatorEnum theOperator, string theValue, string expectedFilter)
     {
         // Arrange
-        var cut = new AcmeSearchFieldForChildObject(1, FieldName, "Display Name", false, false, false, false);
+        var cut = new AcmeSearchFieldForChildObject(1, FieldName, "Display Name", false, false, false, false, false);
 
         var values = new List<string?> { theValue};
 
@@ -32,7 +32,7 @@ public class AcmeSearchFieldForChildObjectTests
     public void CreateFilter_OtherOperatorsDoNotBuildFilters_AnExceptionIsRaised(AcmeSearchFilterOperatorEnum theOperator)
     {
         // Arrange
-        var cut = new AcmeSearchFieldForChildObject(1,  FieldName, "Display Name", false, false, false, false);
+        var cut = new AcmeSearchFieldForChildObject(1,  FieldName, "Display Name", false, false, false, false, false);
 
         var values = new List<string?> { "true" };
 

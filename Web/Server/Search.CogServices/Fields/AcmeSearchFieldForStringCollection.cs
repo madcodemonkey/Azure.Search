@@ -5,8 +5,8 @@ namespace Search.CogServices;
 public class AcmeSearchFieldForStringCollection : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
-    public AcmeSearchFieldForStringCollection(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isSecurityFilter) : 
-        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isSecurityFilter)
+    public AcmeSearchFieldForStringCollection(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
+        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
     {
     }
 

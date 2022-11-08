@@ -6,10 +6,11 @@ public enum HotelDocumentFieldEnum
     BaseRate = 2,
     HotelName = 3,
     Category = 4,
-    Tags = 5,
-    ParkingIncluded = 6,
-    SmokingAllowed = 7,
-    LastRenovationDate = 8,
-    Rating = 9,
-    Roles = 10
+    Description = 5,
+    Tags = 6,
+    ParkingIncluded = 7,
+    SmokingAllowed = 8,
+    LastRenovationDate = 9,
+    Rating = 10,
+    Roles = 11
 }

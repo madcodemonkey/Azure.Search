@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿using System.Globalization;
+using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 
@@ -19,7 +20,7 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
     /// <summary>Searches using the Azure Search API.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
-    public async Task<AcmeSearchQueryResult<SearchResult<TIndexClass>>> SearchAsync(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
+    public virtual async Task<AcmeSearchQueryResult<SearchResult<TIndexClass>>> SearchAsync(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
     {
         SearchOptions options = CreateDefaultOptions(request, rolesTheUserIsAssigned);
 
@@ -35,7 +36,7 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
     /// <param name="request">The search request from the client side.</param>
     /// <param name="azSearchResult">The response from the Azure Search index.</param>
     /// <returns></returns>
-    private async Task<AcmeSearchQueryResult<SearchResult<TIndexClass>>> ConvertResultsAsync(AcmeSearchQuery request, Response<SearchResults<TIndexClass>> azSearchResult)
+    protected virtual async Task<AcmeSearchQueryResult<SearchResult<TIndexClass>>> ConvertResultsAsync(AcmeSearchQuery request, Response<SearchResults<TIndexClass>> azSearchResult)
     {
         var result = new AcmeSearchQueryResult<SearchResult<TIndexClass>>
         {
@@ -93,6 +94,8 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
 
         FieldService.AddFacets(options);
 
+        FieldService.AddHighlightFields(options);
+
         if (request.OrderByFields.Count == 0)
             FieldService.AddScoreToOrderBy(options);
         else FieldService.AddOrderBy(options, request.OrderByFields);
@@ -100,4 +103,39 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
 
         return options;
     }
+
+    /// <summary>Maps the highlight fields onto the document object.  This is handy if you don't really need the original document text
+    /// and just want highlight text returned in the document object.</summary>
+    /// <param name="docs">The docs that were found by the Azure Search method.</param>
+    /// <param name="highlightPropertyNames">The highlighted property names.</param>
+    /// <exception cref="ArgumentException">If you give us a property name that doesn't exist, you could get an exception.</exception>
+    protected virtual void MapHighlightsOnToDocument(List<SearchResult<TIndexClass>> docs, params string[] highlightPropertyNames)
+    {
+        foreach (SearchResult<TIndexClass> oneDoc in docs)
+        {
+            if (oneDoc.Highlights == null) continue;
+            
+            foreach (var oneDocHighlight in oneDoc.Highlights)
+            {
+                if (oneDocHighlight.Value == null || oneDocHighlight.Value.Count == 0) continue;
+
+                foreach (string propertyName in highlightPropertyNames)
+                {
+                    // Note: That I need the property name that matches the C# document object; however, the field name in the highlight document
+                    //       (oneDocHighlight.Key) could be in a JSON camelcase format, so I do a string comparison and ignore the case so
+                    //       that I can find the match.
+                    if (string.Compare(propertyName, oneDocHighlight.Key, CultureInfo.InvariantCulture, CompareOptions.IgnoreCase) == 0)
+                    {
+                        var prop = typeof(TIndexClass).GetProperty(propertyName); 
+                        if (prop == null) throw new ArgumentException($"There is no property on the {typeof(TIndexClass)} named {propertyName}!");
+
+                        // I've still yet to see a case where there was more than one value.  I'm not sure why this is an array.
+                        prop.SetValue(oneDoc.Document, oneDocHighlight.Value[0]);
+                    }
+                }
+            }
+        }
+
+    }
+
 }

@@ -94,6 +94,23 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
         }
     }
 
+
+    /// <summary>Adds facets to your SearchOptions instance.</summary>
+    /// <param name="options">The options that need facets</param>
+    /// <param name="clearBeforeAdding">Indicates if we should clear out the highlight fields before adding more.</param>
+    public void AddHighlightFields(SearchOptions options, bool clearBeforeAdding = true)
+    {
+        if (clearBeforeAdding) options.HighlightFields.Clear();
+        
+        foreach (var field in FieldList)
+        {
+            if (field.IsHighlighted == false)
+                continue;
+
+            options.HighlightFields.Add(field.FieldName);
+        }
+    }
+
     /// <summary>Builds and OData filter for Azure Search based on user specified filters and the roles that user has been assigned.</summary>
     /// <param name="filters">Filters to use</param>
     /// <param name="rolesTheUserIsAssigned">Roles assigned to the current user.</param>

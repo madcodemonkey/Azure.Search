@@ -21,7 +21,7 @@ public class AcmeSearchFieldForStringFieldTests
     public void CreateFilter_AllOperatorsWorkWithOneValue_FilterCreated(AcmeSearchFilterOperatorEnum theOperator, string theValue, string expectedFilter)
     {
         // Arrange
-        var cut = new AcmeSearchFieldForStringField(1, FieldName, "Display Name", false, false, false, false);
+        var cut = new AcmeSearchFieldForStringField(1, FieldName, "Display Name", false, false, false, false, false);
 
         var values = new List<string?> { theValue };
 
@@ -39,7 +39,7 @@ public class AcmeSearchFieldForStringFieldTests
     public void CreateFilter_TheWithinOperatorWillThrowAnExceptionIfOnlyOneValueIsPassedIn_AnExceptionIsThrown()
     {
         // Arrange
-        var cut = new AcmeSearchFieldForNumberField(1, FieldName, "Display Name", false, false, false, false);
+        var cut = new AcmeSearchFieldForNumberField(1, FieldName, "Display Name", false, false, false, false, false);
 
         var values = new List<string?> { "James" };
 

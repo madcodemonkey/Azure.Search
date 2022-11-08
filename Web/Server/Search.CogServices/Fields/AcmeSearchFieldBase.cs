@@ -3,13 +3,14 @@
 public abstract class AcmeSearchFieldBase : IAcmeSearchField
 {
     /// <summary>Constructor</summary>
-    protected AcmeSearchFieldBase(int id, string displayName, string fieldName, bool isFilterable, bool isSortable, bool isFacetable, bool isSecurityFilter)
+    protected AcmeSearchFieldBase(int id, string displayName, string fieldName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter)
     {
         Id = id;
         DisplayName = displayName;
         FieldName = fieldName;
         IsFacetable = isFacetable;
         IsFilterable = isFilterable;
+        IsHighlighted = isHighlighted;
         IsSecurityFilter = isSecurityFilter;
         IsSortable = isSortable;
     }
@@ -28,7 +29,11 @@ public abstract class AcmeSearchFieldBase : IAcmeSearchField
     
     /// <summary>Indicates if the field can be used in a filter statement (e.g,. $filter=fieldName eq 'value')</summary>
     public bool IsFilterable { get; private set; }
-    
+
+    /// <summary>Indicates if the field's data is highlighted when doing a search.  Realize that highlights come back in there on collection and
+    /// are not part of the document.</summary>
+    public bool IsHighlighted { get; private set; }
+
     /// <summary>Indicates that this filter is used for security trimming</summary>
     public bool IsSecurityFilter { get; private set; }
     
