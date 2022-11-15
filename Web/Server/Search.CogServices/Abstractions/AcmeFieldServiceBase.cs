@@ -132,8 +132,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
         {
             if (sbFilter.Length > 0)
                 sbFilter.Append(" and ");
-            FindById(filter.Id);
-
+            
             var searchFilter = FindById(filter.Id);
             if (searchFilter == null)
                 throw new ArgumentNullException($"Could not find a search filter with an id of '{filter.Id}'");
