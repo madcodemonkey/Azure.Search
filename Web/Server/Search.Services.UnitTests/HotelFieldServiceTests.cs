@@ -21,7 +21,7 @@ namespace Search.Services.UnitTests
             // Act & Assert
             foreach (SearchField field in searchFields)
             {
-                var acmeSearchField = cut.FindByFieldName(field.Name);
+                var acmeSearchField = cut.FindByIndexFieldName(field.Name);
                 if (acmeSearchField == null) continue;
                 
                 Assert.AreEqual(acmeSearchField.IsFacetable, field.IsFacetable, $"The {field.Name} field IsFacetable setting is wrong!  The document used to to create the index says it is {field.IsFacetable}!");

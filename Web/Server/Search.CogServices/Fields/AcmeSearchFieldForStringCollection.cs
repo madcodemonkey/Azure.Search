@@ -5,8 +5,8 @@ namespace Search.CogServices;
 public class AcmeSearchFieldForStringCollection : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
-    public AcmeSearchFieldForStringCollection(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
-        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
+    public AcmeSearchFieldForStringCollection(int id, string indexFieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
+        base(id, displayName, indexFieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
     {
     }
 
@@ -20,7 +20,7 @@ public class AcmeSearchFieldForStringCollection : AcmeSearchFieldBase
             return string.Empty;
 
         if (searchOperator != AcmeSearchFilterOperatorEnum.Equal)
-            throw new ArgumentException($"Currently we only handle equal operator for collections!  Please correct the search operator for the field named {FieldName}");
+            throw new ArgumentException($"Currently we only handle equal operator for collections!  Please correct the search operator for the field named {IndexFieldName}");
 
         // Do not make sb a member of the class. 
         //  Create it each time in case we make this class a singleton!
@@ -30,7 +30,7 @@ public class AcmeSearchFieldForStringCollection : AcmeSearchFieldBase
         // Another example: https://docs.microsoft.com/en-us/azure/search/search-security-trimming-for-azure-search-with-aad#step-2-compose-the-search-request
         // Note: The each item is NOT surrounded by single quotes.  ALL items are surround by a pair of single quotes.
         //       You need OR syntax to do that..see shorthand syntax link above and look at the top of the page.
-        sb.Append($"{this.FieldName}/any(g:search.in(g, '");
+        sb.Append($"{this.IndexFieldName}/any(g:search.in(g, '");
 
         // Length of string is greater than zero now, so need a way of tracking when a comma is needed.
         bool commaNeeded = false;

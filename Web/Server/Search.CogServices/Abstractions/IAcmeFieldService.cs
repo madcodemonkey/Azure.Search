@@ -50,9 +50,9 @@ public interface IAcmeFieldService
     /// <returns></returns>
     List<AcmeSearchFacet> ConvertFacets(IDictionary<string, IList<FacetResult>> facets, List<AcmeSearchFilterItem> filters);
 
-    /// <summary>Finds a filter by its name it was given when it was created.</summary>
-    /// <param name="fieldName">The field name to find.</param>
-    IAcmeSearchField? FindByFieldName(string fieldName);
+    /// <summary>Finds a filter by Azure Index field name it was given when it was created.</summary>
+    /// <param name="indexFieldName">The Azure Index field name to find.</param>
+    IAcmeSearchField? FindByIndexFieldName(string indexFieldName);
 
     /// <summary>Finds a filter by the id it was given when it was created.</summary>
     /// <param name="id">The id to find</param>

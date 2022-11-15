@@ -3,8 +3,8 @@
 public class AcmeSearchFieldForStringField : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
-    public AcmeSearchFieldForStringField(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
-        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
+    public AcmeSearchFieldForStringField(int id, string indexFieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
+        base(id, displayName, indexFieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
     {
     }
    
@@ -16,7 +16,7 @@ public class AcmeSearchFieldForStringField : AcmeSearchFieldBase
     {
         string theValue = values[0] == null ? "null" : $"'{values[0]}'";
 
-        return $"{this.FieldName} {OperatorToString(searchOperator)} {theValue}";
+        return $"{this.IndexFieldName} {OperatorToString(searchOperator)} {theValue}";
     }
 
 }

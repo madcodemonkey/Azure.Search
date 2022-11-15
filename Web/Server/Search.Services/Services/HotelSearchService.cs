@@ -18,6 +18,9 @@ public class HotelSearchService : AcmeSearchServiceBase<HotelDocument>, IHotelSe
 
     protected override string IndexName => _settings.Hotel.IndexName;
 
+    /// <summary>Searches using the Azure Search API.</summary>
+    /// <param name="request">The request from the user.</param>
+    /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
     public override async Task<AcmeSearchQueryResult<SearchResult<HotelDocument>>> SearchAsync(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
     {
         var result = await base.SearchAsync(request, rolesTheUserIsAssigned);

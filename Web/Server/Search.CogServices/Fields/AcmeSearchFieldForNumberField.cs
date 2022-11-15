@@ -3,8 +3,8 @@
 public class AcmeSearchFieldForNumberField : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
-    public AcmeSearchFieldForNumberField(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
-        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
+    public AcmeSearchFieldForNumberField(int id, string indexFieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
+        base(id, displayName, indexFieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
     {
     }
     
@@ -23,11 +23,11 @@ public class AcmeSearchFieldForNumberField : AcmeSearchFieldBase
             if (values.Count < 2)
                 throw new ArgumentException($"To use the {AcmeSearchFilterOperatorEnum.WithinRange} operator with a number field, you must include at least two values!");
 
-            return $"{this.FieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.GreaterOrEqual)} {ConvertToNullOrTrimString(values[0])} and " +
-                $"{this.FieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.LessOrEqual)} {ConvertToNullOrTrimString(values[1])}";
+            return $"{this.IndexFieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.GreaterOrEqual)} {ConvertToNullOrTrimString(values[0])} and " +
+                $"{this.IndexFieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.LessOrEqual)} {ConvertToNullOrTrimString(values[1])}";
         }
 
-        return $"{this.FieldName} {OperatorToString(searchOperator)} {ConvertToNullOrTrimString(values[0])}";
+        return $"{this.IndexFieldName} {OperatorToString(searchOperator)} {ConvertToNullOrTrimString(values[0])}";
     }
 
     protected string ConvertToNullOrTrimString(string? value)

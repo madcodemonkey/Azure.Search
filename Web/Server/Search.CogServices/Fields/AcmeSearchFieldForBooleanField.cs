@@ -3,8 +3,8 @@
 public class AcmeSearchFieldForBooleanField : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
-    public AcmeSearchFieldForBooleanField(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) :
-        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
+    public AcmeSearchFieldForBooleanField(int id, string indexFieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) :
+        base(id, displayName, indexFieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
     {
     }
 
@@ -18,12 +18,12 @@ public class AcmeSearchFieldForBooleanField : AcmeSearchFieldBase
             return string.Empty;
 
         if (searchOperator != AcmeSearchFilterOperatorEnum.Equal && searchOperator != AcmeSearchFilterOperatorEnum.NotEqual)
-            throw new ArgumentException($"Please specify either equal or not equal for boolean field named {FieldName}!");
+            throw new ArgumentException($"Please specify either equal or not equal for boolean field named {IndexFieldName}!");
 
         string booleanAsString = values[0]?.ToLower().Trim() ?? "null";
         if (booleanAsString != "null" && booleanAsString != "true" && booleanAsString != "false")
-            throw new ArgumentException($"Please specify either 'true' or 'false' for the field value for the field named {FieldName}!");
+            throw new ArgumentException($"Please specify either 'true' or 'false' for the field value for the field named {IndexFieldName}!");
 
-        return $"{this.FieldName} {OperatorToString(searchOperator)} {booleanAsString}";
+        return $"{this.IndexFieldName} {OperatorToString(searchOperator)} {booleanAsString}";
     }
 }

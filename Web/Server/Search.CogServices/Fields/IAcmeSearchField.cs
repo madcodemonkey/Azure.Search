@@ -8,8 +8,8 @@ public interface IAcmeSearchField
     /// <summary>The name you would display in the UI.</summary>
     string DisplayName { get; }
 
-    /// <summary>The actual field name that we would NEVER send to the user.</summary>
-    string FieldName { get; }
+    /// <summary>The actual field name in the Azure Index that we would NEVER send to the user.</summary>
+    string IndexFieldName { get; }
 
     /// <summary>Indicates if the filter can also be used as a facet.</summary>
     bool IsFacetable { get; }

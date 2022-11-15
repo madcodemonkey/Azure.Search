@@ -24,11 +24,11 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
         return FieldList.FirstOrDefault(w => w.Id == id);
     }
 
-    /// <summary>Finds a filter by its name it was given when it was created.</summary>
-    /// <param name="fieldName">The field name to find.</param>
-    public IAcmeSearchField? FindByFieldName(string fieldName)
+    /// <summary>Finds a filter by Azure Index field name it was given when it was created.</summary>
+    /// <param name="indexFieldName">The Azure Index field name to find.</param>
+    public IAcmeSearchField? FindByIndexFieldName(string indexFieldName)
     {
-        return FieldList.FirstOrDefault(w => w.FieldName == fieldName);
+        return FieldList.FirstOrDefault(w => w.IndexFieldName == indexFieldName);
     }
 
     /// <summary>Adds an orderby statement for a field</summary>
@@ -47,7 +47,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
 
         string sortOrder = descending ? "desc" : "asc";
         
-        options.OrderBy.Add($"{field.FieldName} {sortOrder}");
+        options.OrderBy.Add($"{field.IndexFieldName} {sortOrder}");
     }
 
     /// <summary>Adds an orderby statement for a field</summary>
@@ -90,7 +90,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
             // The default is 10, but you can increase or decrease this value using the
             // count parameter on the facet attribute. 
             // See 5th example here https://docs.microsoft.com/en-us/rest/api/searchservice/search-documents#bkmk_examples
-            options.Facets.Add($"{field.FieldName},count:{MaximNumberOfFacets}");
+            options.Facets.Add($"{field.IndexFieldName},count:{MaximNumberOfFacets}");
         }
     }
 
@@ -107,7 +107,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
             if (field.IsHighlighted == false)
                 continue;
 
-            options.HighlightFields.Add(field.FieldName);
+            options.HighlightFields.Add(field.IndexFieldName);
         }
     }
 
@@ -175,7 +175,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
             var oneFacet = new AcmeSearchFacet();
 
             string facetName = facet.Key;
-            var searchFilter = FindByFieldName(facetName);
+            var searchFilter = FindByIndexFieldName(facetName);
 
             if (searchFilter == null)
                 throw new ArgumentNullException($"Could not find a search filter named '{facetName}'");

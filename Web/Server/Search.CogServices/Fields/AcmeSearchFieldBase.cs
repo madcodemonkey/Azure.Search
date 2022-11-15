@@ -3,11 +3,11 @@
 public abstract class AcmeSearchFieldBase : IAcmeSearchField
 {
     /// <summary>Constructor</summary>
-    protected AcmeSearchFieldBase(int id, string displayName, string fieldName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter)
+    protected AcmeSearchFieldBase(int id, string displayName, string indexFieldName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter)
     {
         Id = id;
         DisplayName = displayName;
-        FieldName = fieldName;
+        IndexFieldName = indexFieldName;
         IsFacetable = isFacetable;
         IsFilterable = isFilterable;
         IsHighlighted = isHighlighted;
@@ -22,7 +22,7 @@ public abstract class AcmeSearchFieldBase : IAcmeSearchField
     public string DisplayName { get; private set; }
     
     /// <summary>The actual field name that we would NEVER send to the user.</summary>
-    public string FieldName { get; private set; }
+    public string IndexFieldName { get; private set; }
 
     /// <summary>Indicates if the filter can also be used as a facet.</summary>
     public bool IsFacetable { get; private set; }

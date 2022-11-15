@@ -6,10 +6,10 @@ public class AcmeSearchFieldForChildObject : AcmeSearchFieldBase
     private readonly string _childFieldName;
 
     /// <summary>Constructor</summary>
-    public AcmeSearchFieldForChildObject(int id, string fieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
-        base(id, displayName, fieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
+    public AcmeSearchFieldForChildObject(int id, string indexFieldName, string displayName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
+        base(id, displayName, indexFieldName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
     {
-        string[] fields = fieldName.Split('/');
+        string[] fields = indexFieldName.Split('/');
         if (fields == null || fields.Length != 2)
             throw new ArgumentException("Please use slash syntax to denote parent and child fields (e.g., 'authors/name' where authors is parent and name is child object field name)");
         _parentFieldName = fields[0];
@@ -26,7 +26,7 @@ public class AcmeSearchFieldForChildObject : AcmeSearchFieldBase
             return string.Empty;
 
         if (searchOperator != AcmeSearchFilterOperatorEnum.Equal)
-            throw new ArgumentException($"Currently we only handle equal operator for collections!  Please correct the search operator for the field named {FieldName}");
+            throw new ArgumentException($"Currently we only handle equal operator for collections!  Please correct the search operator for the field named {IndexFieldName}");
 
         //  return $"authors/any(c: c/name eq '{values[0]}')";
         return $"{this._parentFieldName}/any(c: c/{_childFieldName} eq '{values[0]}')";
