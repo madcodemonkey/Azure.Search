@@ -3,16 +3,17 @@ namespace Search.CogServices.UnitTests;
 [TestClass]
 public class AcmeSearchFieldForStringCollectionTests
 {
-    private const string FieldName = "myField";
+    private const string IndexFieldName = "myField";
+    private const string PropFieldName = "MyField";
 
     [DataTestMethod]
-    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "1,21,3", $"{FieldName}/any(g:search.in(g, '1,21,3', ','))")]
-    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "1, 21, 3", $"{FieldName}/any(g:search.in(g, '1, 21, 3', ','))")]
-    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "7,8,9", $"{FieldName}/any(g:search.in(g, '7,8,9', ','))")]
+    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "1,21,3", $"{IndexFieldName}/any(g:search.in(g, '1,21,3', ','))")]
+    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "1, 21, 3", $"{IndexFieldName}/any(g:search.in(g, '1, 21, 3', ','))")]
+    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "7,8,9", $"{IndexFieldName}/any(g:search.in(g, '7,8,9', ','))")]
     public void CreateFilter_EqualAndNotEqualFiltersWork_FilterCreated(AcmeSearchFilterOperatorEnum theOperator, string theValue, string expectedFilter)
     {
         // Arrange
-        var cut = new AcmeSearchFieldForStringCollection(1, FieldName, "Display Name", false, false, false, false, false);
+        var cut = new AcmeSearchFieldForStringCollection(1, PropFieldName, IndexFieldName, "Display Name", false, false, false, false, false);
 
         var values = new List<string?> { theValue };
 
@@ -33,7 +34,7 @@ public class AcmeSearchFieldForStringCollectionTests
     public void CreateFilter_OtherOperatorsDoNotBuildFilters_AnExceptionIsRaised(AcmeSearchFilterOperatorEnum theOperator)
     {
         // Arrange
-        var cut = new AcmeSearchFieldForStringCollection(1, FieldName, "Display Name", false, false, false, false, false);
+        var cut = new AcmeSearchFieldForStringCollection(1, PropFieldName, IndexFieldName, "Display Name", false, false, false, false, false);
 
         var values = new List<string?> { "true" };
 

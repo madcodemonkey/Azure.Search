@@ -3,24 +3,25 @@ namespace Search.CogServices.UnitTests;
 [TestClass]
 public class AcmeSearchFieldForBooleanFieldTests
 {
-    private const string FieldName = "myField";
+    private const string IndexFieldName = "myField";
+    private const string PropFieldName = "MyField";
 
     [DataTestMethod]
-    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "true", $"{FieldName} eq true")]
-    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "TRUE", $"{FieldName} eq true")]
-    [DataRow(AcmeSearchFilterOperatorEnum.Equal, " true", $"{FieldName} eq true")]
-    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "false", $"{FieldName} eq false")]
-    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "FALSE", $"{FieldName} eq false")]
-    [DataRow(AcmeSearchFilterOperatorEnum.Equal, " false", $"{FieldName} eq false")]
-    [DataRow(AcmeSearchFilterOperatorEnum.Equal, null, $"{FieldName} eq null")]
-    [DataRow(AcmeSearchFilterOperatorEnum.NotEqual, "true", $"{FieldName} ne true")]
-    [DataRow(AcmeSearchFilterOperatorEnum.NotEqual, "false", $"{FieldName} ne false")]
-    [DataRow(AcmeSearchFilterOperatorEnum.NotEqual, null, $"{FieldName} ne null")]
+    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "true", $"{IndexFieldName} eq true")]
+    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "TRUE", $"{IndexFieldName} eq true")]
+    [DataRow(AcmeSearchFilterOperatorEnum.Equal, " true", $"{IndexFieldName} eq true")]
+    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "false", $"{IndexFieldName} eq false")]
+    [DataRow(AcmeSearchFilterOperatorEnum.Equal, "FALSE", $"{IndexFieldName} eq false")]
+    [DataRow(AcmeSearchFilterOperatorEnum.Equal, " false", $"{IndexFieldName} eq false")]
+    [DataRow(AcmeSearchFilterOperatorEnum.Equal, null, $"{IndexFieldName} eq null")]
+    [DataRow(AcmeSearchFilterOperatorEnum.NotEqual, "true", $"{IndexFieldName} ne true")]
+    [DataRow(AcmeSearchFilterOperatorEnum.NotEqual, "false", $"{IndexFieldName} ne false")]
+    [DataRow(AcmeSearchFilterOperatorEnum.NotEqual, null, $"{IndexFieldName} ne null")]
 
     public void CreateFilter_EqualAndNotEqualFiltersWork_FilterCreated(AcmeSearchFilterOperatorEnum theOperator, string theValue, string expectedFilter)
     {
         // Arrange
-        var cut = new AcmeSearchFieldForBooleanField(1, FieldName, "Display Name", false, false, false, false, false);
+        var cut = new AcmeSearchFieldForBooleanField(1, PropFieldName, IndexFieldName, "Display Name", false, false, false, false, false);
 
         var values = new List<string?> { theValue};
 
@@ -40,7 +41,7 @@ public class AcmeSearchFieldForBooleanFieldTests
     public void CreateFilter_OtherOperatorsDoNotBuildFilters_AnExceptionIsRaised(AcmeSearchFilterOperatorEnum theOperator)
     {
         // Arrange
-        var cut = new AcmeSearchFieldForBooleanField(1, FieldName, "Display Name", false, false, false, false, false);
+        var cut = new AcmeSearchFieldForBooleanField(1, PropFieldName, IndexFieldName, "Display Name", false, false, false, false, false);
 
         var values = new List<string?> { "true" };
 

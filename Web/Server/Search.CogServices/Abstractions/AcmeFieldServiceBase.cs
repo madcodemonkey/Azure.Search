@@ -31,6 +31,13 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
         return FieldList.FirstOrDefault(w => w.IndexFieldName == indexFieldName);
     }
 
+    /// <summary>Finds a filter by C# class property name.  This is the class used to create the index and id decorated with attributes.</summary>
+    /// <param name="propFieldName">The C# class property name to find.</param>
+    public IAcmeSearchField? FindByPropertyFieldName(string propFieldName)
+    {
+        return FieldList.FirstOrDefault(w => w.PropertyFieldName == propFieldName);
+    }
+    
     /// <summary>Adds an orderby statement for a field</summary>
     /// <param name="options">The options to add orderby statement to</param>
     /// <param name="fieldId">The id of the field.  If it's not found, you will receive an exception.</param>

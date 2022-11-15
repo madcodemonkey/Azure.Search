@@ -25,17 +25,17 @@ public class HotelFieldService : AcmeFieldServiceBase, IHotelFieldService
         //       1. I'm adding additional info (security trimming) that is not on the attribute
         //       2. I'm using an email to set the field id and that enum is going to be in the client side code as well.
         
-        fieldList.Add(new AcmeSearchFieldForNumberField((int) HotelDocumentFieldEnum.BaseRate, "baseRate", "Base Rate", true, true, true, false, false));
-        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.Category, "category", "Category", true, true, true, true, false));
-        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.Description, "description", "Description", false, false, false, true, false));
-        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.HotelId, "hotelId", "Id", true, false, false, false, false));
-        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.HotelName, "hotelName", "Hotel Name", true, true, false, true, false));
-        fieldList.Add(new AcmeSearchFieldForBooleanField((int) HotelDocumentFieldEnum.LastRenovationDate, "lastRenovationDate", "Last Renovation Date", true, true, false, false, false));
-        fieldList.Add(new AcmeSearchFieldForBooleanField((int) HotelDocumentFieldEnum.ParkingIncluded, "parkingIncluded", "Parking Included", true, false, true, false, false));
-        fieldList.Add(new AcmeSearchFieldForBooleanField((int) HotelDocumentFieldEnum.SmokingAllowed, "smokingAllowed", "Smoking Allowed", true, false, true, false, false));
-        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.Rating, "rating", "Rating", true, true, true, false, false));
-        fieldList.Add(new AcmeSearchFieldForStringCollection((int) HotelDocumentFieldEnum.Roles, "roles", "Roles", true, false, false, false, true)); // Security Trimming field
-        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.Tags, "tags", "Tags", true, false, true, false, false));
+        fieldList.Add(new AcmeSearchFieldForNumberField((int) HotelDocumentFieldEnum.BaseRate, nameof(HotelDocument.BaseRate), "baseRate", "Base Rate", true, true, true, false, false));
+        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.Category, nameof(HotelDocument.Category), "category", "Category", true, true, true, true, false));
+        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.Description, nameof(HotelDocument.Description), "description", "Description", false, false, false, true, false));
+        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.HotelId, nameof(HotelDocument.HotelId), "hotelId", "Id", true, false, false, false, false));
+        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.HotelName, nameof(HotelDocument.HotelName), "hotelName", "Hotel Name", true, true, false, true, false));
+        fieldList.Add(new AcmeSearchFieldForBooleanField((int) HotelDocumentFieldEnum.LastRenovationDate, nameof(HotelDocument.LastRenovationDate), "lastRenovationDate", "Last Renovation Date", true, true, false, false, false));
+        fieldList.Add(new AcmeSearchFieldForBooleanField((int) HotelDocumentFieldEnum.ParkingIncluded, nameof(HotelDocument.ParkingIncluded), "parkingIncluded", "Parking Included", true, false, true, false, false));
+        fieldList.Add(new AcmeSearchFieldForBooleanField((int) HotelDocumentFieldEnum.SmokingAllowed, nameof(HotelDocument.SmokingAllowed), "smokingAllowed", "Smoking Allowed", true, false, true, false, false));
+        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.Rating, nameof(HotelDocument.Rating), "rating", "Rating", true, true, true, false, false));
+        fieldList.Add(new AcmeSearchFieldForStringCollection((int) HotelDocumentFieldEnum.Roles, nameof(HotelDocument.Roles), "roles", "Roles", true, false, false, false, true)); // Security Trimming field
+        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.Tags, nameof(HotelDocument.Tags), "tags", "Tags", true, false, true, false, false));
 
         return fieldList;
     }

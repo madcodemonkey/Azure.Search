@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+﻿using System.Text;
 using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
@@ -126,10 +126,15 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
     /// <summary>Maps the highlight fields onto the document object.  This is handy if you don't really need the original document text
     /// and just want highlight text returned in the document object.</summary>
     /// <param name="docs">The docs that were found by the Azure Search method.</param>
-    /// <param name="highlightPropertyNames">The highlighted property names.</param>
+    /// <param name="dividerBetweenHighlights">The text you would like between the highlights if more than one is found for a given field.
+    /// In a field that contains a LOT of text, it's possible that you could get more than one highlight in different parts of the document.
+    /// Sometimes it looks like it breaks it up by sentences and sometimes not.  This is what you want between the highlights.  It may not
+    /// make any sense if the user sees them all smashed together so two breaks is the default.</param>
     /// <exception cref="ArgumentException">If you give us a property name that doesn't exist, you could get an exception.</exception>
-    protected virtual void MapHighlightsOnToDocument(List<SearchResult<TIndexClass>> docs, params string[] highlightPropertyNames)
+    protected virtual void MapHighlightsOnToDocument(List<SearchResult<TIndexClass>> docs, string dividerBetweenHighlights = "<br/><br/>")
     {
+        var sb = new StringBuilder();
+
         foreach (SearchResult<TIndexClass> oneDoc in docs)
         {
             if (oneDoc.Highlights == null) continue;
@@ -138,20 +143,25 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
             {
                 if (oneDocHighlight.Value == null || oneDocHighlight.Value.Count == 0) continue;
 
-                foreach (string propertyName in highlightPropertyNames)
-                {
-                    // Note: That I need the property name that matches the C# document object; however, the field name in the highlight document
-                    //       (oneDocHighlight.Key) could be in a JSON camelcase format, so I do a string comparison and ignore the case so
-                    //       that I can find the match.
-                    if (string.Compare(propertyName, oneDocHighlight.Key, CultureInfo.InvariantCulture, CompareOptions.IgnoreCase) == 0)
-                    {
-                        var prop = typeof(TIndexClass).GetProperty(propertyName); 
-                        if (prop == null) throw new ArgumentException($"There is no property on the {typeof(TIndexClass)} named {propertyName}!");
+                var searchField = FieldService.FindByIndexFieldName(oneDocHighlight.Key);
 
-                        // I've still yet to see a case where there was more than one value.  I'm not sure why this is an array.
-                        prop.SetValue(oneDoc.Document, oneDocHighlight.Value[0]);
-                    }
+                if (searchField == null)
+                    throw new ArgumentException($"The field service could not find a property on the {typeof(TIndexClass)} named {oneDocHighlight.Key}!");
+                
+                var prop = typeof(TIndexClass).GetProperty(searchField.PropertyFieldName);
+                if (prop == null) throw new ArgumentException($"There is no property on the {typeof(TIndexClass)} named {searchField.PropertyFieldName}!");
+                
+                // You'll have more than one string if the text property being search is very large.
+                // The individual strings will correspond to sentences most of the time, but not always.
+                sb.Clear();
+                foreach (string oneHighlight in oneDocHighlight.Value)
+                {
+                    if (sb.Length > 0)
+                        sb.Append(dividerBetweenHighlights);
+                    sb.Append(oneHighlight);
                 }
+
+                prop.SetValue(oneDoc.Document, sb.ToString());
             }
         }
 

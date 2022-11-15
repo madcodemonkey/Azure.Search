@@ -11,6 +11,9 @@ public interface IAcmeSearchField
     /// <summary>The actual field name in the Azure Index that we would NEVER send to the user.</summary>
     string IndexFieldName { get; }
 
+    /// <summary>The name of the property on the C# class that maps to the field.</summary>
+    public string PropertyFieldName { get; }
+
     /// <summary>Indicates if the filter can also be used as a facet.</summary>
     bool IsFacetable { get; }
 

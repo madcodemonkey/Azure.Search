@@ -3,7 +3,8 @@ namespace Search.CogServices.UnitTests;
 [TestClass]
 public class AcmeSearchFieldForChildObjectTests
 {
-    private const string FieldName = "authors/name";
+    private const string IndexFieldName = "authors/name";
+    private const string PropFieldName = "name";
 
     [DataTestMethod]
     [DataRow(AcmeSearchFilterOperatorEnum.Equal, "James", "authors/any(c: c/name eq 'James')")]
@@ -11,7 +12,7 @@ public class AcmeSearchFieldForChildObjectTests
     public void CreateFilter_EqualAndNotEqualFiltersWork_FilterCreated(AcmeSearchFilterOperatorEnum theOperator, string theValue, string expectedFilter)
     {
         // Arrange
-        var cut = new AcmeSearchFieldForChildObject(1, FieldName, "Display Name", false, false, false, false, false);
+        var cut = new AcmeSearchFieldForChildObject(1, PropFieldName, IndexFieldName, "Display Name", false, false, false, false, false);
 
         var values = new List<string?> { theValue};
 
@@ -32,7 +33,7 @@ public class AcmeSearchFieldForChildObjectTests
     public void CreateFilter_OtherOperatorsDoNotBuildFilters_AnExceptionIsRaised(AcmeSearchFilterOperatorEnum theOperator)
     {
         // Arrange
-        var cut = new AcmeSearchFieldForChildObject(1,  FieldName, "Display Name", false, false, false, false, false);
+        var cut = new AcmeSearchFieldForChildObject(1, null, IndexFieldName, "Display Name", false, false, false, false, false);
 
         var values = new List<string?> { "true" };
 

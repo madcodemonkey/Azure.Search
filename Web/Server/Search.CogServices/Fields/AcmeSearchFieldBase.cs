@@ -3,11 +3,13 @@
 public abstract class AcmeSearchFieldBase : IAcmeSearchField
 {
     /// <summary>Constructor</summary>
-    protected AcmeSearchFieldBase(int id, string displayName, string indexFieldName, bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter)
+    protected AcmeSearchFieldBase(int id, string propertyFieldName, string indexFieldName, string displayName,
+        bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter)
     {
         Id = id;
         DisplayName = displayName;
         IndexFieldName = indexFieldName;
+        PropertyFieldName = propertyFieldName;
         IsFacetable = isFacetable;
         IsFilterable = isFilterable;
         IsHighlighted = isHighlighted;
@@ -23,6 +25,9 @@ public abstract class AcmeSearchFieldBase : IAcmeSearchField
     
     /// <summary>The actual field name that we would NEVER send to the user.</summary>
     public string IndexFieldName { get; private set; }
+
+    /// <summary>The name of the property on the C# class that maps to the field.</summary>
+    public string PropertyFieldName { get; private set; }
 
     /// <summary>Indicates if the filter can also be used as a facet.</summary>
     public bool IsFacetable { get; private set; }

@@ -25,7 +25,7 @@ public class HotelSearchService : AcmeSearchServiceBase<HotelDocument>, IHotelSe
     {
         var result = await base.SearchAsync(request, rolesTheUserIsAssigned);
 
-        MapHighlightsOnToDocument(result.Docs, nameof(HotelDocument.HotelName), nameof(HotelDocument.Category), nameof(HotelDocument.Description));
+        MapHighlightsOnToDocument(result.Docs, dividerBetweenHighlights: "<br/><br/>");
 
         return result;
     }

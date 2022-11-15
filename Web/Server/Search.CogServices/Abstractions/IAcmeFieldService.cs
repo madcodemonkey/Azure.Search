@@ -54,6 +54,10 @@ public interface IAcmeFieldService
     /// <param name="indexFieldName">The Azure Index field name to find.</param>
     IAcmeSearchField? FindByIndexFieldName(string indexFieldName);
 
+    /// <summary>Finds a filter by C# class property name.  This is the class used to create the index and id decorated with attributes.</summary>
+    /// <param name="propFieldName">The C# class property name to find.</param>
+    IAcmeSearchField? FindByPropertyFieldName(string propFieldName);
+
     /// <summary>Finds a filter by the id it was given when it was created.</summary>
     /// <param name="id">The id to find</param>
     IAcmeSearchField? FindById(int id);
