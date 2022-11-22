@@ -21,17 +21,19 @@ public class AzureSqlDataSourceDeleteMenuItem : IConsoleMenuItem
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string dataSourceName = _promptHelper.GetText($"Name of the Data Source to delete (Default: {_settings.HotelDataSourceName})?", true, true);
+        string dataSourceName = _promptHelper.GetText($"Name of the Data Source to delete (Default: {_settings.Hotel.DataSourceName})?", true, true);
         if (string.IsNullOrWhiteSpace(dataSourceName))
-            dataSourceName = _settings.HotelDataSourceName;
+            dataSourceName = _settings.Hotel.DataSourceName;
 
-        if (dataSourceName == "exit")
-            return new ConsoleMenuItemResponse(false, false);
+        Console.WriteLine("  ");
 
-        var result = await _dataSourceService.DeleteAsync(dataSourceName);
-        if (result)
-            Console.WriteLine($"Deleted {dataSourceName}");
-        else Console.WriteLine("NOTHING deleted");
+        if (_promptHelper.GetYorN("Are you sure you want to delete the data source?", true))
+        {
+            var result = await _dataSourceService.DeleteAsync(dataSourceName);
+            if (result)
+                Console.WriteLine($"Deleted {dataSourceName}");
+            else Console.WriteLine("NOTHING deleted");
+        }
 
         Console.WriteLine("-------------------------------");
 

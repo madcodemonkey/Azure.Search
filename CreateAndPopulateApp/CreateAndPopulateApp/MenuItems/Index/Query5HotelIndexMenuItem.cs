@@ -22,9 +22,9 @@ public class Query5HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_settings.HotelIndexName})?", true, true);
+        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_settings.Hotel.IndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexName))
-            indexName = _settings.HotelIndexName;
+            indexName = _settings.Hotel.IndexName;
 
         string keyName = _promptHelper.GetText("The document hotel id (Query first and get this. Leave blank to exit)?", true, true);
 

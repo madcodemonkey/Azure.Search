@@ -8,13 +8,16 @@ namespace CreateAndPopulateApp;
 public class AzureSqlDataSourceCreateMenuItem : IConsoleMenuItem
 {
     private readonly SearchServiceSettings _settings;
+    private readonly AppDatabaseOptions _databaseOptions;
     private readonly IPromptHelper _promptHelper;
     private readonly IAcmeSearchDataSourceService _dataSourceService;
 
     /// <summary>Constructor</summary>
-    public AzureSqlDataSourceCreateMenuItem(SearchServiceSettings settings, IPromptHelper promptHelper, IAcmeSearchDataSourceService dataSourceService)
+    public AzureSqlDataSourceCreateMenuItem(SearchServiceSettings settings, AppDatabaseOptions databaseOptions,
+        IPromptHelper promptHelper, IAcmeSearchDataSourceService dataSourceService)
     {
         _settings = settings;
+        _databaseOptions = databaseOptions;
         _promptHelper = promptHelper;
         _dataSourceService = dataSourceService;
     }
@@ -22,22 +25,22 @@ public class AzureSqlDataSourceCreateMenuItem : IConsoleMenuItem
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
 
-        string dataSourceName = _promptHelper.GetText($"Name of the HOTEL Data Source (Default: {_settings.HotelDataSourceName})?", true, true);
+        string dataSourceName = _promptHelper.GetText($"Name of the HOTEL Data Source (Default: {_settings.Hotel.DataSourceName})?", true, true);
         if (string.IsNullOrWhiteSpace(dataSourceName))
-            dataSourceName = _settings.HotelDataSourceName;
+            dataSourceName = _settings.Hotel.DataSourceName;
 
         if (dataSourceName == "exit")
             return new ConsoleMenuItemResponse(false, false);
 
-        string tableName = _promptHelper.GetText($"Name of the Index (Default: {_settings.HotelTableName})?", true, true);
+        string tableName = _promptHelper.GetText($"Name of the Index (Default: {_settings.Hotel.TableName})?", true, true);
         if (string.IsNullOrWhiteSpace(tableName))
-            tableName = _settings.HotelTableName;
+            tableName = _settings.Hotel.TableName;
 
         if (tableName == "exit")
             return new ConsoleMenuItemResponse(false, false);
 
         Console.WriteLine("Creating the data source that is needed for the indexer...");
-        await _dataSourceService.CreateForAzureSqlAsync(dataSourceName, tableName, _settings.DatabaseConnectionString);
+        await _dataSourceService.CreateForAzureSqlAsync(dataSourceName, tableName, _databaseOptions.ConnectionString);
 
         Console.WriteLine("-------------------------------");
 

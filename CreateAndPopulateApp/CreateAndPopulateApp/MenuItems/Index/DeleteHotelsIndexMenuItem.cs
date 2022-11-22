@@ -20,9 +20,9 @@ public class DeleteHotelsIndexMenuItem : IConsoleMenuItem
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string indexName = _promptHelper.GetText($"Name of the index to delete (Default: {_settings.HotelIndexName})?", true, true);
+        string indexName = _promptHelper.GetText($"Name of the index to delete (Default: {_settings.Hotel.IndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexName))
-            indexName = _settings.HotelIndexName;
+            indexName = _settings.Hotel.IndexName;
 
         if (indexName != "exit")
         {

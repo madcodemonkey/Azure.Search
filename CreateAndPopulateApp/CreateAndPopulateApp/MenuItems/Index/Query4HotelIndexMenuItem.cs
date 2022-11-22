@@ -24,9 +24,9 @@ public class Query4HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_settings.HotelIndexName})?", true, true);
+        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_settings.Hotel.IndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexName))
-            indexName = _settings.HotelIndexName;
+            indexName = _settings.Hotel.IndexName;
 
         string searchText = _promptHelper.GetText($"Search text (Default: '*')?", true, true);
         if (string.IsNullOrWhiteSpace(searchText))

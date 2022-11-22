@@ -22,7 +22,7 @@ catch (Exception ex)
     Console.WriteLine(ex.Message);
     Console.WriteLine(ex.StackTrace);
 }
- 
+
 
 static void AddMyDependencies(IServiceCollection serviceCollection)
 {
@@ -39,11 +39,20 @@ static void AddMyDependencies(IServiceCollection serviceCollection)
 
     serviceCollection.AddSingleton<IConfiguration>(config);
 
+    serviceCollection.AddSingleton(GetDatabaseOptions(config));
+
     var searchServiceSettings = GetSearchSettings(config);
     serviceCollection.AddCogServices(searchServiceSettings);
     serviceCollection.AddSearchServices(searchServiceSettings);
 }
 
+static AppDatabaseOptions GetDatabaseOptions(IConfiguration config)
+{
+    return new AppDatabaseOptions()
+    {
+        ConnectionString = config["DatabaseConnectionString"],
+    };
+}
 
 static SearchServiceSettings GetSearchSettings(IConfiguration config)
 {
@@ -53,16 +62,19 @@ static SearchServiceSettings GetSearchSettings(IConfiguration config)
         SearchApiKey = config["SearchApiKey"],
         SearchEndPoint = config["SearchEndPoint"],
 
-        // Database
-        DatabaseConnectionString= config["DatabaseConnectionString"],
-
         // Azure SQL Settings
-        HotelSuggestorName = config["HotelSuggestorName"],
-        HotelTableName = config["HotelTableName"],
-        HotelDataSourceName= config["HotelDataSourceName"],
-        HotelIndexerName= config["HotelIndexerName"],
-        HotelSynonymMapName= config["HotelSynonymMapName"],
-        HotelIndexName= config["HotelIndexName"],
-    };
+        Hotel = new SearchServiceIndexSettings()
+        {
+            SuggestorName = config["HotelSuggestorName"],
+            TableName = config["HotelTableName"],
+            DataSourceName = config["HotelDataSourceName"],
+            IndexerName = config["HotelIndexerName"],
+            IndexName = config["HotelIndexName"],
+        },
+        Synonyms = new SearchServiceSynonymSettings()
 
+        {
+            HotelMapName = config["HotelSynonymMapName"]
+        }
+    };
 }

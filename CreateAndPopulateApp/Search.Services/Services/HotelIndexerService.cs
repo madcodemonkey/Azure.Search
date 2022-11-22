@@ -4,19 +4,20 @@ using Search.Model;
 
 namespace Search.Services;
 
-public class HotelIndexerService : IHotelIndexerService
+public class HotelIndexerService : AcmeSearchIndexerService, IHotelIndexerService
 {
-    private readonly IAcmeSearchIndexerService _indexerService;
+    private readonly SearchServiceSettings _searchSettings;
 
     /// <summary>Constructor</summary>
-    public HotelIndexerService(IAcmeSearchIndexerService indexerService)
+    public HotelIndexerService(SearchServiceSettings settings) : base(settings)
     {
-        _indexerService = indexerService;
+        _searchSettings = settings;
     }
-
-    public async Task CreateIndexerAsync(string indexerName, string dataSourceName, string targetIndexName)
+   
+    /// <summary>Creates the Hotel indexer</summary>
+    public async Task<bool> CreateAsync()
     {
-        
+        // How often should the indexer run?
         var schedule = new IndexingSchedule(TimeSpan.FromDays(1))
         {
             StartTime = DateTimeOffset.Now
@@ -31,11 +32,11 @@ public class HotelIndexerService : IHotelIndexerService
 
         // Indexer declarations require a data source and search index.
         // Common optional properties include a schedule, parameters, and field mappings
-        // The field mappings below are redundant due to how the Hotel class is defined, but 
+        // The field mappings below are redundant due to how the HotelDocument class is defined, but 
         // we included them anyway to show the syntax 
-        var indexer = new SearchIndexer(indexerName, dataSourceName, targetIndexName)
+        var indexer = new SearchIndexer(_searchSettings.Hotel.IndexerName, _searchSettings.Hotel.DataSourceName, _searchSettings.Hotel.IndexName)
         {
-            Description = "Data indexer",
+            Description = "Hotel data indexer",
             Schedule = schedule,
             Parameters = parameters,
             FieldMappings =
@@ -45,7 +46,22 @@ public class HotelIndexerService : IHotelIndexerService
             }
         };
 
-        await _indexerService.ClientIndexer.CreateOrUpdateIndexerAsync(indexer);
+
+        var data = await ClientIndexer.CreateOrUpdateIndexerAsync(indexer);
+
+        return data != null;  // TODO: Is this a good check?
+    }
+
+    /// <summary>Deletes the hotel indexer</summary>
+    public async Task<bool> DeleteAsync()
+    {
+        return await DeleteAsync(_searchSettings.Hotel.IndexerName);
+    }
+
+    /// <summary>Runs the hotel indexer now.</summary>
+    public async Task RunAsync()
+    {
+        await ClientIndexer.RunIndexerAsync(_searchSettings.Hotel.IndexerName);
     }
 
 }

@@ -1,6 +1,15 @@
-﻿namespace Search.Services;
+﻿using Search.CogServices;
 
-public interface IHotelSynonymService
+namespace Search.Services;
+
+public interface IHotelSynonymService : IAcmeSearchSynonymService
 {
-    Task<bool> AssociateSynonymMapToHotelFieldsAsync(string hotelIndexName, string synonymMapName);
+    /// <summary>Creates all the synonym lists used by the hotel index.</summary>
+    Task<string> CreateAsync();
+
+    /// <summary>Deletes hotel synonym map</summary>
+    Task<bool> DeleteAsync();
+    
+    /// <summary>Associates a synonym map with certain fields on the Hotel Index</summary>
+    Task AssociateSynonymMapToHotelFieldsAsync();
 }

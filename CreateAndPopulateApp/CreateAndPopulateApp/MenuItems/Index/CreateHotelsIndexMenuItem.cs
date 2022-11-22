@@ -1,5 +1,4 @@
 ﻿using ConsoleMenuHelper;
-using Search.Model;
 using Search.Services;
 
 namespace CreateAndPopulateApp;
@@ -20,16 +19,15 @@ public class CreateHotelsIndexMenuItem : IConsoleMenuItem
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        
-        string indexName = _promptHelper.GetText($"Name of the index to create or update (Default: {_settings.HotelIndexName})?", true, true);
-        if (string.IsNullOrWhiteSpace(indexName))
-            indexName = _settings.HotelIndexName;
+        Console.WriteLine($"Name of the index to create or update:: {_settings.Hotel.IndexName}");
+        Console.WriteLine("  ");
 
-        if (indexName != "exit")
+
+        if (_promptHelper.GetYorN("Create or update the index?", true))
         {
             await _hotelIndexService.CreateOrUpdateAsync();
         }
-        
+
         Console.WriteLine("-------------------------------");
 
         return new ConsoleMenuItemResponse(false, false);

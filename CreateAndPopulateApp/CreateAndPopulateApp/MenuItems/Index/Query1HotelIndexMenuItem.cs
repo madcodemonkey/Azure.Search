@@ -23,9 +23,9 @@ public class Query1HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_settings.HotelIndexName})?", true, true);
+        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_settings.Hotel.IndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexName))
-            indexName = _settings.HotelIndexName;
+            indexName = _settings.Hotel.IndexName;
 
         Console.WriteLine("Query #1: Search on empty term '*' to return all documents, showing a subset of fields...\n");
 

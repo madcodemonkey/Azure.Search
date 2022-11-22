@@ -20,17 +20,12 @@ public class SynonymAssociateMenuItem : IConsoleMenuItem
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string hotelIndexName = _promptHelper.GetText($"Name of the HOTEL index to associate to a synonym map (Default: {_settings.HotelIndexName})?", true, true);
-        if (string.IsNullOrWhiteSpace(hotelIndexName))
-            hotelIndexName = _settings.HotelIndexName;
-        
-        string synonymMapName = _promptHelper.GetText($"Name of the synonym map to associate to the HOTEL index (Default: {_settings.HotelSynonymMapName})?", true, true);
-        if (string.IsNullOrWhiteSpace(synonymMapName))
-            synonymMapName = _settings.HotelSynonymMapName;
-
-        if (synonymMapName != "exit")
+        Console.WriteLine($"HOTEL index name to associate to a synonym map: {_settings.Hotel.IndexName}");
+        Console.WriteLine($"Synonym map to associate to the HOTEL index: {_settings.Synonyms.HotelMapName}");
+        Console.WriteLine("  ");
+        if (_promptHelper.GetYorN("Do you want to associate this synonym map with this index?", true))
         {
-            await _hotelSynonymService.AssociateSynonymMapToHotelFieldsAsync(hotelIndexName, synonymMapName);
+            await _hotelSynonymService.AssociateSynonymMapToHotelFieldsAsync();
         }
 
         Console.WriteLine("-------------------------------");

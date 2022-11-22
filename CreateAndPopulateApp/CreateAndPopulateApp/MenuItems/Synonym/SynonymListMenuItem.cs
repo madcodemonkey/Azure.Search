@@ -21,9 +21,9 @@ public class SynonymListMenuItem : IConsoleMenuItem
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string synonymMapName = _promptHelper.GetText($"Name of the synonym map (Default: {_settings.HotelSynonymMapName})?", true, true);
+        string synonymMapName = _promptHelper.GetText($"Name of the synonym map (Default: {_settings.Synonyms.HotelMapName})?", true, true);
         if (string.IsNullOrWhiteSpace(synonymMapName))
-            synonymMapName = _settings.HotelSynonymMapName;
+            synonymMapName = _settings.Synonyms.HotelMapName;
 
         List<string> synonymNames = await _synonymService.GetSynonymNamesAsync(synonymMapName);
         foreach (string item in synonymNames)

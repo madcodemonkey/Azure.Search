@@ -21,17 +21,17 @@ public class AzureSqlIndexerDeleteMenuItem : IConsoleMenuItem
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string indexerName = _promptHelper.GetText($"Name of the Indexer to delete (Default: {_settings.HotelIndexerName})?", true, true);
+        string indexerName = _promptHelper.GetText($"Name of the Indexer to delete (Default: {_settings.Hotel.IndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexerName))
-            indexerName = _settings.HotelIndexerName;
+            indexerName = _settings.Hotel.IndexerName;
 
-        if (indexerName == "exit")
-            return new ConsoleMenuItemResponse(false, false);
-        
-        var result = await _indexerService.DeleteAsync(indexerName);
-        if (result)
-            Console.WriteLine($"Deleted {indexerName}");
-        else  Console.WriteLine("NOTHING deleted");
+        if (_promptHelper.GetYorN("Are you sure you want to delete the indexer", true))
+        {
+            var result = await _indexerService.DeleteAsync(indexerName);
+            if (result)
+                Console.WriteLine($"Deleted {indexerName}");
+            else Console.WriteLine("NOTHING deleted");
+        }
 
         Console.WriteLine("-------------------------------");
 

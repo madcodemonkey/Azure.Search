@@ -1,6 +1,5 @@
 ﻿using ConsoleMenuHelper;
 using Search.CogServices;
-using Search.Services;
 
 namespace CreateAndPopulateApp;
 
@@ -16,11 +15,11 @@ public class ListAllIndexesMenuItem : IConsoleMenuItem
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        foreach (string indexName in  await  _indexService.GetIndexNamesAsync())
+        foreach (string indexName in await _indexService.GetIndexNamesAsync())
         {
             Console.WriteLine(indexName);
         }
-        
+
 
         Console.WriteLine("-------------------------------");
 

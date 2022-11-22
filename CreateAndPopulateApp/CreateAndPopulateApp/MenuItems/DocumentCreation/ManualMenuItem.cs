@@ -23,9 +23,9 @@ public class ManualMenuItem : IConsoleMenuItem
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string hotelIndexName = _promptHelper.GetText($"Name of the HOTEL index (Default: {_settings.HotelIndexName})?", true, true);
+        string hotelIndexName = _promptHelper.GetText($"Name of the HOTEL index (Default: {_settings.Hotel.IndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(hotelIndexName))
-            hotelIndexName = _settings.HotelIndexName;
+            hotelIndexName = _settings.Hotel.IndexName;
 
         if (hotelIndexName != "exit")
         {

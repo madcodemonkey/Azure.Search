@@ -22,9 +22,9 @@ public class SynonymCreateMenuItem : IConsoleMenuItem
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
 
-        string synonymMapName = _promptHelper.GetText($"Create of the synonym map (Default: {_settings.HotelSynonymMapName})?", true, true);
+        string synonymMapName = _promptHelper.GetText($"Create of the synonym map (Default: {_settings.Synonyms.HotelMapName})?", true, true);
         if (string.IsNullOrWhiteSpace(synonymMapName))
-            synonymMapName = _settings.HotelSynonymMapName;
+            synonymMapName = _settings.Synonyms.HotelMapName;
 
         if (synonymMapName != "exit")
         {

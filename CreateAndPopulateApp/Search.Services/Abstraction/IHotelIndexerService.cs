@@ -1,6 +1,16 @@
-﻿namespace Search.Services;
+﻿using Search.CogServices;
 
-public interface IHotelIndexerService
+namespace Search.Services;
+
+public interface IHotelIndexerService : IAcmeSearchIndexerService
 {
-    Task CreateIndexerAsync(string indexerName, string dataSourceName, string targetIndexName);
+    /// <summary>Creates the Hotel indexer</summary>
+    public Task<bool> CreateAsync();
+
+    /// <summary>Deletes the hotel indexer</summary>
+    Task<bool> DeleteAsync();
+
+    /// <summary>Runs the hotel indexer now.</summary>
+    Task RunAsync();
+
 }

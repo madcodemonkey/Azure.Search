@@ -21,7 +21,7 @@ public class SynonymDeleteMenuItem : IConsoleMenuItem
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        var synonymMapName = _promptHelper.GetText($"Name of the synonym map to delete (Default: '{_settings.HotelSynonymMapName}')?", false);
+        var synonymMapName = _promptHelper.GetText($"Name of the synonym map to delete (Default: '{_settings.Synonyms.HotelMapName}')?", false);
 
         if (synonymMapName != "exit")
         {

@@ -4,17 +4,41 @@ using Search.Model;
 
 namespace Search.Services;
 
-public class HotelSynonymService : IHotelSynonymService
+public class HotelSynonymService : AcmeSearchSynonymService, IHotelSynonymService
 {
-    private readonly IAcmeSearchIndexService _indexService;
+    private readonly SearchServiceSettings _searchServiceSettings;
 
-    public HotelSynonymService(IAcmeSearchIndexService indexService)
+    /// <summary>Constructor</summary>
+    public HotelSynonymService(IAcmeSearchIndexService indexService, SearchServiceSettings searchServiceSettings) : base(indexService)
     {
-        _indexService = indexService;
+        _searchServiceSettings = searchServiceSettings;
     }
 
+    /// <summary>Creates all the synonym lists used by the hotel index.</summary>
+    public async Task<string> CreateAsync()
+    {
+        if (await ExistsAsync(_searchServiceSettings.Synonyms.HotelMapName))
+            return $"{_searchServiceSettings.Synonyms.HotelMapName} has already been created.";
 
-    public async Task<bool> AssociateSynonymMapToHotelFieldsAsync(string hotelIndexName, string synonymMapName)
+        // Note that each synonym group is new line delimited!
+        // Docs to understand equivalency: USA, United States, United States of America
+        // https://learn.microsoft.com/en-us/azure/search/search-synonyms#equivalency-rules
+        // Docs to understand explicit mapping (substitute all the words on the left with one on right):  Washington, Wash., WA => WA
+        // https://learn.microsoft.com/en-us/azure/search/search-synonyms#explicit-mapping
+        await CreateAsync(_searchServiceSettings.Synonyms.HotelMapName,
+            "hotel, motel\ninternet,wifi\nfive star=>luxury\neconomy,inexpensive=>budget");
+
+        return $"{_searchServiceSettings.Synonyms.HotelMapName} created.";
+    }
+
+    /// <summary>Deletes hotel synonym map</summary>
+    public async Task<bool> DeleteAsync()
+    {
+        return await DeleteAsync(_searchServiceSettings.Synonyms.HotelMapName);
+    }
+
+    /// <summary>Associates a synonym map with certain fields on the Hotel Index</summary>
+    public async Task AssociateSynonymMapToHotelFieldsAsync()
     {
         const int maxNumTries = 3;
 
@@ -23,23 +47,34 @@ public class HotelSynonymService : IHotelSynonymService
             try
             {
                 // Get the index
-                SearchIndex index = _indexService.Client.GetIndex(hotelIndexName);
-                
-                index.Fields.First(f => f.Name == nameof(HotelDocument.Category).ConvertToCamelCase()).SynonymMapNames.Add(synonymMapName);
-                index.Fields.First(f => f.Name == nameof(HotelDocument.Tags).ConvertToCamelCase()).SynonymMapNames.Add(synonymMapName);
+                SearchIndex index = await IndexService.Client.GetIndexAsync(_searchServiceSettings.Hotel.IndexName);
+
+                AddSynonymToField(index, nameof(HotelDocument.Category).ConvertToCamelCase(), _searchServiceSettings.Synonyms.HotelMapName);
+                AddSynonymToField(index, nameof(HotelDocument.Tags).ConvertToCamelCase(), _searchServiceSettings.Synonyms.HotelMapName);
 
                 // The IfNotChanged condition ensures that the index is updated only if the ETags match.
-               await _indexService.Client.CreateOrUpdateIndexAsync(index);
+                await IndexService.Client.CreateOrUpdateIndexAsync(index);
 
-                return true;
+                break;
             }
             catch
             {
-                Console.WriteLine($"Index update failed : . Attempt({i}/{maxNumTries}).\n");
+                if (i == (maxNumTries - 1))
+                    throw;
             }
         }
-
-        return false;
     }
 
+    /// <summary>Adds a synonym to a field if it isn't already there.</summary>
+    private void AddSynonymToField(SearchIndex index, string fieldName, string synonymMapName)
+    {
+        var field = index.Fields.First(f => f.Name == fieldName);
+        if (field == null) throw new ArgumentException($"Field {fieldName} does not exist!");
+
+        // Only add it if it wasn't already there; otherwise, you will get an exception for adding a synonym twice.
+        if (field.SynonymMapNames.Any(w => w == synonymMapName) == false)
+        {
+            field.SynonymMapNames.Add(synonymMapName);
+        }
+    }
 }

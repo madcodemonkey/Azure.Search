@@ -20,18 +20,18 @@ public class Query6HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_settings.HotelIndexName})?", true, true);
+        string indexName = _promptHelper.GetText($"Name of the index to search (Default: {_settings.Hotel.IndexName})?", true, true);
         if (string.IsNullOrWhiteSpace(indexName))
-            indexName = _settings.HotelIndexName;
+            indexName = _settings.Hotel.IndexName;
 
         while (true)
         {
-            string searchText = _promptHelper.GetText("The search text (Default: 'sec' or type 'exit')?", true, true);
+            string searchText = _promptHelper.GetText("The search text (Default: 'hot' or type 'exit')?", true, true);
             if (searchText.ToLower() == "exit")
                 break;
 
             if (string.IsNullOrWhiteSpace(searchText))
-                searchText = "sec";
+                searchText = "hot";
 
             Console.WriteLine($"Query #6: Call Autocomplete on HotelName that starts with '{searchText}'...");
 
