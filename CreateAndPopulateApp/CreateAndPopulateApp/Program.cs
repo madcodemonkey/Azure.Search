@@ -3,6 +3,7 @@ using CreateAndPopulateApp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Search.CogServices;
 using Search.Services;
 
 try
@@ -37,11 +38,16 @@ static void AddMyDependencies(IServiceCollection serviceCollection)
     IConfiguration config = builder.Build();
 
     serviceCollection.AddSingleton<IConfiguration>(config);
-    serviceCollection.AddSearchServices(GetSearchSettings(config));
+
+    var searchServiceSettings = GetSearchSettings(config);
+    serviceCollection.AddCogServices(searchServiceSettings);
+    serviceCollection.AddSearchServices(searchServiceSettings);
 }
 
-static SearchServiceSettings GetSearchSettings(IConfiguration config )
+
+static SearchServiceSettings GetSearchSettings(IConfiguration config)
 {
+
     return new SearchServiceSettings
     {
         SearchApiKey = config["SearchApiKey"],

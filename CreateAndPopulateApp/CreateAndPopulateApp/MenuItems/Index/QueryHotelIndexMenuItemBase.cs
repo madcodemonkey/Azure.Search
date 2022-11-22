@@ -7,7 +7,7 @@ namespace CreateAndPopulateApp;
 public abstract class QueryHotelIndexMenuItemBase
 {
     // Write search results to console
-    protected async Task WriteDocumentsAsync(SearchResults<Hotel> searchResults)
+    protected async Task WriteDocumentsAsync(SearchResults<HotelDocument> searchResults)
     {
         // Show the facets returned from teh search if there are any.  You have to request
         // the fields you want facets on in your search options.  Furthermore, they ONLY include 
@@ -28,9 +28,9 @@ public abstract class QueryHotelIndexMenuItemBase
         }
 
         bool somethingFound = false;
-        AsyncPageable<SearchResult<Hotel>> resultList = searchResults.GetResultsAsync();
+        AsyncPageable<SearchResult<HotelDocument>> resultList = searchResults.GetResultsAsync();
         
-        await foreach (SearchResult<Hotel> result in resultList)
+        await foreach (SearchResult<HotelDocument> result in resultList)
         {
             somethingFound = true;
             

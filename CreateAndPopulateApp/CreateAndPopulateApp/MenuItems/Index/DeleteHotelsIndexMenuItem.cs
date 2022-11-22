@@ -1,4 +1,5 @@
 ﻿using ConsoleMenuHelper;
+using Search.CogServices;
 using Search.Services;
 
 namespace CreateAndPopulateApp;

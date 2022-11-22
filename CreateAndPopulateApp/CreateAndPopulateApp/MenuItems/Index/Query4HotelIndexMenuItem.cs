@@ -1,8 +1,10 @@
 ﻿using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using ConsoleMenuHelper;
+using Search.CogServices;
 using Search.Model;
 using Search.Services;
+using StringExtension = Search.Services.StringExtension;
 
 namespace CreateAndPopulateApp;
 
@@ -39,16 +41,16 @@ public class Query4HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
 
         // Be careful here. The case must match the field names we used in the index.
         // Since I've lowercased my first characters with the [JsonPropertyName("hotelId")] attribute, it expects them to match.
-        options.Facets.Add(nameof(Hotel.Category).ConvertToCamelCase());
-        options.Facets.Add(nameof(Hotel.Tags).ConvertToCamelCase());
+        options.Facets.Add(StringExtension.ConvertToCamelCase(nameof(HotelDocument.Category)));
+        options.Facets.Add(StringExtension.ConvertToCamelCase(nameof(HotelDocument.Tags)));
 
-        options.Select.Add(nameof(Hotel.HotelId).ConvertToCamelCase());
-        options.Select.Add(nameof(Hotel.HotelName).ConvertToCamelCase());
-        options.Select.Add(nameof(Hotel.Category).ConvertToCamelCase());
-        options.Select.Add(nameof(Hotel.Tags).ConvertToCamelCase());
+        options.Select.Add(StringExtension.ConvertToCamelCase(nameof(HotelDocument.HotelId)));
+        options.Select.Add(StringExtension.ConvertToCamelCase(nameof(HotelDocument.HotelName)));
+        options.Select.Add(StringExtension.ConvertToCamelCase(nameof(HotelDocument.Category)));
+        options.Select.Add(StringExtension.ConvertToCamelCase(nameof(HotelDocument.Tags)));
 
 
-        SearchResults<Hotel> response = await _indexService.Search<Hotel>(indexName, searchText, options);
+        SearchResults<HotelDocument> response = await _indexService.Search<HotelDocument>(indexName, searchText, options);
 
 
         await WriteDocumentsAsync(response);

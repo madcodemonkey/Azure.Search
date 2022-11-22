@@ -1,29 +1,26 @@
 ﻿using Azure;
-using Azure.Core.Serialization;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Models;
-using System.Text.Json;
 
-namespace Search.Services;
+namespace Search.CogServices;
 
 public class AcmeSearchIndexService : IAcmeSearchIndexService
 {
-    protected readonly SearchServiceSettings _settings;
+    protected AcmeSearchSettings Settings { get; private set; }
     private SearchIndexClient? _client;
     private readonly SearchClientOptions _clientOptions;
 
     /// <summary>Constructor</summary>
-    public AcmeSearchIndexService(SearchServiceSettings settings)
+    public AcmeSearchIndexService(AcmeSearchSettings settings, IAcmeOptionsService optionsService)
     {
-        _settings = settings;
-        _clientOptions = CreateSearchClientOptions();
+        Settings = settings;
+        _clientOptions = optionsService.CreateSearchClientOptions();
     }
 
     /// <summary>This is the Microsoft client that does all the work.</summary>
     public SearchIndexClient Client => _client ??= new SearchIndexClient(
-        new Uri(_settings.SearchEndPoint), new AzureKeyCredential(_settings.SearchApiKey), _clientOptions);
-
+        new Uri(Settings.SearchEndPoint), new AzureKeyCredential(Settings.SearchApiKey), _clientOptions);
 
     /// <summary>Deletes an index.</summary>
     /// <param name="indexName">The name of the index to delete</param>
@@ -121,14 +118,14 @@ public class AcmeSearchIndexService : IAcmeSearchIndexService
     /// <param name="searchText">The text to find</param>
     /// <param name="options">The search options to apply</param>
     /// <param name="suggesterName">The name of the suggestor</param>
-    public async Task<SuggestResults<T>> SuggestAsync<T>(string indexName, string searchText, string suggesterName, SuggestOptions options)
+    public async Task<SuggestResults<T>> SuggestAsync<T>(string indexName, string searchText,string suggesterName, SuggestOptions options)
     {
         var searchClient = Client.GetSearchClient(indexName);
         return await searchClient.SuggestAsync<T>(searchText, suggesterName, options);
     }
 
-
-
+    
+  
     /// <summary>Searches for documents</summary>
     /// <typeparam name="T">The type of data being returned.</typeparam>
     /// <param name="indexName">The name of the index</param>
@@ -159,26 +156,5 @@ public class AcmeSearchIndexService : IAcmeSearchIndexService
         SearchClient searchClient = Client.GetSearchClient(indexName);
 
         IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch);
-    }
-
-    /// <summary>Create search options</summary>
-    private SearchClientOptions CreateSearchClientOptions()
-    {
-        // This is needed to avoid an error when uploading data that has a GeographyPoint property.  
-        // Here is the error: The request is invalid. Details: parameters : Cannot find nested property 'location' on the resource type 'search.documentFields'.
-        JsonSerializerOptions serializerOptions = new JsonSerializerOptions
-        {
-            Converters =
-            {
-                // Requires Microsoft.Azure.Core.Spatial NuGet package.
-                new MicrosoftSpatialGeoJsonConverter()
-            },
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        };
-
-        return new SearchClientOptions
-        {
-            Serializer = new JsonObjectSerializer(serializerOptions)
-        };
     }
 }

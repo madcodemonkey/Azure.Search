@@ -1,5 +1,6 @@
 ﻿using Azure;
 using ConsoleMenuHelper;
+using Search.CogServices;
 using Search.Model;
 using Search.Services;
 
@@ -35,7 +36,7 @@ public class Query5HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
 
         Console.WriteLine("Query #5: Look up a specific document...\n");
 
-        Response<Hotel>? lookupResponse = await _indexService.GetDocumentAsync<Hotel>(indexName, keyName);
+        Response<HotelDocument>? lookupResponse = await _indexService.GetDocumentAsync<HotelDocument>(indexName, keyName);
 
         if (lookupResponse != null)
         {

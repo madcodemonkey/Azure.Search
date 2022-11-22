@@ -1,7 +1,7 @@
 ﻿using Azure;
 using Azure.Search.Documents.Indexes.Models;
 
-namespace Search.Services;
+namespace Search.CogServices;
 
 public class AcmeSearchSynonymService : IAcmeSearchSynonymService
 {

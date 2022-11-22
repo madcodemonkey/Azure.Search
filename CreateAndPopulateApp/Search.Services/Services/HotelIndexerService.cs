@@ -1,4 +1,5 @@
 ﻿using Azure.Search.Documents.Indexes.Models;
+using Search.CogServices;
 using Search.Model;
 
 namespace Search.Services;
@@ -39,8 +40,8 @@ public class HotelIndexerService : IHotelIndexerService
             Parameters = parameters,
             FieldMappings =
             {
-                new FieldMapping("Id") {TargetFieldName = nameof(Hotel.HotelId)},
-                new FieldMapping("Amenities") {TargetFieldName = nameof(Hotel.Tags) }
+                new FieldMapping("Id") {TargetFieldName = nameof(HotelDocument.HotelId)},
+                new FieldMapping("Amenities") {TargetFieldName = nameof(HotelDocument.Tags) }
             }
         };
 

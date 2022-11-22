@@ -1,8 +1,10 @@
 ﻿using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using ConsoleMenuHelper;
+using Search.CogServices;
 using Search.Model;
 using Search.Services;
+using StringExtension = Search.Services.StringExtension;
 
 namespace CreateAndPopulateApp;
 
@@ -36,14 +38,14 @@ public class Query3HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
         // Since I've lowercased my first characters with the [JsonPropertyName("hotelId")] attribute, it expects them to match.
         var options = new SearchOptions
         {
-            SearchFields = { nameof(Hotel.Tags).ConvertToCamelCase() }
+            SearchFields = { StringExtension.ConvertToCamelCase(nameof(HotelDocument.Tags)) }
         };
 
-        options.Select.Add(nameof(Hotel.HotelId).ConvertToCamelCase());
-        options.Select.Add(nameof(Hotel.HotelName).ConvertToCamelCase());
-        options.Select.Add(nameof(Hotel.Tags).ConvertToCamelCase());
+        options.Select.Add(StringExtension.ConvertToCamelCase(nameof(HotelDocument.HotelId)));
+        options.Select.Add(StringExtension.ConvertToCamelCase(nameof(HotelDocument.HotelName)));
+        options.Select.Add(StringExtension.ConvertToCamelCase(nameof(HotelDocument.Tags)));
 
-        SearchResults<Hotel> response = await _indexService.Search<Hotel>(indexName, searchText, options);
+        SearchResults<HotelDocument> response = await _indexService.Search<HotelDocument>(indexName, searchText, options);
 
         await WriteDocumentsAsync(response);
 

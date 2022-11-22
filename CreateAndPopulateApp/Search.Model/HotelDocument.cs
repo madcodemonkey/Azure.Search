@@ -8,9 +8,9 @@ namespace Search.Model;
 // The JsonPropertyName attribute is defined in the Azure Search .NET SDK.
 // Here it used to ensure that Pascal-case property names in the model class are mapped to camel-case
 // field names in the index.
-public partial class Hotel
+public partial class HotelDocument
 {
-    [SimpleField(IsKey = true, IsFilterable = true)]
+    [SearchableField(IsKey = true, IsFilterable = true)]
     [JsonPropertyName("hotelId")]
     public string HotelId { get; set; }
 
@@ -46,7 +46,7 @@ public partial class Hotel
     [JsonPropertyName("smokingAllowed")]
     public bool? SmokingAllowed { get; set; }
 
-    [SimpleField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
+    [SimpleField(IsFilterable = true, IsSortable = true)]
     [JsonPropertyName("lastRenovationDate")]
     public DateTimeOffset? LastRenovationDate { get; set; }
 
@@ -57,6 +57,10 @@ public partial class Hotel
     [SearchableField(IsFilterable = true)]
     [JsonPropertyName("roles")]
     public string[] Roles { get; set; }
+
+    [SimpleField(IsFilterable = true, IsFacetable = true)]
+    [JsonPropertyName("isDeleted")]
+    public bool IsDeleted { get; set; }
 
     /// <summary>Location</summary>
     /// <remarks>Requires Microsoft.Azure.Core.Spatial NuGet package for GeographyPoint</remarks>

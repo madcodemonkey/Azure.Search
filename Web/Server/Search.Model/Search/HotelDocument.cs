@@ -58,6 +58,10 @@ public partial class HotelDocument
     [JsonPropertyName("roles")]
     public string[] Roles { get; set; }
 
+    [SimpleField(IsFilterable = true, IsFacetable = true)]
+    [JsonPropertyName("isDeleted")]
+    public bool IsDeleted { get; set; }
+
     /// <summary>Location</summary>
     /// <remarks>Requires Microsoft.Azure.Core.Spatial NuGet package for GeographyPoint</remarks>
     [SimpleField(IsFilterable = true, IsSortable = true)]

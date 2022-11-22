@@ -1,5 +1,5 @@
 ﻿using ConsoleMenuHelper;
-using Search.Services;
+using Search.CogServices;
 
 namespace CreateAndPopulateApp;
 
@@ -17,7 +17,7 @@ public class AzureSqlDataSourceListMenuItem : IConsoleMenuItem
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
         List<string> dataSourceNameList = await _dataSourceService.GetListAsync();
-        
+
         if (dataSourceNameList.Count == 0)
             Console.WriteLine("Nothing found.");
 

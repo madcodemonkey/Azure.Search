@@ -1,5 +1,5 @@
 ﻿using ConsoleMenuHelper;
-using Search.Services;
+using Search.CogServices;
 
 namespace CreateAndPopulateApp;
 
@@ -16,12 +16,12 @@ public class SynonymListAllMapsMenuItem : IConsoleMenuItem
 
     public async Task<ConsoleMenuItemResponse> WorkAsync()
     {
-        var response  = await _synonymService.GetSynonymMapNamesAsync();
+        var response = await _synonymService.GetSynonymMapNamesAsync();
         foreach (string item in response)
         {
             Console.WriteLine(item);
         }
-        
+
         Console.WriteLine("-------------------------------");
 
         return new ConsoleMenuItemResponse(false, false);

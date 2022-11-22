@@ -1,6 +1,7 @@
 ﻿using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using ConsoleMenuHelper;
+using Search.CogServices;
 using Search.Model;
 using Search.Services;
 
@@ -42,7 +43,7 @@ public class Query1HotelIndexMenuItem : QueryHotelIndexMenuItemBase, IConsoleMen
         //options.Select.Add("hotelName");
         //options.Select.Add("rating");
 
-        SearchResults<Hotel> response = await _indexService.Search<Hotel>(indexName, "*", options);
+        SearchResults<HotelDocument> response = await _indexService.Search<HotelDocument>(indexName, "*", options);
 
         await WriteDocumentsAsync(response);
 

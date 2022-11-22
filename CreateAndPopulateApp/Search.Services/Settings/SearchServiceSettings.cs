@@ -1,10 +1,9 @@
-﻿namespace Search.Services;
+﻿using Search.CogServices;
 
-public class SearchServiceSettings
+namespace Search.Services;
+
+public class SearchServiceSettings : AcmeSearchSettings
 {
-    public string SearchEndPoint { get; set; }
-    public string SearchApiKey { get; set; }
-    
     public string DatabaseConnectionString { get; set; }
 
     public string HotelSuggestorName { get; set; }

@@ -2,15 +2,15 @@
 using Azure;
 using Azure.Search.Documents.Indexes;
 
-namespace Search.Services;
+namespace Search.CogServices;
 
 public class AcmeSearchIndexerService : IAcmeSearchIndexerService
 {
-    protected SearchServiceSettings Settings { get; }
+    protected AcmeSearchSettings Settings { get; }
     private SearchIndexerClient? _client;
 
     /// <summary>Constructor</summary>
-    public AcmeSearchIndexerService(SearchServiceSettings settings)
+    public AcmeSearchIndexerService(AcmeSearchSettings settings)
     {
         Settings = settings;
     }

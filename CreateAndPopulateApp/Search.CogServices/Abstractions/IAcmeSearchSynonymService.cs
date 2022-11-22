@@ -1,4 +1,4 @@
-﻿namespace Search.Services;
+﻿namespace Search.CogServices;
 
 public interface IAcmeSearchSynonymService
 {
