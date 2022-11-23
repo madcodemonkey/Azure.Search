@@ -28,7 +28,8 @@ namespace Search.Repositories.Migrations
                     Rating = table.Column<int>(type: "int", nullable: true),
                     Roles = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Location = table.Column<Point>(type: "geography", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {

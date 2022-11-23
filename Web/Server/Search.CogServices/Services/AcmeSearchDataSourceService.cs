@@ -17,11 +17,23 @@ public class AcmeSearchDataSourceService : IAcmeSearchDataSourceService
     /// <param name="name">The name of the data source</param>
     /// <param name="tableOrViewName">The table or view that the Azure SQL data source is pointed at.</param>
     /// <param name="connectionString">A connection string to attach to the database.</param>
-    public async Task<bool> CreateForAzureSqlAsync(string name, string tableOrViewName, string connectionString)
+    /// <param name="highWaterMarkColumnName">The high watermark field used to detect changes</param>
+    /// <param name="softDeleteColumnName">The column that indicates that the record should be removed from the Azure Search Index</param>
+    /// <param name="softDeleteColumnValue">The value in the column that indicates that the record should be deleted.</param>
+    public async Task<bool> CreateForAzureSqlAsync(string name, string tableOrViewName, string connectionString,
+        string highWaterMarkColumnName, string softDeleteColumnName, string softDeleteColumnValue)
     {
         var dataSource = new SearchIndexerDataSourceConnection(
             name, SearchIndexerDataSourceType.AzureSql, connectionString,
-            new SearchIndexerDataContainer(tableOrViewName));
+            new SearchIndexerDataContainer(tableOrViewName))
+        {
+            DataChangeDetectionPolicy = new HighWaterMarkChangeDetectionPolicy(highWaterMarkColumnName),
+            DataDeletionDetectionPolicy = new SoftDeleteColumnDeletionDetectionPolicy
+            {
+                SoftDeleteColumnName = softDeleteColumnName,
+                SoftDeleteMarkerValue = softDeleteColumnValue
+            }
+        };
 
         // The data source does not need to be deleted if it was already created,
         // but the connection string may need to be updated if it was changed

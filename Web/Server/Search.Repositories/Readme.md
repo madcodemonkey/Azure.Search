@@ -5,10 +5,10 @@ dotnet tool list --global
 If you don't see a 6.x version, you should update your tools
 Package Id      Version      Commands
 --------------------------------------
-dotnet-ef       6.0.6        dotnet-ef
+dotnet-ef       6.0.10        dotnet-ef
 
 Update your tools with this command:
-dotnet tool update --global dotnet-ef --version 6.0.6
+dotnet tool update --global dotnet-ef --version 6.0.10
 
 # EF Migrations
 From the folder where the **solution file** is located run the following to create a migration:

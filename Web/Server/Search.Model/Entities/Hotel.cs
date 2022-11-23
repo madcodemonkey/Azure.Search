@@ -1,4 +1,5 @@
-﻿using NetTopologySuite.Geometries;
+﻿using System.ComponentModel.DataAnnotations;
+using NetTopologySuite.Geometries;
 
 namespace Search.Model;
 
@@ -29,5 +30,8 @@ public class Hotel
 
     public Point? Location { get; set; }
     public bool IsDeleted { get; set; } = false;
+
+    [Timestamp]
+    public byte[] RowVersion { get; set; }
 }
 

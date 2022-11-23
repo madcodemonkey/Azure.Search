@@ -13,7 +13,7 @@ using Search.Repositories;
 namespace Search.Repositories.Migrations
 {
     [DbContext(typeof(AcmeContext))]
-    [Migration("20221018221040_Initial")]
+    [Migration("20221123013953_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,6 +71,12 @@ namespace Search.Repositories.Migrations
                     b.Property<string>("Roles")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<bool?>("SmokingAllowed")
                         .HasColumnType("bit");

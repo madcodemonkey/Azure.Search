@@ -21,7 +21,10 @@ public class HotelDataSourceService : AcmeSearchDataSourceService, IHotelDataSou
         return await this.CreateForAzureSqlAsync(
             _settings.Hotel.DataSourceName, 
             _settings.Hotel.TableName,
-            _databaseOptions.ConnectionString);
+            _databaseOptions.ConnectionString,
+            _settings.Hotel.HighWaterMarkColumnName, 
+            _settings.Hotel.SoftDeleteColumnName, 
+            _settings.Hotel.SoftDeleteColumnValue);
     }
 
     /// <summary>Deletes a hotel data source if it exists.</summary>
