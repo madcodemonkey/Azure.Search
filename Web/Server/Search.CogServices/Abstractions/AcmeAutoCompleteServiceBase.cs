@@ -1,12 +1,13 @@
-﻿using Azure.Search.Documents;
+﻿using Azure;
+using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 
 namespace Search.CogServices;
 
-public abstract class AcmeSuggestorServiceBase<TIndexClass> where TIndexClass : class
+public abstract class AcmeAutoCompleteServiceBase
 {
     /// <summary>Constructor</summary>
-    protected AcmeSuggestorServiceBase(IAcmeSearchIndexService searchIndexService, IAcmeFieldService fieldService)
+    protected AcmeAutoCompleteServiceBase(IAcmeSearchIndexService searchIndexService, IAcmeFieldService fieldService)
     {
         SearchIndexService = searchIndexService;
         FieldService = fieldService;
@@ -18,38 +19,34 @@ public abstract class AcmeSuggestorServiceBase<TIndexClass> where TIndexClass : 
     protected abstract string IndexName { get; }
     protected abstract string SuggestorName { get; }
 
-    /// <summary>Suggest</summary>
+    /// <summary>Autocomplete</summary>
     /// <param name="request">A request for a suggestion</param>
     /// <param name="rolesTheUserIsAssigned">Case sensitive list of roles that for search trimming.</param>
     /// <returns>List of suggestions</returns>
-    public virtual async Task<SuggestResults<TIndexClass>> SuggestAsync(AcmeSuggestorQuery request, List<string> rolesTheUserIsAssigned)
+    public virtual async Task<Response<AutocompleteResults>> AutoCompleteAsync(AcmeSuggestorQuery request, List<string> rolesTheUserIsAssigned)
     {
         var options = CreateDefaultOptions(request, rolesTheUserIsAssigned);
-
-        var suggestResult = await SearchIndexService.SuggestAsync<TIndexClass>(IndexName, request.Query, SuggestorName, options);
-
-        return suggestResult;
+        Response<AutocompleteResults> autoCompleteResult = await SearchIndexService.AutocompleteAsync(IndexName, request.Query, SuggestorName, options);
+        
+        return autoCompleteResult;
     }
      
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
-    protected virtual SuggestOptions CreateDefaultOptions(AcmeSuggestorQuery request, List<string> rolesTheUserIsAssigned)
+    protected virtual AutocompleteOptions CreateDefaultOptions(AcmeSuggestorQuery request, List<string> rolesTheUserIsAssigned)
     {
-        var options = new SuggestOptions
+        var options = new AutocompleteOptions
         {
             Filter = FieldService.BuildODataFilter(request.Filters, rolesTheUserIsAssigned),
             HighlightPreTag = "<b>",
             HighlightPostTag = "</b>",
-            // MinimumCoverage = 33.3,
-            OrderBy = { "search.score() desc" },
-            //SearchFields = {  },
-            // Select = { },
+            Mode = AutocompleteMode.TwoTerms,
             Size = request.NumberOfSuggestionsToRetrieve,
             UseFuzzyMatching = false // false for performance reasons
         };
 
-        AddFieldNamesToSelect(GetFieldNamesToSelect(), options);
+        AddFieldNamesToSearchFields(GetFieldNamesToSearch(), options);
 
         return options;
     }
@@ -58,19 +55,20 @@ public abstract class AcmeSuggestorServiceBase<TIndexClass> where TIndexClass : 
     /// fields are returned along with the suggestion.</summary>
     /// <param name="fieldNames">The document field names to retrieve.</param>
     /// <param name="options">The options to add the field names to.</param>
-    protected virtual void AddFieldNamesToSelect(List<string> fieldNames, SuggestOptions options)
+    protected virtual void AddFieldNamesToSearchFields(List<string> fieldNames, AutocompleteOptions options)
     {
-        options.Select.Clear();
+        options.SearchFields.Clear();
 
         foreach (string fieldName in fieldNames)
         {
-            options.Select.Add(fieldName);
+            options.SearchFields.Add(fieldName);
         }
     }
 
-    /// <summary>Gets a list of fields that we should be returned with the document found with the suggestion. If left blank, it will return the key field.
-    /// Warning! Field names must match exactly how they appear in the Azure Search Document!</summary>
-    protected virtual List<string> GetFieldNamesToSelect()
+    /// <summary>Gets a list of fields that we should be returned with the document found with the autocomplete.
+    /// If left blank, it will return the key field. Warning! Field names must match exactly how they
+    /// appear in the Azure Search Document!</summary>
+    protected virtual List<string> GetFieldNamesToSearch()
     {
         return new List<string>();
     }

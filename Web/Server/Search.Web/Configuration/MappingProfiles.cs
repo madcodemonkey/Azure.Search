@@ -10,8 +10,15 @@ public class MappingProfiles : Profile
 {
     public MappingProfiles()
     {
+        CreateAutoCompleteMappings();
         CreateSuggestionMappings();
         CreateSearchMappings();
+    }
+
+    
+    private void CreateAutoCompleteMappings()
+    {
+        CreateMap<AutocompleteItem, HotelAutocompleteDto>();
     }
 
     private void CreateSuggestionMappings()

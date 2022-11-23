@@ -3,7 +3,7 @@ using Search.CogServices;
 
 namespace Search.Web;
 
-public class AcmeSuggestQueryValidator : AbstractValidator<AcmeSuggestQuery>
+public class AcmeSuggestQueryValidator : AbstractValidator<AcmeSuggestorQuery>
 {
     public AcmeSuggestQueryValidator()
     {

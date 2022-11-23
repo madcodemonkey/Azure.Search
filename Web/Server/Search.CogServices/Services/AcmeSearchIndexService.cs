@@ -38,10 +38,13 @@ public class AcmeSearchIndexService : IAcmeSearchIndexService
     /// <param name="indexName">The name of the index</param>
     /// <param name="searchText">The partial bit of text to search upon</param>
     /// <param name="suggesterName">The name of the suggester</param>
-    public async Task<Response<AutocompleteResults>> AutocompleteAsync(string indexName, string searchText, string suggesterName)
+    /// <param name="options">Options that allow specifying autocomplete behaviors, like fuzzy matching.</param>
+    /// <param name="cancellationToken">Optional <see cref="CancellationToken"/> to propagate notifications that the operation should be canceled. </param>
+    public async Task<Response<AutocompleteResults>> AutocompleteAsync(string indexName, string searchText, string suggesterName,
+        AutocompleteOptions? options = null, CancellationToken cancellationToken = default)
     {
         var searchClient = Client.GetSearchClient(indexName);
-        return await searchClient.AutocompleteAsync(searchText, suggesterName);
+        return await searchClient.AutocompleteAsync(searchText, suggesterName, options, cancellationToken);
     }
 
     /// <summary>Retrieves a single document.</summary>
@@ -104,41 +107,30 @@ public class AcmeSearchIndexService : IAcmeSearchIndexService
     /// <param name="indexName">The name of the index</param>
     /// <param name="searchText">The text to find</param>
     /// <param name="options">The search options to apply</param>
-    public async Task<Response<SearchResults<T>>> Search<T>(string indexName, string searchText, SearchOptions? options = null)
+    /// <param name="cancellationToken">Optional <see cref="CancellationToken"/> to propagate notifications that the operation should be canceled. </param>
+    public async Task<Response<SearchResults<T>>> SearchAsync<T>(string indexName, string searchText, 
+        SearchOptions? options = null, CancellationToken cancellationToken = default)
     {
         var searchClient = Client.GetSearchClient(indexName);
-        return await searchClient.SearchAsync<T>(searchText, options);
+        var response = await searchClient.SearchAsync<T>(searchText, options, cancellationToken);
+        return response;
     }
-
 
 
     /// <summary>Used for autocomplete to get a suggestion.</summary>
     /// <typeparam name="T">The type of data being returned.</typeparam>
     /// <param name="indexName">The name of the index</param>
     /// <param name="searchText">The text to find</param>
-    /// <param name="options">The search options to apply</param>
     /// <param name="suggesterName">The name of the suggestor</param>
-    public async Task<SuggestResults<T>> SuggestAsync<T>(string indexName, string searchText,string suggesterName, SuggestOptions options)
-    {
-        var searchClient = Client.GetSearchClient(indexName);
-        return await searchClient.SuggestAsync<T>(searchText, suggesterName, options);
-    }
-
-    
-  
-    /// <summary>Searches for documents</summary>
-    /// <typeparam name="T">The type of data being returned.</typeparam>
-    /// <param name="indexName">The name of the index</param>
-    /// <param name="searchText">The text to find</param>
     /// <param name="options">The search options to apply</param>
-    public async Task<Response<SearchResults<T>>> SearchAsync<T>(string indexName, string searchText, SearchOptions options)
+    /// <param name="cancellationToken"></param>
+    public async Task<SuggestResults<T>> SuggestAsync<T>(string indexName, string searchText, string suggesterName, 
+        SuggestOptions? options = null, CancellationToken cancellationToken = default)
     {
         var searchClient = Client.GetSearchClient(indexName);
-        var response = await searchClient.SearchAsync<T>(searchText, options);
-        return response;
+        return await searchClient.SuggestAsync<T>(searchText, suggesterName, options, cancellationToken);
     }
-
-
+    
     /// <summary>Uploads documents to an index.</summary>
     /// <typeparam name="T">The class type that we are uploading.</typeparam>
     /// <param name="indexName">The name of the index</param>

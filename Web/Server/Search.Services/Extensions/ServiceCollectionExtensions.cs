@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
 
         sc.AddTransient<IAcmeOptionsService, AppOptionsService>(); // overriding an item in Search.CogServices!
         
-
+        sc.AddTransient<IHotelAutoCompleteService, HotelAutoCompleteService>();
         sc.AddTransient<IHotelDataSourceService, HotelDataSourceService>();
         sc.AddTransient<IHotelIndexService, HotelIndexService>();
         sc.AddTransient<IHotelIndexerService, HotelIndexerService>();

@@ -1,17 +1,18 @@
 ﻿namespace Search.CogServices;
 
-public class AcmeSuggestQuery 
+/// <summary>Used by either the suggest or autocomplete services</summary>
+public class AcmeSuggestorQuery 
 {
-    private int _numberOfSuggestionsToRetrieve;
+    private int _numberOfSuggestionsToRetrieve = 5;
 
     /// <summary>Constructor</summary>
-    public AcmeSuggestQuery()
+    public AcmeSuggestorQuery()
     {
         Filters = new List<AcmeSearchFilterItem>();
     }
 
     /// <summary>The simple or Lucene style query</summary>
-    public string Query { get; set; }
+    public string Query { get; set; } = string.Empty;
 
     /// <summary>Filters to narrow the search.  This help with response time a lot.</summary>
     /// <remarks>I'm not letting the user build them because filters are also part of security</remarks>

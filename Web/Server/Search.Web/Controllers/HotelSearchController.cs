@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using Azure.Search.Documents.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -15,26 +16,46 @@ public class HotelSearchController : ControllerBase
 {
     private readonly IHotelSearchService _hotelSearchService;
     private readonly IHotelSuggestorService _hotelSuggestorService;
+    private readonly IHotelAutoCompleteService _autoCompleteService;
     private readonly IMapper _mapper;
     private readonly IValidator<AcmeSearchQuery> _searchValidator;
-    private readonly IValidator<AcmeSuggestQuery> _suggestValidator;
+    private readonly IValidator<AcmeSuggestorQuery> _suggestValidator;
 
     /// <summary>Constructor</summary>
     public HotelSearchController(IHotelSearchService hotelSearchService,
-        IHotelSuggestorService hotelSuggestorService, IMapper mapper,
+        IHotelSuggestorService hotelSuggestorService, 
+        IHotelAutoCompleteService autoCompleteService, IMapper mapper,
         IValidator<AcmeSearchQuery> searchValidator,
-        IValidator<AcmeSuggestQuery> suggestValidator)
+        IValidator<AcmeSuggestorQuery> suggestValidator)
     {
         _hotelSearchService = hotelSearchService;
         _hotelSuggestorService = hotelSuggestorService;
+        _autoCompleteService = autoCompleteService;
         _mapper = mapper;
         _searchValidator = searchValidator;
         _suggestValidator = suggestValidator;
     }
+    
+    [HttpPost("AutoComplete")]
+    public async Task<IActionResult> AutoComplete(AcmeSuggestorQuery query)
+    {
+        var validationResult = await _suggestValidator.ValidateAsync(query);
+
+        if (validationResult.IsValid == false)
+        {
+            return new BadRequestObjectResult(validationResult.ToString());
+        }
+
+        Response<AutocompleteResults> autoCompleteResult = await _autoCompleteService.AutoCompleteAsync(query, GetRoles());
+        
+        List<HotelAutocompleteDto> mapResult = _mapper.Map<List<HotelAutocompleteDto>>(autoCompleteResult.Value.Results);
+
+        return new OkObjectResult(mapResult);
+    }
 
 
     [HttpPost("Suggest")]
-    public async Task<IActionResult> Suggest(AcmeSuggestQuery query)
+    public async Task<IActionResult> Suggest(AcmeSuggestorQuery query)
     {
         var validationResult = await _suggestValidator.ValidateAsync(query);
 
