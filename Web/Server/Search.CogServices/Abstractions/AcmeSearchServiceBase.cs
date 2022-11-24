@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Azure;
+﻿using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 
@@ -122,49 +121,4 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
 
         return options;
     }
-
-    /// <summary>Maps the highlight fields onto the document object.  This is handy if you don't really need the original document text
-    /// and just want highlight text returned in the document object.</summary>
-    /// <param name="docs">The docs that were found by the Azure Search method.</param>
-    /// <param name="dividerBetweenHighlights">The text you would like between the highlights if more than one is found for a given field.
-    /// In a field that contains a LOT of text, it's possible that you could get more than one highlight in different parts of the document.
-    /// Sometimes it looks like it breaks it up by sentences and sometimes not.  This is what you want between the highlights.  It may not
-    /// make any sense if the user sees them all smashed together so two breaks is the default.</param>
-    /// <exception cref="ArgumentException">If you give us a property name that doesn't exist, you could get an exception.</exception>
-    protected virtual void MapHighlightsOnToDocument(List<SearchResult<TIndexClass>> docs, string dividerBetweenHighlights = "<br/><br/>")
-    {
-        var sb = new StringBuilder();
-
-        foreach (SearchResult<TIndexClass> oneDoc in docs)
-        {
-            if (oneDoc.Highlights == null) continue;
-            
-            foreach (var oneDocHighlight in oneDoc.Highlights)
-            {
-                if (oneDocHighlight.Value == null || oneDocHighlight.Value.Count == 0) continue;
-
-                var searchField = FieldService.FindByIndexFieldName(oneDocHighlight.Key);
-
-                if (searchField == null)
-                    throw new ArgumentException($"The field service could not find a property on the {typeof(TIndexClass)} named {oneDocHighlight.Key}!");
-                
-                var prop = typeof(TIndexClass).GetProperty(searchField.PropertyFieldName);
-                if (prop == null) throw new ArgumentException($"There is no property on the {typeof(TIndexClass)} named {searchField.PropertyFieldName}!");
-                
-                // You'll have more than one string if the text property being search is very large.
-                // The individual strings will correspond to sentences most of the time, but not always.
-                sb.Clear();
-                foreach (string oneHighlight in oneDocHighlight.Value)
-                {
-                    if (sb.Length > 0)
-                        sb.Append(dividerBetweenHighlights);
-                    sb.Append(oneHighlight);
-                }
-
-                prop.SetValue(oneDoc.Document, sb.ToString());
-            }
-        }
-
-    }
-
 }

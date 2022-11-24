@@ -85,6 +85,7 @@ public class HotelSearchController : ControllerBase
         // Note on how continuation is really used https://stackoverflow.com/questions/33826731/how-to-use-microsoft-azure-search-searchcontinuationtoken
         AcmeSearchQueryResult<SearchResult<HotelDocument>> searchResult = await _hotelSearchService.SearchAsync(query, GetRoles());
 
+
         AcmeSearchQueryResult<HotelDocumentDto>? mapResult = _mapper.Map<AcmeSearchQueryResult<HotelDocumentDto>>(searchResult);
 
         return new OkObjectResult(mapResult);

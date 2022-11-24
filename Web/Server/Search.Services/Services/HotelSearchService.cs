@@ -7,13 +7,16 @@ namespace Search.Services;
 public class HotelSearchService : AcmeSearchServiceBase<HotelDocument>, IHotelSearchService
 {
     private readonly SearchServiceSettings _settings;
+    private readonly IHotelSearchHighlightService _highlightService;
 
     /// <summary>Constructor</summary>
     public HotelSearchService(SearchServiceSettings settings,
         IAcmeSearchIndexService acmeSearchIndexService,
+        IHotelSearchHighlightService highlightService,
         IHotelFieldService hotelFieldService) : base(acmeSearchIndexService, hotelFieldService)
     {
         _settings = settings;
+        _highlightService = highlightService;
     }
 
     protected override string IndexName => _settings.Hotel.IndexName;
@@ -25,8 +28,12 @@ public class HotelSearchService : AcmeSearchServiceBase<HotelDocument>, IHotelSe
     {
         var result = await base.SearchAsync(request, rolesTheUserIsAssigned);
 
-        MapHighlightsOnToDocument(result.Docs, dividerBetweenHighlights: "<br/><br/>");
+        // It takes a lot of text to get more than one highlight item back and see this double break.
+        _highlightService.MapHighlightsOnToDocumentSeparatorStyle(result.Docs, "<br/><br/>");
 
+        // Normally, you would want to increase the number of characters to something larger, but 20 allows you to see the impact of the clipping.
+        //_highlightService.MapHighlightsOnToDocumentGoogleStyle(result.Docs, 20);
+ 
         return result;
     }
 }
