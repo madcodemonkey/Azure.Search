@@ -26,6 +26,15 @@ public abstract class AcmeSuggestorServiceBase<TIndexClass> where TIndexClass : 
     {
         var options = CreateDefaultOptions(request, rolesTheUserIsAssigned);
 
+        return await SuggestAsync(request, options);
+    }
+
+    /// <summary>Suggest</summary>
+    /// <param name="request">A request for a suggestion</param>
+    /// <param name="options">The search options to apply</param>
+    /// <returns>List of suggestions</returns>
+    public virtual async Task<SuggestResults<TIndexClass>> SuggestAsync(AcmeSuggestorQuery request, SuggestOptions options)
+    {
         var suggestResult = await SearchIndexService.SuggestAsync<TIndexClass>(IndexName, request.Query, SuggestorName, options);
 
         return suggestResult;
@@ -46,9 +55,9 @@ public abstract class AcmeSuggestorServiceBase<TIndexClass> where TIndexClass : 
             //SearchFields = {  },
             // Select = { },
             Size = request.NumberOfSuggestionsToRetrieve,
-            UseFuzzyMatching = false // false for performance reasons
+            UseFuzzyMatching = request.UseFuzzyMatching // false by default for performance reasons
         };
-
+        
         AddFieldNamesToSelect(GetFieldNamesToSelect(), options);
 
         return options;

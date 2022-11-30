@@ -21,6 +21,16 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
 
     /// <summary>The name of the index we are querying.</summary>
     protected abstract string IndexName { get; }
+    
+    /// <summary>Searches using the Azure Search API.</summary>
+    /// <param name="request">The request from the user.</param>
+    /// <param name="rolesTheUserIsAssigned">Case sensitive list of roles that for search trimming.</param>
+    public virtual async Task<AcmeSearchQueryResult<SearchResult<TIndexClass>>> SearchAsync(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
+    {
+        SearchOptions options = CreateDefaultOptions(request, rolesTheUserIsAssigned);
+
+        return await SearchAsync(request, options);
+    }
 
     /// <summary>Searches using the Azure Search API, but this overload gives you more control over the options passed to Azure Search.</summary>
     /// <param name="request">The request from the user.</param>
@@ -34,21 +44,6 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
 
         return result;
     }
-
-    /// <summary>Searches using the Azure Search API.</summary>
-    /// <param name="request">The request from the user.</param>
-    /// <param name="rolesTheUserIsAssigned">Case sensitive list of roles that for search trimming.</param>
-    public virtual async Task<AcmeSearchQueryResult<SearchResult<TIndexClass>>> SearchAsync(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
-    {
-        SearchOptions options = CreateDefaultOptions(request, rolesTheUserIsAssigned);
-
-        var azSearchResult = await SearchIndexService.SearchAsync<TIndexClass>(IndexName, request.Query, options);
-
-        var result = await WrapResultsAsync(request, azSearchResult);
-
-        return result;
-    }
-
     
     /// <summary>Wraps the search results that came back from the Azure Search Index in a <see cref="AcmeSearchQueryResult"/> instance.
     /// You will still get the raw result, but with additional information that you can return the the client.</summary>
@@ -58,16 +53,17 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
     {
         var result = new AcmeSearchQueryResult<SearchResult<TIndexClass>>
         {
-            Query = request.Query,
-            Filters = request.Filters,
-            OrderByFields = request.OrderByFields,
+            Docs = await GetPagedResultsAsync(azSearchResult.Value),
             Facets = FieldService.ConvertFacets(azSearchResult.Value.Facets, request.Filters),
+            Filters = request.Filters,
             IncludeAllWords = request.IncludeAllWords,
             IncludeCount = request.IncludeCount,
-            TotalCount = azSearchResult.Value.TotalCount ?? 0,
             ItemsPerPage = request.ItemsPerPage,
+            Query = request.Query,
+            QueryType = request.QueryType,
+            OrderByFields = request.OrderByFields,
             PageNumber = request.PageNumber,
-            Docs = await GetPagedResultsAsync(azSearchResult.Value),
+            TotalCount = azSearchResult.Value.TotalCount ?? 0
         };
 
         return result;
@@ -104,10 +100,11 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
             HighlightPreTag = "<b>",
             HighlightPostTag = "</b>",
             IncludeTotalCount = request.IncludeCount,
+            QueryType = request.QueryType, // Eventually Semantic will be an option.
             OrderBy = { "search.score() desc" },
             SearchMode = request.IncludeAllWords ? SearchMode.All : SearchMode.Any,
             Skip = skip < 1 ? (int?)null : skip,
-            Size = request.ItemsPerPage,
+            Size = request.ItemsPerPage
         };
 
         FieldService.AddFacets(options);

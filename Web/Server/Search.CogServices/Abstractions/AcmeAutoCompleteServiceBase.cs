@@ -26,11 +26,22 @@ public abstract class AcmeAutoCompleteServiceBase
     public virtual async Task<Response<AutocompleteResults>> AutoCompleteAsync(AcmeSuggestorQuery request, List<string> rolesTheUserIsAssigned)
     {
         var options = CreateDefaultOptions(request, rolesTheUserIsAssigned);
+
+        return await AutoCompleteAsync(request, options);
+    }
+
+    /// <summary>Autocomplete</summary>
+    /// <param name="request">A request for a suggestion</param>
+    /// <param name="options">Options that allow specifying autocomplete behaviors, like fuzzy matching.</param>
+    /// <returns>List of suggestions</returns>
+    public virtual async Task<Response<AutocompleteResults>> AutoCompleteAsync(AcmeSuggestorQuery request, AutocompleteOptions options)
+    {
         Response<AutocompleteResults> autoCompleteResult = await SearchIndexService.AutocompleteAsync(IndexName, request.Query, SuggestorName, options);
         
         return autoCompleteResult;
     }
-     
+
+
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
@@ -43,7 +54,7 @@ public abstract class AcmeAutoCompleteServiceBase
             HighlightPostTag = "</b>",
             Mode = AutocompleteMode.TwoTerms,
             Size = request.NumberOfSuggestionsToRetrieve,
-            UseFuzzyMatching = false // false for performance reasons
+            UseFuzzyMatching = request.UseFuzzyMatching // the default is false for performance reasons.  My experience shows that it really does not work well with autocomplete, but works fine with Suggest.
         };
 
         AddFieldNamesToSearchFields(GetFieldNamesToSearch(), options);

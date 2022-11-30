@@ -1,4 +1,6 @@
-﻿namespace Search.CogServices;
+﻿using Azure.Search.Documents.Models;
+
+namespace Search.CogServices;
 
 public class AcmeSearchQuery
 {
@@ -26,4 +28,8 @@ public class AcmeSearchQuery
 
     /// <summary>Current page number</summary>
     public int PageNumber { get; set; }
+
+    /// <summary> A value that specifies the syntax of the search query. The default is simple Use full; if your query uses the Lucene query syntax. </summary>
+    /// <remarks>You need a beta version of the search NuGet package to get semantic search as an option!</remarks>
+    public SearchQueryType QueryType { get; set; } = SearchQueryType.Simple;
 }
