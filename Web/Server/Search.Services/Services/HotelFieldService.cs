@@ -33,7 +33,7 @@ public class HotelFieldService : AcmeFieldServiceBase, IHotelFieldService
         fieldList.Add(new AcmeSearchFieldForBooleanField((int) HotelDocumentFieldEnum.LastRenovationDate, nameof(HotelDocument.LastRenovationDate), "lastRenovationDate", "Last Renovation Date", true, true, false, false, false));
         fieldList.Add(new AcmeSearchFieldForBooleanField((int) HotelDocumentFieldEnum.ParkingIncluded, nameof(HotelDocument.ParkingIncluded), "parkingIncluded", "Parking Included", true, false, true, false, false));
         fieldList.Add(new AcmeSearchFieldForBooleanField((int) HotelDocumentFieldEnum.SmokingAllowed, nameof(HotelDocument.SmokingAllowed), "smokingAllowed", "Smoking Allowed", true, false, true, false, false));
-        fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.Rating, nameof(HotelDocument.Rating), "rating", "Rating", true, true, true, false, false));
+        fieldList.Add(new AcmeSearchFieldForNumberField((int) HotelDocumentFieldEnum.Rating, nameof(HotelDocument.Rating), "rating", "Rating", true, true, true, false, false));
         fieldList.Add(new AcmeSearchFieldForStringCollection((int) HotelDocumentFieldEnum.Roles, nameof(HotelDocument.Roles), "roles", "Roles", true, false, false, false, true)); // Security Trimming field
         fieldList.Add(new AcmeSearchFieldForStringField((int) HotelDocumentFieldEnum.Tags, nameof(HotelDocument.Tags), "tags", "Tags", true, false, true, false, false));
 

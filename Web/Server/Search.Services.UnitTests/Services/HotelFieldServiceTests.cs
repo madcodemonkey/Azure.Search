@@ -46,6 +46,105 @@ public class HotelFieldServiceTests
 
         // Assert
         Assert.IsTrue(numberOfSecurityFields < 2);
+    }
+
+    [TestMethod]
+    [DynamicData(nameof(HotelFilteringData))]
+    public void BuildODataFilter_WhenFilterDataEntered_TheProperODataFilterIsReturned(
+        List<AcmeSearchFilterItem> filters, string expectedFilter)
+    {
+        // Arrange
+        var cut = new HotelFieldService();
+
+        // Act
+        string actualFilter = cut.BuildODataFilter(filters, new List<string> { "admin" });
+
+        // Assert
+        Assert.AreEqual(expectedFilter, actualFilter);
 
     }
+
+    public static IEnumerable<object[]> HotelFilteringData
+    {
+        get
+        {
+            return new[]
+            { 
+                // 1st Test
+                new object[]
+                {
+                    // Filters
+                    new List<AcmeSearchFilterItem>()
+                    {
+                        new AcmeSearchFilterItem()
+                        {
+                            Id = (int) HotelDocumentFieldEnum.Category,
+                            Operator = AcmeSearchFilterOperatorEnum.Equal,
+                            Values = new List<string> { "Luxury"}
+                        }
+                    },
+                    // Expected OData filter 
+                    "category eq 'Luxury' and roles/any(g:search.in(g, 'admin', ','))"
+                },
+
+                // 2nd Test
+                new object[]
+                {
+                    // Filters
+                    new List<AcmeSearchFilterItem>()
+                    {
+                        new AcmeSearchFilterItem()
+                        {
+                            Id = (int) HotelDocumentFieldEnum.Rating,
+                            Operator = AcmeSearchFilterOperatorEnum.WithinRange,
+                            Values = new List<string> { "1", "5"}
+                        }
+                    },
+                    // Expected OData filter 
+                    "rating ge 1 and rating le 5 and roles/any(g:search.in(g, 'admin', ','))"
+                },
+
+                // 3rd Test
+                new object[]
+                {
+                    // Filters
+                    new List<AcmeSearchFilterItem>()
+                    {
+                        new AcmeSearchFilterItem()
+                        {
+                            Id = (int) HotelDocumentFieldEnum.SmokingAllowed,
+                            Operator = AcmeSearchFilterOperatorEnum.Equal,
+                            Values = new List<string> { "true"}
+                        }
+                    },
+                    // Expected OData filter 
+                    "smokingAllowed eq true and roles/any(g:search.in(g, 'admin', ','))"
+                },
+
+                // 4th Test
+                new object[]
+                {
+                    // Filters
+                    new List<AcmeSearchFilterItem>()
+                    {
+                        new AcmeSearchFilterItem()
+                        {
+                            Id = (int) HotelDocumentFieldEnum.BaseRate,
+                            Operator = AcmeSearchFilterOperatorEnum.WithinRange,
+                            Values = new List<string> { "100.01", "456.43"}
+                        },
+                        new AcmeSearchFilterItem()
+                        {
+                            Id = (int) HotelDocumentFieldEnum.Category,
+                            Operator = AcmeSearchFilterOperatorEnum.Equal,
+                            Values = new List<string> { "Luxury"}
+                        },
+                    },
+                    // Expected OData filter 
+                    "baseRate ge 100.01 and baseRate le 456.43 and category eq 'Luxury' and roles/any(g:search.in(g, 'admin', ','))"
+                },
+            };
+        }
+    }
+
 }
