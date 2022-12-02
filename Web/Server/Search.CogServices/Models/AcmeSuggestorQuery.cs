@@ -10,7 +10,7 @@ public class AcmeSuggestorQuery
 
     /// <summary>Filters to narrow the search.  This help with response time a lot.</summary>
     /// <remarks>I'm not letting the user build them because filters are also part of security</remarks>
-    public List<AcmeSearchFilterGroup> Filters { get; set; } = new List<AcmeSearchFilterGroup>();
+    public List<AcmeSearchFilterField> Filters { get; set; } = new List<AcmeSearchFilterField>();
 
     /// <summary>The number of suggestions to retrieve. This must be a value between 1 and 100.</summary>
     public int NumberOfSuggestionsToRetrieve

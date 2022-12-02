@@ -126,7 +126,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
     /// <param name="groupFilters">Filters to use</param>
     /// <param name="rolesTheUserIsAssigned">Roles assigned to the current user.</param>
     /// <returns>An OData Filter</returns>
-    public string BuildODataFilter(List<AcmeSearchFilterGroup> groupFilters, List<string?> rolesTheUserIsAssigned)
+    public string BuildODataFilter(List<AcmeSearchFilterField> groupFilters, List<string?> rolesTheUserIsAssigned)
     {
         // All Filters are case SENSITIVE
         // All Filters are case SENSITIVE
@@ -183,7 +183,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
     /// <param name="facets">Facets from an Azure Search call</param>
     /// <param name="groupFilters">Filters that we are currently using</param>
     /// <returns></returns>
-    public List<AcmeSearchFacet> ConvertFacets(IDictionary<string, IList<FacetResult>>? facets, List<AcmeSearchFilterGroup> groupFilters)
+    public List<AcmeSearchFacet> ConvertFacets(IDictionary<string, IList<FacetResult>>? facets, List<AcmeSearchFilterField> groupFilters)
     {
         var result = new List<AcmeSearchFacet>();
 
@@ -222,31 +222,31 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
     }
 
     /// <summary>Creates an OData filter for one group.</summary>
-    /// <param name="groupFilter">The group to evaluate</param>
+    /// <param name="fieldFilter">The group to evaluate</param>
     /// <param name="surroundEachGroupWithParenthesis">Indicates if we should surround the group with parenthesis</param>
-    private string BuildGroupODataFilter(AcmeSearchFilterGroup groupFilter, bool surroundEachGroupWithParenthesis)
+    private string BuildGroupODataFilter(AcmeSearchFilterField fieldFilter, bool surroundEachGroupWithParenthesis)
     {
         var sbGroupFilter = new StringBuilder();
 
-        foreach (var filter in groupFilter.Filters)
+        var searchFilter = FindById(fieldFilter.FieldId);
+        if (searchFilter == null)
+            throw new ArgumentNullException($"Could not find a search filter with an field id of '{fieldFilter.FieldId}'");
+        if (searchFilter.IsSecurityFilter)
+            throw new ArgumentException("User is trying to specify a security trimming filter which is illegal!");
+
+        foreach (var filter in fieldFilter.Filters)
         {
             if (sbGroupFilter.Length > 0)
             {
-                if (groupFilter.FiltersOperator == AcmeSearchGroupOperatorEnum.And)
+                if (fieldFilter.FiltersOperator == AcmeSearchGroupOperatorEnum.And)
                     sbGroupFilter.Append(" and ");
                 else sbGroupFilter.Append(" or ");
             }
-            
-            var searchFilter = FindById(filter.Id);
-            if (searchFilter == null)
-                throw new ArgumentNullException($"Could not find a search filter with an id of '{filter.Id}'");
-            if (searchFilter.IsSecurityFilter)
-                throw new ArgumentException("User is trying to specify a security trimming filter which is illegal!");
-
+         
             sbGroupFilter.Append(searchFilter.CreateFilter(filter.Operator, filter.Values));
         }
 
-        if (surroundEachGroupWithParenthesis || groupFilter.Filters.Count > 1 && groupFilter.FiltersOperator == AcmeSearchGroupOperatorEnum.Or)
+        if (surroundEachGroupWithParenthesis || fieldFilter.Filters.Count > 1 && fieldFilter.FiltersOperator == AcmeSearchGroupOperatorEnum.Or)
             sbGroupFilter.SurroundWithParenthesis();
 
         return sbGroupFilter.ToString();
@@ -256,17 +256,12 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
     /// <param name="groupFilters">The group filters to evaluate.</param>
     /// <param name="fieldId">The id of the field associated with the facet</param>
     /// <param name="facetText">The text of the facet item</param>
-    private bool IsFacetSelected(List<AcmeSearchFilterGroup> groupFilters, int fieldId, string facetText)
+    private bool IsFacetSelected(List<AcmeSearchFilterField> groupFilters, int fieldId, string facetText)
     {
-        foreach (var groupFilter in groupFilters)
-        {
-            if (groupFilter.Filters.Any(w => w.Id == fieldId && string.Compare(w.Values[0], facetText, StringComparison.InvariantCultureIgnoreCase) == 0))
-            {
-                return true;
-            }
-        }
+        var group = groupFilters.FirstOrDefault(w => w.FieldId == fieldId);
+        if (group == null) return false;
 
-        return false;
+        return group.Filters.Any(w => string.Compare(w.Values[0], facetText, StringComparison.InvariantCultureIgnoreCase) == 0);
     }
 
     /// <summary>Register all the fields that are marked as IsFilterable or IsFacetable
@@ -277,7 +272,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
     
     /// <summary>Determines if there is a mixture of AND and OR peer operators in the group filter list</summary>
     /// <param name="groupFilters">The group filters to evaluate.</param>
-    private bool ShouldSurroundEachGroupWithParenthesis(List<AcmeSearchFilterGroup> groupFilters)
+    private bool ShouldSurroundEachGroupWithParenthesis(List<AcmeSearchFilterField> groupFilters)
     {
         if (groupFilters.Count == 0) return false;
         if (groupFilters.Count == 1)

@@ -24,24 +24,49 @@ public class AcmeSearchFieldForDateTimeOffsetField : AcmeSearchFieldBase
             if (values.Count < 2)
                 throw new ArgumentException($"To use the {AcmeSearchFilterOperatorEnum.WithinRange} operator with a date time field, you must include at least two values!");
 
-            return $"{this.IndexFieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.GreaterOrEqual)} {ConvertDateStringToUtcString(values[0])} and " +
-                $"{this.IndexFieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.LessOrEqual)} {ConvertDateStringToUtcString(values[1])}";
+            return $"{this.IndexFieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.GreaterOrEqual)} {ConvertDateStringToUtcString(values[0], TimeHandlingEnum.UseMidnight)} and " +
+                $"{this.IndexFieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.LessOrEqual)} {ConvertDateStringToUtcString(values[1], TimeHandlingEnum.UseEndOfDay)}";
         }
 
-        return $"{this.IndexFieldName} {OperatorToString(searchOperator)} {ConvertDateStringToUtcString(values[0])}";
+        return $"{this.IndexFieldName} {OperatorToString(searchOperator)} {ConvertDateStringToUtcString(values[0], TimeHandlingEnum.UseTimeAsSent)}";
     }
 
-    private string ConvertDateStringToUtcString(string? dateString)
+    private string ConvertDateStringToUtcString(string? dateString, TimeHandlingEnum timeHandling)
     {
         if (dateString == null) return "null";
 
         if (DateTime.TryParse(dateString, out var theDate))
         {
-            var utcDate = new DateTime(theDate.Year, theDate.Month, theDate.Day, 0, 0, 0, DateTimeKind.Utc);
-            return utcDate.ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+            DateTime utcDate;
+            
+            switch (timeHandling)
+            {
+                case TimeHandlingEnum.UseTimeAsSent:
+                    utcDate = new DateTime(theDate.Year, theDate.Month, theDate.Day, theDate.Hour, theDate.Minute, theDate.Second, DateTimeKind.Utc);
+                    break;
+                case TimeHandlingEnum.UseMidnight:
+                    utcDate = new DateTime(theDate.Year, theDate.Month, theDate.Day, 0, 0, 0, DateTimeKind.Utc);
+                    break;
+                case TimeHandlingEnum.UseEndOfDay:
+                    utcDate = new DateTime(theDate.Year, theDate.Month, theDate.Day, 23, 59, 59, DateTimeKind.Utc);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(timeHandling), timeHandling, null);
+            }
+
+            var utcDateAndTime = utcDate.ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+
+            return utcDateAndTime;
         }
 
 
         throw new ArgumentException($"Unable to parse the date string '{dateString}' for the {this.IndexFieldName} field as date time!");
+    }
+
+    private enum TimeHandlingEnum
+    {
+        UseTimeAsSent,
+        UseMidnight,
+        UseEndOfDay
     }
 }

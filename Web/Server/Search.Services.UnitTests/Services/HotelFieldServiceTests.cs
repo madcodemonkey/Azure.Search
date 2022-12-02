@@ -52,7 +52,7 @@ public class HotelFieldServiceTests
     [TestMethod]
     [DynamicData(nameof(HotelFilteringData))]
     public void BuildODataFilter_WhenFilterDataEntered_TheProperODataFilterIsReturned(string testCase,
-        List<AcmeSearchFilterGroup> filters, string expectedFilter,
+        List<AcmeSearchFilterField> filters, string expectedFilter,
         IDictionary<string, IList<FacetResult>> facets, List<HotelFieldServiceTestsSelectedFacet> expectedSelectedFacets)
     {
         // Arrange
@@ -68,7 +68,7 @@ public class HotelFieldServiceTests
     [TestMethod]
     [DynamicData(nameof(HotelFilteringData))]
     public void ConvertFacets_GivenSeveralFilters_FacetsAreSelectedProperly(string testCase,
-        List<AcmeSearchFilterGroup> filters, string expectedFilter,
+        List<AcmeSearchFilterField> filters, string expectedFilter,
         IDictionary<string, IList<FacetResult>> facets, List<HotelFieldServiceTestsSelectedFacet> expectedSelectedFacets)
     {
         // Arrange
@@ -118,17 +118,17 @@ public class HotelFieldServiceTests
                 {
                     "Test case 1",
                     // Filters
-                    new List<AcmeSearchFilterGroup>()
+                    new List<AcmeSearchFilterField>()
                     {
-                        new AcmeSearchFilterGroup()
+                        new AcmeSearchFilterField()
                         {
                             PeerOperator = AcmeSearchGroupOperatorEnum.And,
                             FiltersOperator = AcmeSearchGroupOperatorEnum.And,
+                            FieldId = (int) HotelDocumentFieldEnum.Category,
                             Filters = new List<AcmeSearchFilterItem>()
                             {
                                 new AcmeSearchFilterItem()
                                 {
-                                    Id = (int) HotelDocumentFieldEnum.Category,
                                     Operator = AcmeSearchFilterOperatorEnum.Equal,
                                     Values = new List<string?> { "Luxury"}
                                 }
@@ -147,23 +147,22 @@ public class HotelFieldServiceTests
                 {
                     "Test case 2",
                     // Filters
-                    new List<AcmeSearchFilterGroup>()
+                    new List<AcmeSearchFilterField>()
                     {
-                        new AcmeSearchFilterGroup()
+                        new AcmeSearchFilterField()
                         {
                             PeerOperator = AcmeSearchGroupOperatorEnum.And,
                             FiltersOperator = AcmeSearchGroupOperatorEnum.Or,
+                            FieldId = (int) HotelDocumentFieldEnum.Rating,
                             Filters = new List<AcmeSearchFilterItem>()
                             {
                                 new AcmeSearchFilterItem()
                                 {
-                                    Id = (int) HotelDocumentFieldEnum.Rating,
                                     Operator = AcmeSearchFilterOperatorEnum.Equal,
                                     Values = new List<string?> { "1" }
                                 },
                                 new AcmeSearchFilterItem()
                                 {
-                                    Id = (int) HotelDocumentFieldEnum.Rating,
                                     Operator = AcmeSearchFilterOperatorEnum.Equal,
                                     Values = new List<string?> { "5"}
                                 }
@@ -182,17 +181,17 @@ public class HotelFieldServiceTests
                 {
                     "Test case 3",
                     // Filters
-                    new List<AcmeSearchFilterGroup>()
+                    new List<AcmeSearchFilterField>()
                     {
-                        new AcmeSearchFilterGroup()
+                        new AcmeSearchFilterField()
                         {
                             PeerOperator = AcmeSearchGroupOperatorEnum.And,
                             FiltersOperator = AcmeSearchGroupOperatorEnum.And,
+                            FieldId =  (int) HotelDocumentFieldEnum.SmokingAllowed,
                             Filters = new List<AcmeSearchFilterItem>()
                             {
                                 new AcmeSearchFilterItem()
                                 {
-                                    Id = (int) HotelDocumentFieldEnum.SmokingAllowed,
                                     Operator = AcmeSearchFilterOperatorEnum.Equal,
                                     Values = new List<string?> { "true"}
                                 }
@@ -211,23 +210,31 @@ public class HotelFieldServiceTests
                 {
                     "Test case 4",
                     // Filters
-                    new List<AcmeSearchFilterGroup>()
+                    new List<AcmeSearchFilterField>()
                     {
-                        new AcmeSearchFilterGroup()
+                        new AcmeSearchFilterField()
                         {
                             PeerOperator = AcmeSearchGroupOperatorEnum.And,
                             FiltersOperator = AcmeSearchGroupOperatorEnum.And,
+                            FieldId = (int) HotelDocumentFieldEnum.BaseRate,
                             Filters = new List<AcmeSearchFilterItem>()
                             {
                                 new AcmeSearchFilterItem()
                                 {
-                                    Id = (int) HotelDocumentFieldEnum.BaseRate,
                                     Operator = AcmeSearchFilterOperatorEnum.WithinRange,
                                     Values = new List<string?> { "100.01", "456.43"}
-                                },
+                                }
+                            },
+                        },
+                        new AcmeSearchFilterField()
+                        {
+                            PeerOperator = AcmeSearchGroupOperatorEnum.And,
+                            FiltersOperator = AcmeSearchGroupOperatorEnum.And,
+                            FieldId =  (int) HotelDocumentFieldEnum.Category,
+                            Filters = new List<AcmeSearchFilterItem>()
+                            {
                                 new AcmeSearchFilterItem()
                                 {
-                                    Id = (int) HotelDocumentFieldEnum.Category,
                                     Operator = AcmeSearchFilterOperatorEnum.Equal,
                                     Values = new List<string?> { "Luxury"}
                                 },
