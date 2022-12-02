@@ -4,19 +4,13 @@
 public class AcmeSuggestorQuery 
 {
     private int _numberOfSuggestionsToRetrieve = 5;
-
-    /// <summary>Constructor</summary>
-    public AcmeSuggestorQuery()
-    {
-        Filters = new List<AcmeSearchFilterItem>();
-    }
-
+    
     /// <summary>The simple or Lucene style query</summary>
     public string Query { get; set; } = string.Empty;
 
     /// <summary>Filters to narrow the search.  This help with response time a lot.</summary>
     /// <remarks>I'm not letting the user build them because filters are also part of security</remarks>
-    public List<AcmeSearchFilterItem> Filters { get; set; }
+    public List<AcmeSearchFilterGroup> Filters { get; set; } = new List<AcmeSearchFilterGroup>();
 
     /// <summary>The number of suggestions to retrieve. This must be a value between 1 and 100.</summary>
     public int NumberOfSuggestionsToRetrieve

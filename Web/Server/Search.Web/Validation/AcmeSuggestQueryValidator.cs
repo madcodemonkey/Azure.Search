@@ -9,6 +9,6 @@ public class AcmeSuggestQueryValidator : AbstractValidator<AcmeSuggestorQuery>
     {
         RuleFor(x => x.Query).NotEmpty();
         RuleFor(x => x.NumberOfSuggestionsToRetrieve).InclusiveBetween(1, 100);
-        RuleForEach(x => x.Filters).SetValidator(new AcmeSearchFilterItemValidator());
+        RuleForEach(x => x.Filters).SetValidator(new AcmeSearchFilterGroupValidator());
     }
 }

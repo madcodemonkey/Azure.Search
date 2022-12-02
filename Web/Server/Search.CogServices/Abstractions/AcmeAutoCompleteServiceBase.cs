@@ -23,7 +23,7 @@ public abstract class AcmeAutoCompleteServiceBase
     /// <param name="request">A request for a suggestion</param>
     /// <param name="rolesTheUserIsAssigned">Case sensitive list of roles that for search trimming.</param>
     /// <returns>List of suggestions</returns>
-    public virtual async Task<Response<AutocompleteResults>> AutoCompleteAsync(AcmeSuggestorQuery request, List<string> rolesTheUserIsAssigned)
+    public virtual async Task<Response<AutocompleteResults>> AutoCompleteAsync(AcmeSuggestorQuery request, List<string?> rolesTheUserIsAssigned)
     {
         var options = CreateDefaultOptions(request, rolesTheUserIsAssigned);
 
@@ -45,7 +45,7 @@ public abstract class AcmeAutoCompleteServiceBase
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
-    protected virtual AutocompleteOptions CreateDefaultOptions(AcmeSuggestorQuery request, List<string> rolesTheUserIsAssigned)
+    protected virtual AutocompleteOptions CreateDefaultOptions(AcmeSuggestorQuery request, List<string?> rolesTheUserIsAssigned)
     {
         var options = new AutocompleteOptions
         {

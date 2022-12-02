@@ -25,7 +25,7 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
     /// <summary>Searches using the Azure Search API.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">Case sensitive list of roles that for search trimming.</param>
-    public virtual async Task<AcmeSearchQueryResult<SearchResult<TIndexClass>>> SearchAsync(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
+    public virtual async Task<AcmeSearchQueryResult<SearchResult<TIndexClass>>> SearchAsync(AcmeSearchQuery request, List<string?> rolesTheUserIsAssigned)
     {
         SearchOptions options = CreateDefaultOptions(request, rolesTheUserIsAssigned);
 
@@ -89,7 +89,7 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
-    protected virtual SearchOptions CreateDefaultOptions(AcmeSearchQuery request, List<string> rolesTheUserIsAssigned)
+    protected virtual SearchOptions CreateDefaultOptions(AcmeSearchQuery request, List<string?> rolesTheUserIsAssigned)
     {
         string filter = FieldService.BuildODataFilter(request.Filters, rolesTheUserIsAssigned);
         int skip = (request.PageNumber - 1) * request.ItemsPerPage;

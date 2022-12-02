@@ -7,13 +7,11 @@ namespace Search.CogServices;
 public abstract class AcmeFieldServiceBase : IAcmeFieldService
 {
     public List<IAcmeSearchField> FieldList { get; private set; }
-    private readonly IAcmeSearchField? _securityTrimmingField;
 
     /// <summary>Constructor</summary>
     protected AcmeFieldServiceBase()
     {
         FieldList = RegisterFields();
-        _securityTrimmingField = FieldList.FirstOrDefault(w => w.IsSecurityFilter);
     }
     protected virtual int MaximNumberOfFacets => 20;
 
@@ -37,7 +35,13 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
     {
         return FieldList.FirstOrDefault(w => w.PropertyFieldName == propFieldName);
     }
-    
+
+    /// <summary>Finds the security trimming field.</summary>
+    public IAcmeSearchField? FindSecurityTrimmingField()
+    {
+        return FieldList.FirstOrDefault(w => w.IsSecurityFilter);
+    }
+
     /// <summary>Adds an orderby statement for a field</summary>
     /// <param name="options">The options to add orderby statement to</param>
     /// <param name="fieldId">The id of the field.  If it's not found, you will receive an exception.</param>
@@ -119,10 +123,10 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
     }
 
     /// <summary>Builds and OData filter for Azure Search based on user specified filters and the roles that user has been assigned.</summary>
-    /// <param name="filters">Filters to use</param>
+    /// <param name="groupFilters">Filters to use</param>
     /// <param name="rolesTheUserIsAssigned">Roles assigned to the current user.</param>
     /// <returns>An OData Filter</returns>
-    public string BuildODataFilter(List<AcmeSearchFilterItem> filters, List<string> rolesTheUserIsAssigned)
+    public string BuildODataFilter(List<AcmeSearchFilterGroup> groupFilters, List<string?> rolesTheUserIsAssigned)
     {
         // All Filters are case SENSITIVE
         // All Filters are case SENSITIVE
@@ -131,46 +135,55 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
         // All Filters are case SENSITIVE
         // All Filters are case SENSITIVE
 
-        // Yes.  Need filter build service because I need two pieces of info
-        // The exact field name and then a user friendly version of it
-        // I also need to know the field type of the index so text can be quoted and numbers should NOT.
         var sbFilter = new StringBuilder();
-        foreach (var filter in filters)
-        {
-            if (sbFilter.Length > 0)
-                sbFilter.Append(" and ");
-            
-            var searchFilter = FindById(filter.Id);
-            if (searchFilter == null)
-                throw new ArgumentNullException($"Could not find a search filter with an id of '{filter.Id}'");
-            if (searchFilter.IsSecurityFilter)
-                throw new ArgumentException("User is trying to specify a security trimming filter which is illegal!");
 
-            sbFilter.Append(searchFilter.CreateFilter(filter.Operator, filter.Values));
+        bool surroundEachGroupWithParenthesis = ShouldSurroundEachGroupWithParenthesis(groupFilters);
+
+        for (var index = 0; index < groupFilters.Count; index++)
+        {
+            var oneGroupFilter = groupFilters[index];
+            if (index > 0)
+            {
+                if (groupFilters[index-1].PeerOperator == AcmeSearchGroupOperatorEnum.And)
+                    sbFilter.Append(" and ");
+                else sbFilter.Append(" or ");
+            }
+
+            string groupFilter = BuildGroupODataFilter(oneGroupFilter, surroundEachGroupWithParenthesis);
+            sbFilter.Append(groupFilter);
         }
 
         // Warning!! If the object of T that you're passing into the Azure Suggest or Azure Search methods does not have the Roles property on it, 
         //           using roles here will do NOTHING!!!  In other words, I didn't want to return roles to the user
         //           so I removed it from by BookDocumentBrief class. Afterwards, this filter STOPPED working!  No ERRORS!
-        if (_securityTrimmingField != null)
+        if (rolesTheUserIsAssigned.Count > 0)
         {
-            if (sbFilter.Length > 0)
-                sbFilter.Append(" and ");
+            var securityTrimmingField = FindSecurityTrimmingField();
+            if (securityTrimmingField != null)
+            {
+                if (sbFilter.Length > 0)
+                {
+                    if (groupFilters.Count > 1 && surroundEachGroupWithParenthesis)
+                        sbFilter.SurroundWithParenthesis();
+                    
+                    sbFilter.Append(" and ");
+                }
 
-            sbFilter.Append(_securityTrimmingField.CreateFilter(AcmeSearchFilterOperatorEnum.Equal, rolesTheUserIsAssigned));
+                sbFilter.Append(securityTrimmingField.CreateFilter(AcmeSearchFilterOperatorEnum.Equal, rolesTheUserIsAssigned));
+            }
         }
-
 
         return sbFilter.ToString();
     }
+
 
     /// <summary>Avoiding a leaky abstraction by converting Azure Search facets to our format.
     /// Given a list of facets from Azure Search compare them to the filter list we are using and 
     /// mark them as "Selected" so that the user knows they are being used to filter results</summary>
     /// <param name="facets">Facets from an Azure Search call</param>
-    /// <param name="filters">Filters that we are currently using</param>
+    /// <param name="groupFilters">Filters that we are currently using</param>
     /// <returns></returns>
-    public List<AcmeSearchFacet> ConvertFacets(IDictionary<string, IList<FacetResult>>? facets, List<AcmeSearchFilterItem> filters)
+    public List<AcmeSearchFacet> ConvertFacets(IDictionary<string, IList<FacetResult>>? facets, List<AcmeSearchFilterGroup> groupFilters)
     {
         var result = new List<AcmeSearchFacet>();
 
@@ -198,8 +211,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
                 {
                     Text = text,
                     Count = item.Count ?? 0,
-                    Selected = filters.Any(w => string.Compare(w.Values[0], text, true) == 0)
-
+                    Selected = IsFacetSelected(groupFilters, searchFilter.Id, text)
                 });
             }
 
@@ -209,9 +221,81 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
         return result;
     }
 
+    /// <summary>Creates an OData filter for one group.</summary>
+    /// <param name="groupFilter">The group to evaluate</param>
+    /// <param name="surroundEachGroupWithParenthesis">Indicates if we should surround the group with parenthesis</param>
+    private string BuildGroupODataFilter(AcmeSearchFilterGroup groupFilter, bool surroundEachGroupWithParenthesis)
+    {
+        var sbGroupFilter = new StringBuilder();
+
+        foreach (var filter in groupFilter.Filters)
+        {
+            if (sbGroupFilter.Length > 0)
+            {
+                if (groupFilter.FiltersOperator == AcmeSearchGroupOperatorEnum.And)
+                    sbGroupFilter.Append(" and ");
+                else sbGroupFilter.Append(" or ");
+            }
+            
+            var searchFilter = FindById(filter.Id);
+            if (searchFilter == null)
+                throw new ArgumentNullException($"Could not find a search filter with an id of '{filter.Id}'");
+            if (searchFilter.IsSecurityFilter)
+                throw new ArgumentException("User is trying to specify a security trimming filter which is illegal!");
+
+            sbGroupFilter.Append(searchFilter.CreateFilter(filter.Operator, filter.Values));
+        }
+
+        if (surroundEachGroupWithParenthesis || groupFilter.Filters.Count > 1 && groupFilter.FiltersOperator == AcmeSearchGroupOperatorEnum.Or)
+            sbGroupFilter.SurroundWithParenthesis();
+
+        return sbGroupFilter.ToString();
+    }
+
+    /// <summary>Indicates if the facet should be selected or not.</summary>
+    /// <param name="groupFilters">The group filters to evaluate.</param>
+    /// <param name="fieldId">The id of the field associated with the facet</param>
+    /// <param name="facetText">The text of the facet item</param>
+    private bool IsFacetSelected(List<AcmeSearchFilterGroup> groupFilters, int fieldId, string facetText)
+    {
+        foreach (var groupFilter in groupFilters)
+        {
+            if (groupFilter.Filters.Any(w => w.Id == fieldId && string.Compare(w.Values[0], facetText, StringComparison.InvariantCultureIgnoreCase) == 0))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /// <summary>Register all the fields that are marked as IsFilterable or IsFacetable
     /// here.  We do NOT want the client side building filters.  It can only pass in
     /// query text.  This avoids injection attacks where the client can see anything in the
     /// index.  If they could build them, they could avoid security trimming.</summary>
     protected abstract List<IAcmeSearchField> RegisterFields();
+    
+    /// <summary>Determines if there is a mixture of AND and OR peer operators in the group filter list</summary>
+    /// <param name="groupFilters">The group filters to evaluate.</param>
+    private bool ShouldSurroundEachGroupWithParenthesis(List<AcmeSearchFilterGroup> groupFilters)
+    {
+        if (groupFilters.Count == 0) return false;
+        if (groupFilters.Count == 1)
+        {
+            if (groupFilters[0].Filters.Count == 1)
+                return false;
+
+            return groupFilters[0].FiltersOperator == AcmeSearchGroupOperatorEnum.Or;
+        }
+
+        foreach (var group in groupFilters)
+        {
+            if (group.PeerOperator != AcmeSearchGroupOperatorEnum.And)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
