@@ -249,6 +249,70 @@ public class HotelFieldServiceTests
                     new List<HotelFieldServiceTestsSelectedFacet> { new ((int) HotelDocumentFieldEnum.Category, "Luxury")}
 
                 },
+
+                 
+                new object[]
+                {
+                    "Test case 5",
+                    // Filters
+                    new List<AcmeSearchFilterField>()
+                    {
+                        new AcmeSearchFilterField()
+                        {
+                            PeerOperator = AcmeSearchGroupOperatorEnum.Or,
+                            FiltersOperator = AcmeSearchGroupOperatorEnum.And,
+                            FieldId = (int) HotelDocumentFieldEnum.BaseRate,
+                            Filters = new List<AcmeSearchFilterItem>()
+                            {
+                                new AcmeSearchFilterItem()
+                                {
+                                    Operator = AcmeSearchFilterOperatorEnum.WithinRange,
+                                    Values = new List<string?> { "100.01", "456.43"}
+                                }
+                            },
+                        },
+                        new AcmeSearchFilterField()
+                        {
+                            PeerOperator = AcmeSearchGroupOperatorEnum.And,
+                            FiltersOperator = AcmeSearchGroupOperatorEnum.Or,
+                            FieldId =  (int) HotelDocumentFieldEnum.Category,
+                            Filters = new List<AcmeSearchFilterItem>()
+                            {
+                                new AcmeSearchFilterItem()
+                                {
+                                    Operator = AcmeSearchFilterOperatorEnum.Equal,
+                                    Values = new List<string?> { "Luxury"}
+                                },
+                                new AcmeSearchFilterItem()
+                                {
+                                    Operator = AcmeSearchFilterOperatorEnum.Equal,
+                                    Values = new List<string?> { "Budget"}
+                                },
+                            },
+                        },
+                        new AcmeSearchFilterField()
+                        {
+                            PeerOperator = AcmeSearchGroupOperatorEnum.And,  // Not used because it is the last one in the list
+                            FiltersOperator = AcmeSearchGroupOperatorEnum.And,
+                            FieldId =  (int) HotelDocumentFieldEnum.SmokingAllowed,
+                            Filters = new List<AcmeSearchFilterItem>()
+                            {
+                                new AcmeSearchFilterItem()
+                                {
+                                    Operator = AcmeSearchFilterOperatorEnum.Equal,
+                                    Values = new List<string?> { "true"}
+                                },
+                            },
+                        }
+                    },
+                    // Expected OData filter 
+                    "(baseRate ge 100.01 and baseRate le 456.43 or (category eq 'Luxury' or category eq 'Budget') and smokingAllowed eq true) and roles/any(g:search.in(g, 'admin', ','))",
+                    // Facets returned from Azure Search
+                    CreateFacetResultDictionary(),
+                    // Expected selected items in the facet list
+                    new List<HotelFieldServiceTestsSelectedFacet> { new ((int) HotelDocumentFieldEnum.Category, "Luxury"), new ((int) HotelDocumentFieldEnum.Category, "Budget")}
+
+                },
             };
         }
     }

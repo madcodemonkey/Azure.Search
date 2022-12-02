@@ -2,7 +2,7 @@
 
 namespace Search.CogServices;
 
-public static class StringExtension
+public static class StringExtensions
 {
     /// <summary>Converts a string to camel case.</summary>
     /// <param name="value">The string to convert</param>
