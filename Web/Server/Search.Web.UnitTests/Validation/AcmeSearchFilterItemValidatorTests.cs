@@ -16,8 +16,8 @@ namespace Search.Web.UnitTests
             // var testData = new
             var testData = new AcmeSearchFilterItem()
             {
-                Operator =  (AcmeSearchFilterOperatorEnum) theOperator,
-                Values = new List<string?> { "34"}
+                Operator = (AcmeSearchFilterOperatorEnum)theOperator,
+                Values = new List<string?> { "34" }
             };
 
             // Act

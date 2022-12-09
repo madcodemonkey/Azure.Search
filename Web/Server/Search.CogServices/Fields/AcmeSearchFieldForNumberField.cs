@@ -4,11 +4,16 @@ public class AcmeSearchFieldForNumberField : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
     public AcmeSearchFieldForNumberField(int id, string propertyFieldName, string indexFieldName, string displayName,
-        bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
+        bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) :
         base(id, propertyFieldName, indexFieldName, displayName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
     {
     }
-    
+
+    protected string ConvertToNullOrTrimString(string? value)
+    {
+        return value == null ? "null" : value.Trim();
+    }
+
     /// <summary>This protected method builds the filter for numeric (double, decimal, float, etc.) types.</summary>
     /// <param name="searchOperator">The operator to use while building the filter.</param>
     /// <param name="values">The values to use while building the filter.</param>
@@ -29,10 +34,5 @@ public class AcmeSearchFieldForNumberField : AcmeSearchFieldBase
         }
 
         return $"{this.IndexFieldName} {OperatorToString(searchOperator)} {ConvertToNullOrTrimString(values[0])}";
-    }
-
-    protected string ConvertToNullOrTrimString(string? value)
-    {
-        return value == null ? "null" : value.Trim();
     }
 }

@@ -7,7 +7,7 @@ namespace Search.Services.UnitTests;
 public class HotelSearchHighlightServiceTests : AzureCognitiveSearchTestBase
 {
     private readonly IHotelFieldService _fieldService = new HotelFieldService();
-    
+
     [DataTestMethod]
     [DataRow(50, "string one. string two. string three.")]
     [DataRow(50, "string one. string two. string three.")]
@@ -16,7 +16,7 @@ public class HotelSearchHighlightServiceTests : AzureCognitiveSearchTestBase
     {
         // Arrange
         var cut = CreateClassUnderTest();
-        
+
         var documentAndHighlights = new List<TestSearchDocument<HotelDocument>>();
         var oneItem = new TestSearchDocument<HotelDocument>()
         {
@@ -44,7 +44,6 @@ public class HotelSearchHighlightServiceTests : AzureCognitiveSearchTestBase
         // Assert
         Assert.AreEqual(1, docList.Count);
         Assert.AreEqual(expectedString, docList[0].Document.Description);
-
     }
 
     private HotelSearchHighlightService CreateClassUnderTest()

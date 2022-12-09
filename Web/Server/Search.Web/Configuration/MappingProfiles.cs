@@ -15,17 +15,9 @@ public class MappingProfiles : Profile
         CreateSearchMappings();
     }
 
-    
     private void CreateAutoCompleteMappings()
     {
         CreateMap<AutocompleteItem, HotelAutocompleteDto>();
-    }
-
-    private void CreateSuggestionMappings()
-    {
-        CreateMap<SearchSuggestion<HotelDocument>, HotelSuggestorDto>()
-            .ForMember(m => m.Category, opt => opt.MapFrom(m => m.Document.Category))
-            .ForMember(m => m.HotelName, opt => opt.MapFrom(m => m.Document.HotelName));
     }
 
     private void CreateSearchMappings()
@@ -44,5 +36,12 @@ public class MappingProfiles : Profile
             .ForMember(m => m.Rating, opt => opt.MapFrom(m => m.Document.Rating))
             .ForMember(m => m.Location, opt => opt.MapFrom(m => m.Document.Location));
         CreateMap<AcmeSearchQueryResult<SearchResult<HotelDocument>>, AcmeSearchQueryResult<HotelDocumentDto>>();
+    }
+
+    private void CreateSuggestionMappings()
+    {
+        CreateMap<SearchSuggestion<HotelDocument>, HotelSuggestorDto>()
+            .ForMember(m => m.Category, opt => opt.MapFrom(m => m.Document.Category))
+            .ForMember(m => m.HotelName, opt => opt.MapFrom(m => m.Document.HotelName));
     }
 }

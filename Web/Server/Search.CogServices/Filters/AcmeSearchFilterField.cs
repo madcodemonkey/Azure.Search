@@ -15,15 +15,15 @@
 /// </example>
 public class AcmeSearchFilterField
 {
-    /// <summary>Indicates which logical operator to use with its NEXT peer.</summary>
-    public AcmeSearchGroupOperatorEnum PeerOperator { get; set; } = AcmeSearchGroupOperatorEnum.And;
-
     /// <summary>The id of the field.</summary>
     public int FieldId { get; set; }
+
+    /// <summary>The filters that will be used with this group.</summary>
+    public List<AcmeSearchFilterItem> Filters { get; set; } = new();
 
     /// <summary>Indicates which logical operator to use with ALL its own Filters list.</summary>
     public AcmeSearchGroupOperatorEnum FiltersOperator { get; set; } = AcmeSearchGroupOperatorEnum.And;
 
-    /// <summary>The filters that will be used with this group.</summary>
-    public List<AcmeSearchFilterItem> Filters { get; set; } = new();
+    /// <summary>Indicates which logical operator to use with its NEXT peer.</summary>
+    public AcmeSearchGroupOperatorEnum PeerOperator { get; set; } = AcmeSearchGroupOperatorEnum.And;
 }

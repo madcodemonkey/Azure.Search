@@ -8,34 +8,25 @@ namespace Search.Controllers;
 public class HotelSynonymController : ControllerBase
 {
     private readonly IHotelSynonymService _hotelSynonymService;
-   
+
     /// <summary>Constructor</summary>
     public HotelSynonymController(IHotelSynonymService hotelSynonymService)
     {
-        _hotelSynonymService = hotelSynonymService; 
+        _hotelSynonymService = hotelSynonymService;
     }
 
-      
-    [HttpGet("Maps")]
-    public async Task<IActionResult> GetMapList()
-    {
-        var data = await _hotelSynonymService.GetSynonymMapNamesAsync();
-        return Ok(data);
-    }
-
-    [HttpGet("Map")]
-    public async Task<IActionResult> GetList(string name)
-    {
-        var data = await _hotelSynonymService.GetSynonymNamesAsync(name);
-        return Ok(data);
-    }
-
-     
     [HttpPost("Associate")]
     public async Task<IActionResult> AssociateSynonymList()
     {
         await _hotelSynonymService.AssociateSynonymMapToHotelFieldsAsync();
         return Ok();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateSynonymList()
+    {
+        string message = await _hotelSynonymService.CreateAsync();
+        return Ok(message);
     }
 
     [HttpDelete]
@@ -48,10 +39,17 @@ public class HotelSynonymController : ControllerBase
         return Ok(result ? "Deleted" : "Not Deleted");
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateSynonymList()
+    [HttpGet("Map")]
+    public async Task<IActionResult> GetList(string name)
     {
-        string message = await _hotelSynonymService.CreateAsync();
-        return Ok(message);
+        var data = await _hotelSynonymService.GetSynonymNamesAsync(name);
+        return Ok(data);
+    }
+
+    [HttpGet("Maps")]
+    public async Task<IActionResult> GetMapList()
+    {
+        var data = await _hotelSynonymService.GetSynonymMapNamesAsync();
+        return Ok(data);
     }
 }

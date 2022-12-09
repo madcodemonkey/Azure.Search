@@ -8,18 +8,20 @@ namespace Search.Controllers;
 public class HotelDataSourceController : ControllerBase
 {
     private readonly IHotelDataSourceService _hotelDataSourceService;
-   
+
     /// <summary>Constructor</summary>
     public HotelDataSourceController(IHotelDataSourceService hotelDataSourceService)
     {
         _hotelDataSourceService = hotelDataSourceService;
     }
-    
-    [HttpGet]
-    public async Task<IActionResult> Get()
+
+    [HttpPost]
+    public async Task<IActionResult> Create()
     {
-        var data = await _hotelDataSourceService.GetListAsync();
-        return Ok(data);
+        if (await _hotelDataSourceService.CreateAsync())
+            return Ok("Created");
+
+        return Ok("Nothing Created.");
     }
 
     [HttpDelete]
@@ -31,12 +33,10 @@ public class HotelDataSourceController : ControllerBase
         return Ok("Nothing deleted.");
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create()
+    [HttpGet]
+    public async Task<IActionResult> Get()
     {
-        if (await _hotelDataSourceService.CreateAsync())
-            return Ok("Created");
-
-        return Ok("Nothing Created.");
+        var data = await _hotelDataSourceService.GetListAsync();
+        return Ok(data);
     }
 }

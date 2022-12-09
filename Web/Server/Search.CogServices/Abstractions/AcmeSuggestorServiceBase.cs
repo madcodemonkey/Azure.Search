@@ -12,10 +12,9 @@ public abstract class AcmeSuggestorServiceBase<TIndexClass> where TIndexClass : 
         FieldService = fieldService;
     }
 
-
-    protected IAcmeSearchIndexService SearchIndexService { get; }
     protected IAcmeFieldService FieldService { get; }
     protected abstract string IndexName { get; }
+    protected IAcmeSearchIndexService SearchIndexService { get; }
     protected abstract string SuggestorName { get; }
 
     /// <summary>Suggest</summary>
@@ -39,7 +38,21 @@ public abstract class AcmeSuggestorServiceBase<TIndexClass> where TIndexClass : 
 
         return suggestResult;
     }
-     
+
+    /// <summary>Adds a list of fields to the Select property.  This determines which of the document
+    /// fields are returned along with the suggestion.</summary>
+    /// <param name="fieldNames">The document field names to retrieve.</param>
+    /// <param name="options">The options to add the field names to.</param>
+    protected virtual void AddFieldNamesToSelect(List<string> fieldNames, SuggestOptions options)
+    {
+        options.Select.Clear();
+
+        foreach (string fieldName in fieldNames)
+        {
+            options.Select.Add(fieldName);
+        }
+    }
+
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="rolesTheUserIsAssigned">The roles assigned to the user</param>
@@ -57,24 +70,10 @@ public abstract class AcmeSuggestorServiceBase<TIndexClass> where TIndexClass : 
             Size = request.NumberOfSuggestionsToRetrieve,
             UseFuzzyMatching = request.UseFuzzyMatching // false by default for performance reasons
         };
-        
+
         AddFieldNamesToSelect(GetFieldNamesToSelect(), options);
 
         return options;
-    }
-
-    /// <summary>Adds a list of fields to the Select property.  This determines which of the document
-    /// fields are returned along with the suggestion.</summary>
-    /// <param name="fieldNames">The document field names to retrieve.</param>
-    /// <param name="options">The options to add the field names to.</param>
-    protected virtual void AddFieldNamesToSelect(List<string> fieldNames, SuggestOptions options)
-    {
-        options.Select.Clear();
-
-        foreach (string fieldName in fieldNames)
-        {
-            options.Select.Add(fieldName);
-        }
     }
 
     /// <summary>Gets a list of fields that we should be returned with the document found with the suggestion. If left blank, it will return the key field.

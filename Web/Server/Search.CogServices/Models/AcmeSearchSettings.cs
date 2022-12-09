@@ -2,7 +2,6 @@
 
 public class AcmeSearchSettings
 {
-    public string SearchEndPoint { get; set; }
     public string SearchApiKey { get; set; }
-
+    public string SearchEndPoint { get; set; }
 }

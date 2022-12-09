@@ -6,22 +6,17 @@ namespace Search.Services.UnitTests;
 
 public abstract class AzureCognitiveSearchTestBase
 {
-    /// <summary>Used to create response search results object when you don't care about highlights.</summary>
-    private Response<SearchResults<T>> CreateAzureSearchResponse<T>(List<T> documents)
+    /// <summary>Used to extract the search result from the async pageable object into a list that we can more easily use.</summary>
+    protected async Task<List<SearchResult<T>>> ConvertDocumentsAsync<T>(SearchResults<T> azSearchDocuments)
     {
-        var docs = documents.Select(s => new TestSearchDocument<T> { Document = s, Highlights = null }).ToList();
+        var result = new List<SearchResult<T>>();
 
-        return CreateAzureSearchResponse(docs);
-    }
+        AsyncPageable<SearchResult<T>> resultList = azSearchDocuments.GetResultsAsync();
 
-    /// <summary>Used to create response search results object when you want to specify highlight information.</summary>
-    protected Response<SearchResults<T>> CreateAzureSearchResponse<T>(List<TestSearchDocument<T>> documents)
-    {
-        var mockResponse = new Mock<Response>();
-
-        SearchResults<T> mockResults = CreateAzureSearchResults(documents);
-
-        Response<SearchResults<T>> result = Response.FromValue(mockResults, mockResponse.Object);
+        await foreach (var item in resultList)
+        {
+            result.Add(item);
+        }
 
         return result;
     }
@@ -39,18 +34,23 @@ public abstract class AzureCognitiveSearchTestBase
         return result;
     }
 
-    /// <summary>Used to extract the search result from the async pageable object into a list that we can more easily use.</summary>
-    protected async Task<List<SearchResult<T>>> ConvertDocumentsAsync<T>(SearchResults<T> azSearchDocuments)
+    /// <summary>Used to create response search results object when you want to specify highlight information.</summary>
+    protected Response<SearchResults<T>> CreateAzureSearchResponse<T>(List<TestSearchDocument<T>> documents)
     {
-        var result = new List<SearchResult<T>>();
+        var mockResponse = new Mock<Response>();
 
-        AsyncPageable<SearchResult<T>> resultList = azSearchDocuments.GetResultsAsync();
+        SearchResults<T> mockResults = CreateAzureSearchResults(documents);
 
-        await foreach (var item in resultList)
-        {
-            result.Add(item);
-        }
+        Response<SearchResults<T>> result = Response.FromValue(mockResults, mockResponse.Object);
 
         return result;
+    }
+
+    /// <summary>Used to create response search results object when you don't care about highlights.</summary>
+    private Response<SearchResults<T>> CreateAzureSearchResponse<T>(List<T> documents)
+    {
+        var docs = documents.Select(s => new TestSearchDocument<T> { Document = s, Highlights = null }).ToList();
+
+        return CreateAzureSearchResponse(docs);
     }
 }

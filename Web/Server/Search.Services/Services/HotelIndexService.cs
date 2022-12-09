@@ -17,7 +17,6 @@ public class HotelIndexService : AcmeSearchIndexService, IHotelIndexService
         _searchSettings = settings;
     }
 
-
     /// <summary>Creates or updates an index.</summary>
     public async Task<bool> CreateOrUpdateAsync()
     {
@@ -32,7 +31,7 @@ public class HotelIndexService : AcmeSearchIndexService, IHotelIndexService
         var suggester = new SearchSuggester(_searchSettings.Hotel.SuggestorName, new[] { hotelNameFieldName, categoryFieldName });
         searchIndex.Suggesters.Add(suggester);
 
-        // This is a scoring profile to boost results if used.  
+        // This is a scoring profile to boost results if used.
         // We can mark one as default if desired.
         var scoringProfile1 = new ScoringProfile("sp-hotel-name")
         {

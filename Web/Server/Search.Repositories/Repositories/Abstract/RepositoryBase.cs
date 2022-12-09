@@ -6,8 +6,8 @@ namespace Search.Repositories;
 /// <summary>
 /// Provides base repository functionality for <typeparamref name="TEntity"/>
 /// </summary>
-public abstract class RepositoryBase<TEntity, TDatabaseContext> : IRepositoryBase<TEntity> 
-    where TEntity : class 
+public abstract class RepositoryBase<TEntity, TDatabaseContext> : IRepositoryBase<TEntity>
+    where TEntity : class
     where TDatabaseContext : DbContext
 {
     protected readonly TDatabaseContext Context;
@@ -31,58 +31,6 @@ public abstract class RepositoryBase<TEntity, TDatabaseContext> : IRepositoryBas
             await Context.SaveChangesAsync();
         }
         return entity;
-    }
-
-    /// <summary>Retrieves all entities from the database.</summary>
-    public virtual async Task<List<TEntity>> GetAsync() => await DbSet.ToListAsync();
-
-    /// <summary>Retrieves all entities from the database.</summary>
-    public virtual async Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate) => await DbSet.Where(predicate).ToListAsync();
-        
-    /// <summary>Retrieves all entities with the specified includes.</summary>
-    /// <param name="predicate">A where clause predicate</param>
-    /// <param name="includes">Foreign key relationships that you would like to include</param>
-    public virtual async Task<List<TEntity>> GetWithIncludesAsync(Expression<Func<TEntity, bool>> predicate, 
-        params Expression<Func<TEntity, object?>>[] includes)
-    {
-        if (predicate == null)
-            throw new ArgumentNullException(nameof(predicate), "You must specify a predicate!");
-
-
-        var query = DbSet.Where(predicate);
-
-        if (includes.Any())
-        {
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
-        }
-
-        return await query.ToListAsync();
-    }
-
-    /// <summary>Returns the first item or null (nothing included).</summary>
-    public virtual async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await DbSet.FirstOrDefaultAsync(predicate);
-
-
-    /// <summary>Returns the first item or null  (includes specified relationships).</summary>
-    /// <param name="predicate">A where clause predicate</param>
-    /// <param name="includes">Relationships to include</param>
-    public virtual async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object?>>[] includes)
-    {
-        if (predicate == null)
-            throw new ArgumentNullException(nameof(predicate), "You must specify a predicate!");
-
-        var query = DbSet.Where(predicate);
-
-        if (includes.Any())
-        {
-            foreach (var include in includes)
-                query = query.Include(include);
-        }
-
-        return await query.FirstOrDefaultAsync();
     }
 
     /// <summary>Deletes one entity from the database.</summary>
@@ -113,6 +61,55 @@ public abstract class RepositoryBase<TEntity, TDatabaseContext> : IRepositoryBas
         }
     }
 
+    /// <summary>Retrieves all entities from the database.</summary>
+    public virtual async Task<List<TEntity>> GetAsync() => await DbSet.ToListAsync();
+
+    /// <summary>Retrieves all entities from the database.</summary>
+    public virtual async Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate) => await DbSet.Where(predicate).ToListAsync();
+
+    /// <summary>Returns the first item or null (nothing included).</summary>
+    public virtual async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await DbSet.FirstOrDefaultAsync(predicate);
+
+    /// <summary>Returns the first item or null  (includes specified relationships).</summary>
+    /// <param name="predicate">A where clause predicate</param>
+    /// <param name="includes">Relationships to include</param>
+    public virtual async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object?>>[] includes)
+    {
+        if (predicate == null)
+            throw new ArgumentNullException(nameof(predicate), "You must specify a predicate!");
+
+        var query = DbSet.Where(predicate);
+
+        if (includes.Any())
+        {
+            foreach (var include in includes)
+                query = query.Include(include);
+        }
+
+        return await query.FirstOrDefaultAsync();
+    }
+
+    /// <summary>Retrieves all entities with the specified includes.</summary>
+    /// <param name="predicate">A where clause predicate</param>
+    /// <param name="includes">Foreign key relationships that you would like to include</param>
+    public virtual async Task<List<TEntity>> GetWithIncludesAsync(Expression<Func<TEntity, bool>> predicate,
+        params Expression<Func<TEntity, object?>>[] includes)
+    {
+        if (predicate == null)
+            throw new ArgumentNullException(nameof(predicate), "You must specify a predicate!");
+
+        var query = DbSet.Where(predicate);
+
+        if (includes.Any())
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
+
+        return await query.ToListAsync();
+    }
 
     /// <summary>Updates one entity in the database.</summary>
     /// <param name="entity">Entity to update</param>

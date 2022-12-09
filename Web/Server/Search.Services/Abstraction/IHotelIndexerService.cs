@@ -12,5 +12,4 @@ public interface IHotelIndexerService : IAcmeSearchIndexerService
 
     /// <summary>Runs the hotel indexer now.</summary>
     Task RunAsync();
-
 }

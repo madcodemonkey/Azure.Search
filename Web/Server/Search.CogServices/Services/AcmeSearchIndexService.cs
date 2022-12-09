@@ -7,9 +7,8 @@ namespace Search.CogServices;
 
 public class AcmeSearchIndexService : IAcmeSearchIndexService
 {
-    protected AcmeSearchSettings Settings { get; private set; }
-    private SearchIndexClient? _client;
     private readonly SearchClientOptions _clientOptions;
+    private SearchIndexClient? _client;
 
     /// <summary>Constructor</summary>
     public AcmeSearchIndexService(AcmeSearchSettings settings, IAcmeOptionsService optionsService)
@@ -22,17 +21,7 @@ public class AcmeSearchIndexService : IAcmeSearchIndexService
     public SearchIndexClient Client => _client ??= new SearchIndexClient(
         new Uri(Settings.SearchEndPoint), new AzureKeyCredential(Settings.SearchApiKey), _clientOptions);
 
-    /// <summary>Deletes an index.</summary>
-    /// <param name="indexName">The name of the index to delete</param>
-    public async Task<bool> DeleteAsync(string indexName)
-    {
-        if (await ExistsAsync(indexName) == false)
-            return true; // it does not exists
-
-        await Client.DeleteIndexAsync(indexName);
-
-        return true;
-    }
+    protected AcmeSearchSettings Settings { get; private set; }
 
     /// <summary>Retrieves a single document.</summary>
     /// <param name="indexName">The name of the index</param>
@@ -47,23 +36,16 @@ public class AcmeSearchIndexService : IAcmeSearchIndexService
         return await searchClient.AutocompleteAsync(searchText, suggesterName, options, cancellationToken);
     }
 
-    /// <summary>Retrieves a single document.</summary>
-    /// <typeparam name="T">The type of data being returned.</typeparam>
-    /// <param name="indexName">The name of the index</param>
-    /// <param name="key">The documents key</param>
-    public async Task<Response<T>?> GetDocumentAsync<T>(string indexName, string key)
+    /// <summary>Deletes an index.</summary>
+    /// <param name="indexName">The name of the index to delete</param>
+    public async Task<bool> DeleteAsync(string indexName)
     {
-        try
-        {
-            var searchClient = Client.GetSearchClient(indexName);
-            return await searchClient.GetDocumentAsync<T>(key);
-        }
-        catch (RequestFailedException ex)
-        {
-            if (ex.Status == 404)
-                return null;
-            throw;
-        }
+        if (await ExistsAsync(indexName) == false)
+            return true; // it does not exists
+
+        await Client.DeleteIndexAsync(indexName);
+
+        return true;
     }
 
     /// <summary>Indicates if an index exists.</summary>
@@ -82,6 +64,25 @@ public class AcmeSearchIndexService : IAcmeSearchIndexService
             // if exception occurred and status is "Not Found", this is working as expected
             // because someone was too lazy to put in an exist query.
             return false;
+        }
+    }
+
+    /// <summary>Retrieves a single document.</summary>
+    /// <typeparam name="T">The type of data being returned.</typeparam>
+    /// <param name="indexName">The name of the index</param>
+    /// <param name="key">The documents key</param>
+    public async Task<Response<T>?> GetDocumentAsync<T>(string indexName, string key)
+    {
+        try
+        {
+            var searchClient = Client.GetSearchClient(indexName);
+            return await searchClient.GetDocumentAsync<T>(key);
+        }
+        catch (RequestFailedException ex)
+        {
+            if (ex.Status == 404)
+                return null;
+            throw;
         }
     }
 
@@ -108,14 +109,13 @@ public class AcmeSearchIndexService : IAcmeSearchIndexService
     /// <param name="searchText">The text to find</param>
     /// <param name="options">The search options to apply</param>
     /// <param name="cancellationToken">Optional <see cref="CancellationToken"/> to propagate notifications that the operation should be canceled. </param>
-    public async Task<Response<SearchResults<T>>> SearchAsync<T>(string indexName, string searchText, 
+    public async Task<Response<SearchResults<T>>> SearchAsync<T>(string indexName, string searchText,
         SearchOptions? options = null, CancellationToken cancellationToken = default)
     {
         var searchClient = Client.GetSearchClient(indexName);
         var response = await searchClient.SearchAsync<T>(searchText, options, cancellationToken);
         return response;
     }
-
 
     /// <summary>Used for autocomplete to get a suggestion.</summary>
     /// <typeparam name="T">The type of data being returned.</typeparam>
@@ -124,13 +124,13 @@ public class AcmeSearchIndexService : IAcmeSearchIndexService
     /// <param name="suggesterName">The name of the suggestor</param>
     /// <param name="options">The search options to apply</param>
     /// <param name="cancellationToken"></param>
-    public async Task<SuggestResults<T>> SuggestAsync<T>(string indexName, string searchText, string suggesterName, 
+    public async Task<SuggestResults<T>> SuggestAsync<T>(string indexName, string searchText, string suggesterName,
         SuggestOptions? options = null, CancellationToken cancellationToken = default)
     {
         var searchClient = Client.GetSearchClient(indexName);
         return await searchClient.SuggestAsync<T>(searchText, suggesterName, options, cancellationToken);
     }
-    
+
     /// <summary>Uploads documents to an index.</summary>
     /// <typeparam name="T">The class type that we are uploading.</typeparam>
     /// <param name="indexName">The name of the index</param>

@@ -1,12 +1,9 @@
 ﻿namespace Search.CogServices;
 
 /// <summary>Used by either the suggest or autocomplete services</summary>
-public class AcmeSuggestorQuery 
+public class AcmeSuggestorQuery
 {
     private int _numberOfSuggestionsToRetrieve = 5;
-    
-    /// <summary>The simple or Lucene style query</summary>
-    public string Query { get; set; } = string.Empty;
 
     /// <summary>Filters to narrow the search.  This help with response time a lot.</summary>
     /// <remarks>I'm not letting the user build them because filters are also part of security</remarks>
@@ -18,6 +15,9 @@ public class AcmeSuggestorQuery
         get => _numberOfSuggestionsToRetrieve;
         set => _numberOfSuggestionsToRetrieve = value > 0 ? value : 5;
     }
+
+    /// <summary>The simple or Lucene style query</summary>
+    public string Query { get; set; } = string.Empty;
 
     /// <summary> A value indicating whether to use fuzzy matching for the suggestion query. Default is false.
     /// When set to true, the query will find suggestions even if there's a substituted or missing character in

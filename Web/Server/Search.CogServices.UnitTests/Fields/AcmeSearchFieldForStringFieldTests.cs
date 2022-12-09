@@ -32,8 +32,6 @@ public class AcmeSearchFieldForStringFieldTests
         // Assert
         Assert.AreEqual(expectedFilter, actualResult);
     }
-     
-
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]

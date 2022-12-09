@@ -5,7 +5,7 @@ public class AcmeSearchFieldForNumberFieldTests
 {
     private const string IndexFieldName = "myField";
     private const string PropFieldName = "MyField";
-    
+
     [DataTestMethod]
     [DataRow(AcmeSearchFilterOperatorEnum.Equal, "55", $"{IndexFieldName} eq 55")]
     [DataRow(AcmeSearchFilterOperatorEnum.NotEqual, "55", $"{IndexFieldName} ne 55")]
@@ -33,6 +33,22 @@ public class AcmeSearchFieldForNumberFieldTests
         Assert.AreEqual(expectedFilter, actualResult);
     }
 
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void CreateFilter_TheWithinOperatorWillThrowAnExceptionIfOnlyOneValueIsPassedIn_AnExceptionIsThrown()
+    {
+        // Arrange
+        var cut = new AcmeSearchFieldForNumberField(1, PropFieldName, IndexFieldName, "Display Name", false, false, false, false, false);
+
+        var values = new List<string?> { "34" };
+
+        // Act
+        cut.CreateFilter(AcmeSearchFilterOperatorEnum.WithinRange, values);
+
+        // Assert
+        Assert.Fail($"Passing in one value to a {AcmeSearchFilterOperatorEnum.WithinRange} operator should result in an exception!");
+    }
+
     [DataTestMethod]
     [DataRow("55", "85", $"{IndexFieldName} ge 55 and {IndexFieldName} le 85")]
     [DataRow("55", "85", $"{IndexFieldName} ge 55 and {IndexFieldName} le 85")]
@@ -52,24 +68,5 @@ public class AcmeSearchFieldForNumberFieldTests
 
         // Assert
         Assert.AreEqual(expectedFilter, actualResult);
-    }
-
-
-
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void CreateFilter_TheWithinOperatorWillThrowAnExceptionIfOnlyOneValueIsPassedIn_AnExceptionIsThrown()
-    {
-        // Arrange
-        var cut = new AcmeSearchFieldForNumberField(1, PropFieldName, IndexFieldName, "Display Name", false, false, false, false, false);
-
-        var values = new List<string?> { "34" };
-
-        // Act
-        cut.CreateFilter(AcmeSearchFilterOperatorEnum.WithinRange, values);
-
-        // Assert
-        Assert.Fail($"Passing in one value to a {AcmeSearchFilterOperatorEnum.WithinRange} operator should result in an exception!");
-
     }
 }

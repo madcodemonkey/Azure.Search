@@ -2,12 +2,12 @@
 
 public class AcmeSearchFieldForChildObject : AcmeSearchFieldBase
 {
-    private readonly string _parentFieldName;
     private readonly string _childFieldName;
+    private readonly string _parentFieldName;
 
     /// <summary>Constructor</summary>
     public AcmeSearchFieldForChildObject(int id, string propertyFieldName, string indexFieldName, string displayName,
-        bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
+        bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) :
         base(id, propertyFieldName, indexFieldName, displayName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
     {
         string[] fields = indexFieldName.Split('/');
@@ -32,5 +32,4 @@ public class AcmeSearchFieldForChildObject : AcmeSearchFieldBase
         //  return $"authors/any(c: c/name eq '{values[0]}')";
         return $"{this._parentFieldName}/any(c: c/{_childFieldName} eq '{values[0]}')";
     }
-
 }

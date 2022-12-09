@@ -4,11 +4,17 @@ public class AcmeSearchFieldForDateTimeOffsetField : AcmeSearchFieldBase
 {
     /// <summary>Constructor</summary>
     public AcmeSearchFieldForDateTimeOffsetField(int id, string propertyFieldName, string indexFieldName, string displayName,
-        bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) : 
+        bool isFilterable, bool isSortable, bool isFacetable, bool isHighlighted, bool isSecurityFilter) :
         base(id, propertyFieldName, indexFieldName, displayName, isFilterable, isSortable, isFacetable, isHighlighted, isSecurityFilter)
     {
     }
 
+    private enum TimeHandlingEnum
+    {
+        UseTimeAsSent,
+        UseMidnight,
+        UseEndOfDay
+    }
 
     /// <summary>This protected method builds the filter for the DateTimeOffset type.</summary>
     /// <param name="searchOperator">The operator to use while building the filter.</param>
@@ -38,18 +44,21 @@ public class AcmeSearchFieldForDateTimeOffsetField : AcmeSearchFieldBase
         if (DateTime.TryParse(dateString, out var theDate))
         {
             DateTime utcDate;
-            
+
             switch (timeHandling)
             {
                 case TimeHandlingEnum.UseTimeAsSent:
                     utcDate = new DateTime(theDate.Year, theDate.Month, theDate.Day, theDate.Hour, theDate.Minute, theDate.Second, DateTimeKind.Utc);
                     break;
+
                 case TimeHandlingEnum.UseMidnight:
                     utcDate = new DateTime(theDate.Year, theDate.Month, theDate.Day, 0, 0, 0, DateTimeKind.Utc);
                     break;
+
                 case TimeHandlingEnum.UseEndOfDay:
                     utcDate = new DateTime(theDate.Year, theDate.Month, theDate.Day, 23, 59, 59, DateTimeKind.Utc);
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(timeHandling), timeHandling, null);
             }
@@ -59,14 +68,6 @@ public class AcmeSearchFieldForDateTimeOffsetField : AcmeSearchFieldBase
             return utcDateAndTime;
         }
 
-
         throw new ArgumentException($"Unable to parse the date string '{dateString}' for the {this.IndexFieldName} field as date time!");
-    }
-
-    private enum TimeHandlingEnum
-    {
-        UseTimeAsSent,
-        UseMidnight,
-        UseEndOfDay
     }
 }

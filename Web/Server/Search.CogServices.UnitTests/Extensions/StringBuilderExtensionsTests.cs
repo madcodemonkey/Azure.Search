@@ -24,13 +24,12 @@ public class StringBuilderExtensionsTests
         Assert.AreEqual(expectedValue, cut.ToString());
     }
 
-
     [DataTestMethod]
     [DataRow("test", "(test)")]
     [DataRow(null, "()")]
     [DataRow("", "()")]
     public void SurroundWithParenthesis_GivenDifferentStrings_CanAppendToTheFrontOfTheString(
-        string initialValue,string expectedValue)
+        string initialValue, string expectedValue)
     {
         // Arrange
         var cut = new StringBuilder(initialValue);
@@ -41,6 +40,4 @@ public class StringBuilderExtensionsTests
         // Assert
         Assert.AreEqual(expectedValue, cut.ToString());
     }
-
-
 }

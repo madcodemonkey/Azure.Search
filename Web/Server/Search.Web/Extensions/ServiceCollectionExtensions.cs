@@ -8,7 +8,6 @@ namespace Search.Web.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-
         public static IServiceCollection AddSearchWebServices(this IServiceCollection services, IConfiguration config)
         {
             // Automapper docs on DI: https://docs.automapper.org/en/stable/Dependency-injection.html
@@ -28,7 +27,6 @@ namespace Search.Web.Extensions
             services.AddAcmeRepositories(databaseOptions);
 
             return services;
-
         }
     }
 }

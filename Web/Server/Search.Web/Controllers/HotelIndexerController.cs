@@ -15,22 +15,6 @@ public class HotelIndexerController : ControllerBase
         _hotelIndexerService = hotelIndexerService;
     }
 
-     
-    [HttpGet]
-    public async Task<IActionResult> GetList()
-    {
-        var data = await _hotelIndexerService.GetListAsync();
-        return Ok(data);
-    }
-
-    
-    [HttpDelete]
-    public async Task<IActionResult> DeleteHotelIndex()
-    {
-        bool created = await _hotelIndexerService.DeleteAsync();
-        return Ok(created ? "Deleted" : "Not Deleted");
-    }
-
     [HttpPost]
     public async Task<IActionResult> CreateHotelsIndex()
     {
@@ -38,12 +22,24 @@ public class HotelIndexerController : ControllerBase
         return Ok(created ? "Created" : "Not Created");
     }
 
-     
+    [HttpDelete]
+    public async Task<IActionResult> DeleteHotelIndex()
+    {
+        bool created = await _hotelIndexerService.DeleteAsync();
+        return Ok(created ? "Deleted" : "Not Deleted");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetList()
+    {
+        var data = await _hotelIndexerService.GetListAsync();
+        return Ok(data);
+    }
+
     [HttpPost("Run")]
     public async Task<IActionResult> RunHotelIndexer()
     {
         await _hotelIndexerService.RunAsync();
         return Ok();
     }
-
 }

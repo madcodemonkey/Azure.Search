@@ -13,10 +13,9 @@ public abstract class AcmeAutoCompleteServiceBase
         FieldService = fieldService;
     }
 
-
-    protected IAcmeSearchIndexService SearchIndexService { get; }
     protected IAcmeFieldService FieldService { get; }
     protected abstract string IndexName { get; }
+    protected IAcmeSearchIndexService SearchIndexService { get; }
     protected abstract string SuggestorName { get; }
 
     /// <summary>Autocomplete</summary>
@@ -37,10 +36,23 @@ public abstract class AcmeAutoCompleteServiceBase
     public virtual async Task<Response<AutocompleteResults>> AutoCompleteAsync(AcmeSuggestorQuery request, AutocompleteOptions options)
     {
         Response<AutocompleteResults> autoCompleteResult = await SearchIndexService.AutocompleteAsync(IndexName, request.Query, SuggestorName, options);
-        
+
         return autoCompleteResult;
     }
 
+    /// <summary>Adds a list of fields to the Select property.  This determines which of the document
+    /// fields are returned along with the suggestion.</summary>
+    /// <param name="fieldNames">The document field names to retrieve.</param>
+    /// <param name="options">The options to add the field names to.</param>
+    protected virtual void AddFieldNamesToSearchFields(List<string> fieldNames, AutocompleteOptions options)
+    {
+        options.SearchFields.Clear();
+
+        foreach (string fieldName in fieldNames)
+        {
+            options.SearchFields.Add(fieldName);
+        }
+    }
 
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
@@ -60,20 +72,6 @@ public abstract class AcmeAutoCompleteServiceBase
         AddFieldNamesToSearchFields(GetFieldNamesToSearch(), options);
 
         return options;
-    }
-
-    /// <summary>Adds a list of fields to the Select property.  This determines which of the document
-    /// fields are returned along with the suggestion.</summary>
-    /// <param name="fieldNames">The document field names to retrieve.</param>
-    /// <param name="options">The options to add the field names to.</param>
-    protected virtual void AddFieldNamesToSearchFields(List<string> fieldNames, AutocompleteOptions options)
-    {
-        options.SearchFields.Clear();
-
-        foreach (string fieldName in fieldNames)
-        {
-            options.SearchFields.Add(fieldName);
-        }
     }
 
     /// <summary>Gets a list of fields that we should be returned with the document found with the autocomplete.

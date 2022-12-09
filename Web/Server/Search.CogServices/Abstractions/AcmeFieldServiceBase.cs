@@ -6,40 +6,45 @@ namespace Search.CogServices;
 
 public abstract class AcmeFieldServiceBase : IAcmeFieldService
 {
-    public List<IAcmeSearchField> FieldList { get; private set; }
-
     /// <summary>Constructor</summary>
     protected AcmeFieldServiceBase()
     {
         FieldList = RegisterFields();
     }
+
+    public List<IAcmeSearchField> FieldList { get; private set; }
     protected virtual int MaximNumberOfFacets => 20;
 
-    /// <summary>Finds a filter by the id it was given when it was created.</summary>
-    /// <param name="id">The id to find</param>
-    public IAcmeSearchField? FindById(int id)
+    /// <summary>Adds facets to your SearchOptions instance.</summary>
+    /// <param name="options">The options that need facets</param>
+    public void AddFacets(SearchOptions options)
     {
-        return FieldList.FirstOrDefault(w => w.Id == id);
+        foreach (var field in FieldList)
+        {
+            if (field.IsFacetable == false)
+                continue;
+            // In a faceted search, set an upper limit on unique terms returned in a query.
+            // The default is 10, but you can increase or decrease this value using the
+            // count parameter on the facet attribute.
+            // See 5th example here https://docs.microsoft.com/en-us/rest/api/searchservice/search-documents#bkmk_examples
+            options.Facets.Add($"{field.IndexFieldName},count:{MaximNumberOfFacets}");
+        }
     }
 
-    /// <summary>Finds a filter by Azure Index field name it was given when it was created.</summary>
-    /// <param name="indexFieldName">The Azure Index field name to find.</param>
-    public IAcmeSearchField? FindByIndexFieldName(string indexFieldName)
+    /// <summary>Adds facets to your SearchOptions instance.</summary>
+    /// <param name="options">The options that need facets</param>
+    /// <param name="clearBeforeAdding">Indicates if we should clear out the highlight fields before adding more.</param>
+    public void AddHighlightFields(SearchOptions options, bool clearBeforeAdding = true)
     {
-        return FieldList.FirstOrDefault(w => w.IndexFieldName == indexFieldName);
-    }
+        if (clearBeforeAdding) options.HighlightFields.Clear();
 
-    /// <summary>Finds a filter by C# class property name.  This is the class used to create the index and id decorated with attributes.</summary>
-    /// <param name="propFieldName">The C# class property name to find.</param>
-    public IAcmeSearchField? FindByPropertyFieldName(string propFieldName)
-    {
-        return FieldList.FirstOrDefault(w => w.PropertyFieldName == propFieldName);
-    }
+        foreach (var field in FieldList)
+        {
+            if (field.IsHighlighted == false)
+                continue;
 
-    /// <summary>Finds the security trimming field.</summary>
-    public IAcmeSearchField? FindSecurityTrimmingField()
-    {
-        return FieldList.FirstOrDefault(w => w.IsSecurityFilter);
+            options.HighlightFields.Add(field.IndexFieldName);
+        }
     }
 
     /// <summary>Adds an orderby statement for a field</summary>
@@ -57,7 +62,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
         if (clearOrderByList) options.OrderBy.Clear();
 
         string sortOrder = descending ? "desc" : "asc";
-        
+
         options.OrderBy.Add($"{field.IndexFieldName} {sortOrder}");
     }
 
@@ -84,42 +89,8 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
         if (clearOrderByList) options.OrderBy.Clear();
 
         string sortOrder = descending ? "desc" : "asc";
-        
+
         options.OrderBy.Add($"search.score() {sortOrder}");
-    }
-
-
-    /// <summary>Adds facets to your SearchOptions instance.</summary>
-    /// <param name="options">The options that need facets</param>
-    public void AddFacets(SearchOptions options)
-    {
-        foreach (var field in FieldList)
-        {
-            if (field.IsFacetable == false)
-                continue;
-            // In a faceted search, set an upper limit on unique terms returned in a query.
-            // The default is 10, but you can increase or decrease this value using the
-            // count parameter on the facet attribute. 
-            // See 5th example here https://docs.microsoft.com/en-us/rest/api/searchservice/search-documents#bkmk_examples
-            options.Facets.Add($"{field.IndexFieldName},count:{MaximNumberOfFacets}");
-        }
-    }
-
-
-    /// <summary>Adds facets to your SearchOptions instance.</summary>
-    /// <param name="options">The options that need facets</param>
-    /// <param name="clearBeforeAdding">Indicates if we should clear out the highlight fields before adding more.</param>
-    public void AddHighlightFields(SearchOptions options, bool clearBeforeAdding = true)
-    {
-        if (clearBeforeAdding) options.HighlightFields.Clear();
-        
-        foreach (var field in FieldList)
-        {
-            if (field.IsHighlighted == false)
-                continue;
-
-            options.HighlightFields.Add(field.IndexFieldName);
-        }
     }
 
     /// <summary>Builds and OData filter for Azure Search based on user specified filters and the roles that user has been assigned.</summary>
@@ -136,13 +107,13 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
         // All Filters are case SENSITIVE
 
         var sbFilter = new StringBuilder();
-        
+
         for (var index = 0; index < fieldFilters.Count; index++)
         {
             var oneFieldFilter = fieldFilters[index];
             if (index > 0)
             {
-                if (fieldFilters[index-1].PeerOperator == AcmeSearchGroupOperatorEnum.And)
+                if (fieldFilters[index - 1].PeerOperator == AcmeSearchGroupOperatorEnum.And)
                     sbFilter.Append(" and ");
                 else sbFilter.Append(" or ");
             }
@@ -154,7 +125,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
             sbFilter.Append(oneFieldODataFilter);
         }
 
-        // Warning!! If the object of T that you're passing into the Azure Suggest or Azure Search methods does not have the Roles property on it, 
+        // Warning!! If the object of T that you're passing into the Azure Suggest or Azure Search methods does not have the Roles property on it,
         //           using roles here will do NOTHING!!!  In other words, I didn't want to return roles to the user
         //           so I removed it from by BookDocumentBrief class. Afterwards, this filter STOPPED working!  No ERRORS!
         if (rolesTheUserIsAssigned.Count > 0)
@@ -166,7 +137,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
                 {
                     if (ShouldSurroundAllTheFieldFiltersWithParenthesis(fieldFilters))
                         sbFilter.SurroundWithParenthesis();
-                    
+
                     sbFilter.Append(" and ");
                 }
 
@@ -177,9 +148,8 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
         return sbFilter.ToString();
     }
 
-
     /// <summary>Avoiding a leaky abstraction by converting Azure Search facets to our format.
-    /// Given a list of facets from Azure Search compare them to the filter list we are using and 
+    /// Given a list of facets from Azure Search compare them to the filter list we are using and
     /// mark them as "Selected" so that the user knows they are being used to filter results</summary>
     /// <param name="facets">Facets from an Azure Search call</param>
     /// <param name="fieldFilters">A list of field filter where each represents a grouping of filters for one field.</param>
@@ -190,7 +160,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
 
         if (facets == null)
             return result;
-        
+
         foreach (KeyValuePair<string, IList<FacetResult>> facet in facets)
         {
             var oneFacet = new AcmeSearchFacet();
@@ -222,6 +192,39 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
         return result;
     }
 
+    /// <summary>Finds a filter by the id it was given when it was created.</summary>
+    /// <param name="id">The id to find</param>
+    public IAcmeSearchField? FindById(int id)
+    {
+        return FieldList.FirstOrDefault(w => w.Id == id);
+    }
+
+    /// <summary>Finds a filter by Azure Index field name it was given when it was created.</summary>
+    /// <param name="indexFieldName">The Azure Index field name to find.</param>
+    public IAcmeSearchField? FindByIndexFieldName(string indexFieldName)
+    {
+        return FieldList.FirstOrDefault(w => w.IndexFieldName == indexFieldName);
+    }
+
+    /// <summary>Finds a filter by C# class property name.  This is the class used to create the index and id decorated with attributes.</summary>
+    /// <param name="propFieldName">The C# class property name to find.</param>
+    public IAcmeSearchField? FindByPropertyFieldName(string propFieldName)
+    {
+        return FieldList.FirstOrDefault(w => w.PropertyFieldName == propFieldName);
+    }
+
+    /// <summary>Finds the security trimming field.</summary>
+    public IAcmeSearchField? FindSecurityTrimmingField()
+    {
+        return FieldList.FirstOrDefault(w => w.IsSecurityFilter);
+    }
+
+    /// <summary>Register all the fields that are marked as IsFilterable or IsFacetable
+    /// here.  We do NOT want the client side building filters.  It can only pass in
+    /// query text.  This avoids injection attacks where the client can see anything in the
+    /// index.  If they could build them, they could avoid security trimming.</summary>
+    protected abstract List<IAcmeSearchField> RegisterFields();
+
     /// <summary>Creates an OData filter for one group.</summary>
     /// <param name="fieldFilter">A grouping of filters for one field.</param>
     private string BuildODataFilterForOneFieldFilter(AcmeSearchFilterField fieldFilter)
@@ -242,7 +245,7 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
                     sbGroupFilter.Append(" and ");
                 else sbGroupFilter.Append(" or ");
             }
-         
+
             sbGroupFilter.Append(searchFilter.CreateFilter(filter.Operator, filter.Values));
         }
 
@@ -264,17 +267,11 @@ public abstract class AcmeFieldServiceBase : IAcmeFieldService
         return group.Filters.Any(w => string.Compare(w.Values[0], facetText, StringComparison.InvariantCultureIgnoreCase) == 0);
     }
 
-    /// <summary>Register all the fields that are marked as IsFilterable or IsFacetable
-    /// here.  We do NOT want the client side building filters.  It can only pass in
-    /// query text.  This avoids injection attacks where the client can see anything in the
-    /// index.  If they could build them, they could avoid security trimming.</summary>
-    protected abstract List<IAcmeSearchField> RegisterFields();
-    
     /// <summary>Determines if we should surround all the field list filers with parenthesis before adding security trimming</summary>
     /// <param name="fieldFilters">A list of field filter where each represents a grouping of filters for one field.</param>
     private bool ShouldSurroundAllTheFieldFiltersWithParenthesis(List<AcmeSearchFilterField> fieldFilters)
     {
-        if (fieldFilters.Count == 0) 
+        if (fieldFilters.Count == 0)
             return false;
 
         if (fieldFilters.Count == 1)

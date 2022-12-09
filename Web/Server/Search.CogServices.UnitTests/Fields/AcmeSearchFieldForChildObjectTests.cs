@@ -14,7 +14,7 @@ public class AcmeSearchFieldForChildObjectTests
         // Arrange
         var cut = new AcmeSearchFieldForChildObject(1, PropFieldName, IndexFieldName, "Display Name", false, false, false, false, false);
 
-        var values = new List<string?> { theValue};
+        var values = new List<string?> { theValue };
 
         // Act
         var actualResult = cut.CreateFilter(theOperator, values);
@@ -39,7 +39,7 @@ public class AcmeSearchFieldForChildObjectTests
 
         // Act
         Exception ex = Assert.ThrowsException<ArgumentException>(() => cut.CreateFilter(theOperator, values));
-        
+
         // Assert
         if (ex == null)
             Assert.Fail($"An exception should have been generated for the '{theOperator}'!");

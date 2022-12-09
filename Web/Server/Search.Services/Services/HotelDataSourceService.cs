@@ -5,8 +5,8 @@ namespace Search.Services;
 
 public class HotelDataSourceService : AcmeSearchDataSourceService, IHotelDataSourceService
 {
-    private readonly SearchServiceSettings _settings;
     private readonly AcmeDatabaseOptions _databaseOptions;
+    private readonly SearchServiceSettings _settings;
 
     /// <summary>Constructor</summary>
     public HotelDataSourceService(SearchServiceSettings settings, AcmeDatabaseOptions databaseOptions, IAcmeSearchIndexerService indexerService) : base(indexerService)
@@ -14,16 +14,16 @@ public class HotelDataSourceService : AcmeSearchDataSourceService, IHotelDataSou
         _settings = settings;
         _databaseOptions = databaseOptions;
     }
-    
+
     /// <summary>Creates a hotel data source if it doesn't exist.</summary>
     public async Task<bool> CreateAsync()
     {
         return await this.CreateForAzureSqlAsync(
-            _settings.Hotel.DataSourceName, 
+            _settings.Hotel.DataSourceName,
             _settings.Hotel.TableName,
             _databaseOptions.ConnectionString,
-            _settings.Hotel.HighWaterMarkColumnName, 
-            _settings.Hotel.SoftDeleteColumnName, 
+            _settings.Hotel.HighWaterMarkColumnName,
+            _settings.Hotel.SoftDeleteColumnName,
             _settings.Hotel.SoftDeleteColumnValue);
     }
 

@@ -5,13 +5,13 @@ namespace Search.CogServices;
 
 public class AcmeSearchDataSourceService : IAcmeSearchDataSourceService
 {
-    protected IAcmeSearchIndexerService IndexerService { get; }
-
     /// <summary>Constructor</summary>
     public AcmeSearchDataSourceService(IAcmeSearchIndexerService indexerService)
     {
         IndexerService = indexerService;
     }
+
+    protected IAcmeSearchIndexerService IndexerService { get; }
 
     /// <summary>Creates a Azure SQL data source that will be used by an indexer.</summary>
     /// <param name="name">The name of the data source</param>
@@ -42,16 +42,7 @@ public class AcmeSearchDataSourceService : IAcmeSearchDataSourceService
         return results != null;  // Is this a good check?
     }
 
-    /// <summary>Gets a list of data sources</summary>
-    /// <param name="dataSourceConnectionName">The name of the data source</param>
-    public async Task<bool> ExistsAsync(string dataSourceConnectionName)
-    {
-        Response<SearchIndexerDataSourceConnection>? dataSource = await IndexerService.ClientIndexer.GetDataSourceConnectionAsync(dataSourceConnectionName);
-
-        return dataSource != null;
-    }
-
-    /// <summary>Gets a list of data sources</summary>
+    /// <summary>Delete a data sources</summary>
     /// <param name="dataSourceConnectionName">The name of the data source</param>
     public async Task<bool> DeleteAsync(string dataSourceConnectionName)
     {
@@ -65,7 +56,16 @@ public class AcmeSearchDataSourceService : IAcmeSearchDataSourceService
 
         return false;
     }
-    
+
+    /// <summary>Gets a list of data sources</summary>
+    /// <param name="dataSourceConnectionName">The name of the data source</param>
+    public async Task<bool> ExistsAsync(string dataSourceConnectionName)
+    {
+        Response<SearchIndexerDataSourceConnection>? dataSource = await IndexerService.ClientIndexer.GetDataSourceConnectionAsync(dataSourceConnectionName);
+
+        return dataSource != null;
+    }
+
     /// <summary>Gets a list of data sources</summary>
     public async Task<List<string>> GetListAsync()
     {
@@ -75,5 +75,4 @@ public class AcmeSearchDataSourceService : IAcmeSearchDataSourceService
 
         return result;
     }
-
 }

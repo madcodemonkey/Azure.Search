@@ -9,5 +9,4 @@ public interface IHotelIndexService : IAcmeSearchIndexService
 
     /// <summary>Deletes the hotel index.</summary>
     Task<bool> DeleteAsync();
-
 }

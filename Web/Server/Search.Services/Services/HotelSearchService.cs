@@ -6,8 +6,8 @@ namespace Search.Services;
 
 public class HotelSearchService : AcmeSearchServiceBase<HotelDocument>, IHotelSearchService
 {
-    private readonly SearchServiceSettings _settings;
     private readonly IHotelSearchHighlightService _highlightService;
+    private readonly SearchServiceSettings _settings;
 
     /// <summary>Constructor</summary>
     public HotelSearchService(SearchServiceSettings settings,
@@ -33,7 +33,7 @@ public class HotelSearchService : AcmeSearchServiceBase<HotelDocument>, IHotelSe
 
         // Normally, you would want to increase the number of characters to something larger, but 20 allows you to see the impact of the clipping.
         //_highlightService.MapHighlightsOnToDocumentGoogleStyle(result.Docs, 20);
- 
+
         return result;
     }
 }

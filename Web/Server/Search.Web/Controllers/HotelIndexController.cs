@@ -15,15 +15,13 @@ public class HotelIndexController : ControllerBase
         _hotelIndexService = hotelIndexService;
     }
 
-     
-    [HttpGet]
-    public async Task<IActionResult> GetList()
+    [HttpPost]
+    public async Task<IActionResult> CreateHotelsIndex()
     {
-        var data = await _hotelIndexService.GetIndexNamesAsync();
-        return Ok(data);
+        bool created = await _hotelIndexService.CreateOrUpdateAsync();
+        return Ok(created ? "Created" : "Not Created");
     }
 
-    
     [HttpDelete]
     public async Task<IActionResult> DeleteHotelIndex()
     {
@@ -31,10 +29,10 @@ public class HotelIndexController : ControllerBase
         return Ok(created ? "Deleted" : "Not Deleted");
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateHotelsIndex()
+    [HttpGet]
+    public async Task<IActionResult> GetList()
     {
-        bool created = await _hotelIndexService.CreateOrUpdateAsync();
-        return Ok(created ? "Created" : "Not Created");
+        var data = await _hotelIndexService.GetIndexNamesAsync();
+        return Ok(data);
     }
 }

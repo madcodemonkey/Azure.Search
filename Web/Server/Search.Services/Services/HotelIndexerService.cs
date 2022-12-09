@@ -13,7 +13,7 @@ public class HotelIndexerService : AcmeSearchIndexerService, IHotelIndexerServic
     {
         _searchSettings = settings;
     }
-   
+
     /// <summary>Creates the Hotel indexer</summary>
     public async Task<bool> CreateAsync()
     {
@@ -32,8 +32,8 @@ public class HotelIndexerService : AcmeSearchIndexerService, IHotelIndexerServic
 
         // Indexer declarations require a data source and search index.
         // Common optional properties include a schedule, parameters, and field mappings
-        // The field mappings below are redundant due to how the HotelDocument class is defined, but 
-        // we included them anyway to show the syntax 
+        // The field mappings below are redundant due to how the HotelDocument class is defined, but
+        // we included them anyway to show the syntax
         var indexer = new SearchIndexer(_searchSettings.Hotel.IndexerName, _searchSettings.Hotel.DataSourceName, _searchSettings.Hotel.IndexName)
         {
             Description = "Hotel data indexer",
@@ -45,7 +45,6 @@ public class HotelIndexerService : AcmeSearchIndexerService, IHotelIndexerServic
                 new FieldMapping("Amenities") {TargetFieldName = nameof(HotelDocument.Tags) }
             }
         };
-
 
         var data = await ClientIndexer.CreateOrUpdateIndexerAsync(indexer);
 
@@ -63,5 +62,4 @@ public class HotelIndexerService : AcmeSearchIndexerService, IHotelIndexerServic
     {
         await ClientIndexer.RunIndexerAsync(_searchSettings.Hotel.IndexerName);
     }
-
 }

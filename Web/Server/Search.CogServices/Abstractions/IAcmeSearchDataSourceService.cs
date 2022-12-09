@@ -11,14 +11,14 @@ public interface IAcmeSearchDataSourceService
     /// <param name="softDeleteColumnValue">The value in the column that indicates that the record should be deleted.</param>
     Task<bool> CreateForAzureSqlAsync(string name, string tableOrViewName, string connectionString, string highWaterMarkColumnName, string softDeleteColumnName, string softDeleteColumnValue);
 
-    /// <summary>Gets a list of data sources</summary>
-    Task<List<string>> GetListAsync();
-
-    /// <summary>Gets a list of data sources</summary>
+    /// <summary>Delete a data sources</summary>
     /// <param name="dataSourceConnectionName">The name of the data source</param>
     Task<bool> DeleteAsync(string dataSourceConnectionName);
 
     /// <summary>Gets a list of data sources</summary>
     /// <param name="dataSourceConnectionName">The name of the data source</param>
     Task<bool> ExistsAsync(string dataSourceConnectionName);
+
+    /// <summary>Gets a list of data sources</summary>
+    Task<List<string>> GetListAsync();
 }

@@ -15,7 +15,4 @@ public class StringExtensionsTests
         // Assert
         Assert.AreEqual(expectedValue, actualValue);
     }
-
-
-
 }
