@@ -53,8 +53,8 @@ public abstract class AcmeSearchFieldBase : IAcmeSearchField
     {
         if (values == null || values.Count == 0)
             throw new ArgumentException("You must specify one or more values for a filter!");
-        ValidateFilters(values);
-        return GetFilter(searchOperator, values);
+        var scrubbedFieldValues = ScrubFieldValues(values);
+        return GetFilter(searchOperator, scrubbedFieldValues);
     }
 
     /// <summary>The method that is overriden by the superclass that will be specific to the type specified by the class name.</summary>
@@ -85,17 +85,29 @@ public abstract class AcmeSearchFieldBase : IAcmeSearchField
         }
     }
 
-    private void ValidateFilters(List<string?> values)
+    /// <summary>Scrubs field values as necessary so that the user cannot circumvent security trimming.</summary>
+    /// <param name="values"></param>
+    private List<string?> ScrubFieldValues(List<string?> values)
     {
-        for (int i = 0; i < values.Count; i++)
-        {
-            if (values[i] == null) continue;
+        var result = new List<string>(values.Count);
 
-            if (values[i]?.IndexOf('"') != -1)
-                throw new UnauthorizedAccessException("A filter contains in illegal character (double quote)");
-            if (values[i]?.IndexOf("'") != -1)
-                throw new UnauthorizedAccessException("A filter contains in illegal character (single quote)");
+        foreach (var value in values)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result.Add(value);
+            }
+            else if (value.IndexOf("'", StringComparison.Ordinal) != -1)
+            {
+                result.Add(value.Replace("'", "''"));
+            }
+            else
+            {
+                result.Add(value);
+            }
         }
+
+        return result;
     }
 
 }
