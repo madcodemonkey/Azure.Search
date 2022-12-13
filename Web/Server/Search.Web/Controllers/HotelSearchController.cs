@@ -18,14 +18,14 @@ public class HotelSearchController : ControllerBase
     private readonly IHotelSearchService _hotelSearchService;
     private readonly IHotelSuggestorService _hotelSuggestorService;
     private readonly IMapper _mapper;
-    private readonly IValidator<AcmeSearchQuery> _searchValidator;
+    private readonly IValidator<AcmeSearchQueryDto> _searchValidator;
     private readonly IValidator<AcmeSuggestorQuery> _suggestValidator;
 
     /// <summary>Constructor</summary>
     public HotelSearchController(IHotelSearchService hotelSearchService,
         IHotelSuggestorService hotelSuggestorService,
         IHotelAutoCompleteService autoCompleteService, IMapper mapper,
-        IValidator<AcmeSearchQuery> searchValidator,
+        IValidator<AcmeSearchQueryDto> searchValidator,
         IValidator<AcmeSuggestorQuery> suggestValidator)
     {
         _hotelSearchService = hotelSearchService;
@@ -54,14 +54,16 @@ public class HotelSearchController : ControllerBase
     }
 
     [HttpPost("Search")]
-    public async Task<IActionResult> Search(AcmeSearchQuery query)
+    public async Task<IActionResult> Search(AcmeSearchQueryDto queryDto)
     {
-        var validationResult = await _searchValidator.ValidateAsync(query);
+        var validationResult = await _searchValidator.ValidateAsync(queryDto);
 
         if (validationResult.IsValid == false)
         {
             return new BadRequestObjectResult(validationResult.ToString());
         }
+
+        var query = _mapper.Map<AcmeSearchQuery>(queryDto);
 
         // Reference to paging: https://docs.microsoft.com/en-us/azure/search/tutorial-csharp-paging#extend-your-app-with-numbered-paging
         // Note on how continuation is really used https://stackoverflow.com/questions/33826731/how-to-use-microsoft-azure-search-searchcontinuationtoken

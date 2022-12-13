@@ -13,6 +13,9 @@ public class MappingProfiles : Profile
         CreateAutoCompleteMappings();
         CreateSuggestionMappings();
         CreateSearchMappings();
+
+        CreateMap<AcmeSearchQueryDto, AcmeSearchQuery>()
+            .ForMember(m => m.QueryType, opt => opt.MapFrom(mf => mf.UseSemanticSearch ? SearchQueryType.Semantic : SearchQueryType.Simple));
     }
 
     private void CreateAutoCompleteMappings()
