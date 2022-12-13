@@ -73,10 +73,10 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
             HighlightPreTag = "<b>",
             HighlightPostTag = "</b>",
             IncludeTotalCount = request.IncludeCount,
-            QueryType = request.QueryType, // Eventually Semantic will be an option.
+            QueryType = request.QueryType,
             SearchMode = request.IncludeAllWords ? SearchMode.All : SearchMode.Any,
-            Skip = skip < 1 ? (int?)null : skip,
-            Size = request.ItemsPerPage
+            Size = request.ItemsPerPage,
+            Skip = skip < 1 ? (int?)null : skip
         };
 
         FieldService.AddFacets(options);
@@ -107,8 +107,8 @@ public abstract class AcmeSearchServiceBase<TIndexClass> where TIndexClass : cla
             //HighlightPreTag = "<b>",
             //HighlightPostTag = "</b>",
             IncludeTotalCount = request.IncludeCount,
-            QueryType = SearchQueryType.Full,
-            SearchMode = request.IncludeAllWords ? SearchMode.All : SearchMode.Any,
+            QueryType = SearchQueryType.Semantic,
+            SearchMode = null, // setting this to SearchMode.All or SearchMode.Any causes zero records to be returned!
             Skip = skip < 1 ? (int?)null : skip,
             Size = request.ItemsPerPage
         };
