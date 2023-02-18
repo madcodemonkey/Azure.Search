@@ -30,8 +30,8 @@ public class AcmeSearchODataFieldDateTimeOffset : AcmeSearchODataFieldBase
             if (values.Count < 2)
                 throw new ArgumentException($"To use the {AcmeSearchFilterOperatorEnum.WithinRange} operator with a date time field, you must include at least two values!");
 
-            return $"{fieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.GreaterOrEqual)} {ConvertDateStringToUtcString(values[0], TimeHandlingEnum.UseMidnight)} and " +
-                $"{fieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.LessOrEqual)} {ConvertDateStringToUtcString(values[1], TimeHandlingEnum.UseEndOfDay)}";
+            return $"{fieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.GreaterOrEqual)} {ConvertDateStringToUtcString(fieldName, values[0], TimeHandlingEnum.UseMidnight)} and " +
+                $"{fieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.LessOrEqual)} {ConvertDateStringToUtcString(fieldName, values[1], TimeHandlingEnum.UseEndOfDay)}";
         }
 
         return $"{fieldName} {OperatorToString(searchOperator)} {ConvertDateStringToUtcString(fieldName, values[0], TimeHandlingEnum.UseTimeAsSent)}";
