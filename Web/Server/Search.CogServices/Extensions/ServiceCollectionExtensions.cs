@@ -11,6 +11,8 @@ public static class ServiceCollectionExtensions
         sc.AddScoped<IAcmeSearchDataSourceService, AcmeSearchDataSourceService>();
         sc.AddScoped<IAcmeSearchIndexerService, AcmeSearchIndexerService>();
         sc.AddScoped<IAcmeSearchIndexService, AcmeSearchIndexService>();
-        sc.AddTransient<IAcmeSearchSynonymService, AcmeSearchSynonymService>();
+        sc.AddSingleton<IAcmeIndexInfoService, AcmeIndexInfoService>();
+        sc.AddScoped<IAcmeODataService, AcmeODataService>();
+        sc.AddScoped<IAcmeSearchSynonymService, AcmeSearchSynonymService>();
     }
 }
