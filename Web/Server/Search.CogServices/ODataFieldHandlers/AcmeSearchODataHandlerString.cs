@@ -1,6 +1,6 @@
 ﻿namespace Search.CogServices;
 
-public class AcmeSearchODataFieldString : AcmeSearchODataFieldBase
+public class AcmeSearchODataHandlerString : AcmeSearchODataHandlerBase
 {
     /// <summary>
     /// Indicates if the handler can projects the field type.

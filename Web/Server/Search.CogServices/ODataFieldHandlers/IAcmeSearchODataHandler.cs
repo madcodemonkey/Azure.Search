@@ -1,6 +1,6 @@
 ﻿namespace Search.CogServices;
 
-public interface IAcmeSearchODataField
+public interface IAcmeSearchODataHandler
 {
     /// <summary>
     /// Indicates if the handler can projects the field type.

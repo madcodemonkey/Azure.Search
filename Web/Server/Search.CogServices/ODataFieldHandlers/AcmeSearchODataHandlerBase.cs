@@ -1,6 +1,6 @@
 ﻿namespace Search.CogServices;
 
-public abstract class AcmeSearchODataFieldBase : IAcmeSearchODataField
+public abstract class AcmeSearchODataHandlerBase : IAcmeSearchODataHandler
 {
     /// <summary>Creates an OData filter string.</summary>
     /// <param name="fieldName">The name of the field in the Azure Index document (it is case sensitive!)</param>

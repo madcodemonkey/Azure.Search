@@ -26,20 +26,20 @@ public class AcmeIndexInfoService : IAcmeIndexInfoService
 public class AcmeODataService
 {
     private readonly IAcmeIndexInfoService _indexInfoService;
-    private readonly List<IAcmeSearchODataField> _oDataFieldHandlers;
+    private readonly List<IAcmeSearchODataHandler> _oDataFieldHandlers;
 
     /// <summary>Constructor</summary>
     public AcmeODataService(IAcmeIndexInfoService indexInfoService)
     {
         _indexInfoService = indexInfoService;
-        _oDataFieldHandlers = new List<IAcmeSearchODataField>()
+        _oDataFieldHandlers = new List<IAcmeSearchODataHandler>()
         {
-            new AcmeSearchODataFieldString(),
-            new AcmeSearchODataFieldNumber(),
-            new AcmeSearchODataFieldBoolean(),
-            new AcmeSearchODataFieldStringCollection(),
-            new AcmeSearchODataFieldDateTimeOffset(),
-            new AcmeSearchODataFieldChildObjectString(),
+            new AcmeSearchODataHandlerString(),
+            new AcmeSearchODataHandlerNumber(),
+            new AcmeSearchODataHandlerBoolean(),
+            new AcmeSearchODataHandlerStringCollection(),
+            new AcmeSearchODataHandlerDateTimeOffset(),
+            new AcmeSearchODataHandlerChildObjectString(),
         };
     }
 
@@ -92,7 +92,7 @@ public class AcmeODataService
                     sbFilter.Append(" and ");
                 }
 
-                IAcmeSearchODataField? fieldHandler = _oDataFieldHandlers.FirstOrDefault(w => w.CanHandle(AcmeSearchFilterFieldTypeEnum.StringCollection));
+                IAcmeSearchODataHandler? fieldHandler = _oDataFieldHandlers.FirstOrDefault(w => w.CanHandle(AcmeSearchFilterFieldTypeEnum.StringCollection));
 
                 if (fieldHandler == null)
                     throw new ArgumentNullException($"Could not find a OData field handler for a field named '{securityTrimmingFieldName}' with field type '{AcmeSearchFilterFieldTypeEnum.StringCollection}'");
@@ -110,7 +110,7 @@ public class AcmeODataService
     {
         var sbGroupFilter = new StringBuilder();
 
-        IAcmeSearchODataField? fieldHandler = _oDataFieldHandlers.FirstOrDefault(w => w.CanHandle(fieldFilter.FieldType));
+        IAcmeSearchODataHandler? fieldHandler = _oDataFieldHandlers.FirstOrDefault(w => w.CanHandle(fieldFilter.FieldType));
 
         if (fieldHandler == null)
             throw new ArgumentNullException($"Could not find a OData field handler for a field named '{fieldFilter.FieldName}' with field type '{fieldFilter.FieldType}'");

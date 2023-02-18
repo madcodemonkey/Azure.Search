@@ -1,6 +1,6 @@
 ﻿namespace Search.CogServices;
 
-public class AcmeSearchODataFieldDateTimeOffset : AcmeSearchODataFieldBase
+public class AcmeSearchODataHandlerDateTimeOffset : AcmeSearchODataHandlerBase
 {
     private enum TimeHandlingEnum
     {
