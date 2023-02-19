@@ -24,7 +24,7 @@ public class AcmeSuggestorService : IAcmeSuggestorService
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
     /// <returns>List of suggestions</returns>
-    public virtual async Task<SuggestResults<SearchDocument>> SuggestAsync(AcmeSuggestorQueryV2 request,
+    public virtual async Task<SuggestResults<SearchDocument>> SuggestAsync(AcmeSuggestorQuery request,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
     {
         var options = CreateDefaultOptions(request, securityTrimmingFieldName, securityTrimmingValues);
@@ -36,7 +36,7 @@ public class AcmeSuggestorService : IAcmeSuggestorService
     /// <param name="request">A request for a suggestion</param>
     /// <param name="options">The search options to apply</param>
     /// <returns>List of suggestions</returns>
-    public virtual async Task<SuggestResults<SearchDocument>> SuggestAsync(AcmeSuggestorQueryV2 request, SuggestOptions options)
+    public virtual async Task<SuggestResults<SearchDocument>> SuggestAsync(AcmeSuggestorQuery request, SuggestOptions options)
     {
         var suggestResult = await _searchIndexService.SuggestAsync<SearchDocument>(request.IndexName, request.Query, request.SuggestorName, options);
 
@@ -49,7 +49,7 @@ public class AcmeSuggestorService : IAcmeSuggestorService
     /// being used for security trimming.  It's assumed that it is a string collection.</param>
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
-    public virtual SuggestOptions CreateDefaultOptions(AcmeSuggestorQueryV2 request,
+    public virtual SuggestOptions CreateDefaultOptions(AcmeSuggestorQuery request,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
     {
         string filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFieldName, securityTrimmingValues);

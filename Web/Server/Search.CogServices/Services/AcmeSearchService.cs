@@ -204,7 +204,7 @@ public class AcmeSearchService : IAcmeSearchService
     /// <param name="facets">Facets from an Azure Search call</param>
     /// <param name="fieldFilters">A list of field filter where each represents a grouping of filters for one field.</param>
     /// <returns></returns>
-    private List<AcmeSearchFacet> ConvertFacets(IDictionary<string, IList<FacetResult>>? facets, List<AcmeSearchFilterFieldV2>? fieldFilters)
+    private List<AcmeSearchFacet> ConvertFacets(IDictionary<string, IList<FacetResult>>? facets, List<AcmeSearchFilterField>? fieldFilters)
     {
         var result = new List<AcmeSearchFacet>();
 
@@ -242,7 +242,7 @@ public class AcmeSearchService : IAcmeSearchService
     /// <param name="fieldFilters">A list of field filter where each represents a grouping of filters for one field.</param>
     /// <param name="fieldName">The name of the filter to examine for the values</param>
     /// <param name="facetText">The text of the facet item</param>
-    private bool IsFacetSelected(List<AcmeSearchFilterFieldV2>? fieldFilters, string fieldName, string facetText)
+    private bool IsFacetSelected(List<AcmeSearchFilterField>? fieldFilters, string fieldName, string facetText)
     {
         if (fieldFilters == null) return false;
 

@@ -10,6 +10,6 @@ public class AcmeSuggestorQueryDtoValidator : AbstractValidator<AcmeSuggestorQue
     {
         RuleFor(x => x.Query).NotEmpty();
         RuleFor(x => x.NumberOfSuggestionsToRetrieve).InclusiveBetween(1, 100);
-        RuleForEach(x => x.Filters).SetValidator(new AcmeSearchFilterGroupValidatorV2());
+        RuleForEach(x => x.Filters).SetValidator(new AcmeSearchFilterGroupValidator());
     }
 }

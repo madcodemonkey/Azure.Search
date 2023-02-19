@@ -10,6 +10,6 @@ public interface IAcmeODataService
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
     /// <returns>An OData Filter</returns>
-    string BuildODataFilter(string indexName, List<AcmeSearchFilterFieldV2>? fieldFilters,
+    string BuildODataFilter(string indexName, List<AcmeSearchFilterField>? fieldFilters,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null);
 }

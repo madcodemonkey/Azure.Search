@@ -7,7 +7,7 @@ public class AcmeSearchFilterGroupValidator : AbstractValidator<AcmeSearchFilter
 {
     public AcmeSearchFilterGroupValidator()
     {
-        RuleFor(x => x.FieldId).GreaterThan(0);
+        RuleFor(x => x.FieldName).NotEmpty();
         RuleFor(x => (int)x.PeerOperator).InclusiveBetween((int)AcmeSearchGroupOperatorEnum.And, (int)AcmeSearchGroupOperatorEnum.Or);
         RuleFor(x => (int)x.FiltersOperator).InclusiveBetween((int)AcmeSearchGroupOperatorEnum.And, (int)AcmeSearchGroupOperatorEnum.Or);
         RuleForEach(x => x.Filters).SetValidator(new AcmeSearchFilterItemValidator());

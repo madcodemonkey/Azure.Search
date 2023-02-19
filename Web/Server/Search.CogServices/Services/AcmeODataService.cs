@@ -28,7 +28,7 @@ public class AcmeODataService : IAcmeODataService
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
     /// <returns>An OData Filter</returns>
-    public string BuildODataFilter(string indexName, List<AcmeSearchFilterFieldV2>? fieldFilters,
+    public string BuildODataFilter(string indexName, List<AcmeSearchFilterField>? fieldFilters,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
     {
         // All Filters are case SENSITIVE
@@ -91,7 +91,7 @@ public class AcmeODataService : IAcmeODataService
 
     /// <summary>Creates an OData filter for one group.</summary>
     /// <param name="fieldFilter">A grouping of filters for one field.</param>
-    private string BuildODataFilterForOneFieldFilter(AcmeSearchFilterFieldV2 fieldFilter)
+    private string BuildODataFilterForOneFieldFilter(AcmeSearchFilterField fieldFilter)
     {
         var sbGroupFilter = new StringBuilder();
 
@@ -120,7 +120,7 @@ public class AcmeODataService : IAcmeODataService
 
     /// <summary>Determines if we should surround all the field list filers with parenthesis before adding security trimming</summary>
     /// <param name="fieldFilters">A list of field filter where each represents a grouping of filters for one field.</param>
-    private bool ShouldSurroundAllTheFieldFiltersWithParenthesis(List<AcmeSearchFilterFieldV2> fieldFilters)
+    private bool ShouldSurroundAllTheFieldFiltersWithParenthesis(List<AcmeSearchFilterField> fieldFilters)
     {
         if (fieldFilters.Count == 0)
             return false;

@@ -16,7 +16,9 @@
 public class AcmeSearchFilterField
 {
     /// <summary>The id of the field.</summary>
-    public int FieldId { get; set; }
+    public string FieldName { get; set; }
+
+    public AcmeSearchFilterFieldTypeEnum FieldType {get; set;}
 
     /// <summary>The filters that will be used with this group.</summary>
     public List<AcmeSearchFilterItem> Filters { get; set; } = new();

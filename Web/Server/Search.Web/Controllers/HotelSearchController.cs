@@ -107,7 +107,7 @@ public class HotelSearchController : ControllerBase
             return new BadRequestObjectResult(validationResult.ToString());
         }
 
-        var request = new AcmeSuggestorQueryV2()
+        var request = new AcmeSuggestorQuery()
         {
             Filters = query.Filters,
             NumberOfSuggestionsToRetrieve = query.NumberOfSuggestionsToRetrieve,
