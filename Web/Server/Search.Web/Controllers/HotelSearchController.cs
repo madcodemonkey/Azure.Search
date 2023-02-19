@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Azure;
 using Azure.Search.Documents.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Search.CogServices;
-using Search.Services;
 using Search.Web.Models;
 
 namespace Search.Controllers;
@@ -13,32 +11,34 @@ namespace Search.Controllers;
 [ApiController]
 public class HotelSearchController : ControllerBase
 {
-    private readonly IHotelAutoCompleteService _autoCompleteService;
     private readonly IMapper _mapper;
     private readonly IValidator<AcmeSearchQueryDto> _searchValidator;
     private readonly IValidator<AcmeSuggestorQueryDto> _suggestValidator;
     private readonly IAcmeSearchService _searchService;
     private readonly IAcmeSuggestorService _suggestorService;
+    private readonly IAcmeAutoCompleteService _autoCompleteService;
 
     /// <summary>Constructor</summary>
     public HotelSearchController(
-        IHotelAutoCompleteService autoCompleteService, IMapper mapper,
+         IMapper mapper,
         IValidator<AcmeSearchQueryDto> searchValidator,
         IValidator<AcmeSuggestorQueryDto> suggestValidator,
         IAcmeSearchService searchService,
-        IAcmeSuggestorService suggestorService)
+        IAcmeSuggestorService suggestorService,
+        IAcmeAutoCompleteService autoCompleteService)
     {
-        _autoCompleteService = autoCompleteService;
         _mapper = mapper;
         _searchValidator = searchValidator;
         _suggestValidator = suggestValidator;
         _searchService = searchService;
         _suggestorService = suggestorService;
+        _autoCompleteService = autoCompleteService;
     }
 
     [HttpPost("AutoComplete")]
     public async Task<IActionResult> AutoComplete(AcmeSuggestorQueryDto query)
     {
+        // TODO: Should be using it's own dto like suggest since there will be differences.
         var validationResult = await _suggestValidator.ValidateAsync(query);
 
         if (validationResult.IsValid == false)
@@ -46,12 +46,22 @@ public class HotelSearchController : ControllerBase
             return new BadRequestObjectResult(validationResult.ToString());
         }
 
-     //   Response<AutocompleteResults> autoCompleteResult = await _autoCompleteService.AutoCompleteAsync(query, GetRoles());
+        var request = new AcmeAutoCompleteQuery()
+        {
+            Filters = query.Filters,
+            NumberOfSuggestionsToRetrieve = query.NumberOfSuggestionsToRetrieve,
+            HighlightPreTag = "<b>",
+            HighlightPostTag = "</b>",
+            // TODO: Surface SearchFields Fields
+            Query = query.Query,
+            UseFuzzyMatching = query.UseFuzzyMatching,
+            IndexName = "hotels-idx",
+            SuggestorName = "sg"
+        };
 
-  //      List<HotelAutocompleteDto> mapResult = _mapper.Map<List<HotelAutocompleteDto>>(autoCompleteResult.Value.Results);
+        var result = await _autoCompleteService.AutoCompleteAsync(request, "roles", GetRoles());
 
-    //    return new OkObjectResult(mapResult);
-    return Ok();
+       return Ok(result);
     }
 
     [HttpPost("Search")]

@@ -1,7 +1,7 @@
 ﻿namespace Search.CogServices;
 
-/// <summary>Used by the suggest services</summary>
-public class AcmeSuggestorQueryV2
+/// <summary>Used by the autocomplete services</summary>
+public class AcmeAutoCompleteQuery
 {
     private int _numberOfSuggestionsToRetrieve = 5;
 
@@ -23,12 +23,6 @@ public class AcmeSuggestorQueryV2
     /// <summary> A string tag that is prepended to hit highlights. Must be set with highlightPostTag. Default is &amp;lt;em&amp;gt;. </summary>
     public string? HighlightPreTag { get; set; }
 
-    /// <summary>
-    /// The names of the fields that we should retrieve in the document.  If left null, then only the id field will be retrieved.
-    /// </summary>
-    public IList<string>? DocumentFields { get; set; }
-
-    
     /// <summary>The simple or Lucene style query</summary>
     public string Query { get; set; } = string.Empty;
 
