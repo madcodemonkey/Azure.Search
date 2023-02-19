@@ -28,7 +28,7 @@ public class AcmeODataService : IAcmeODataService
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
     /// <returns>An OData Filter</returns>
-    public string BuildODataFilter(string indexName, List<AcmeSearchFilterFieldV2> fieldFilters,
+    public string BuildODataFilter(string indexName, List<AcmeSearchFilterFieldV2>? fieldFilters,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
     {
         // All Filters are case SENSITIVE
@@ -40,21 +40,24 @@ public class AcmeODataService : IAcmeODataService
 
         var sbFilter = new StringBuilder();
 
-        for (var index = 0; index < fieldFilters.Count; index++)
+        if (fieldFilters != null)
         {
-            var oneFieldFilter = fieldFilters[index];
-            if (index > 0)
+            for (var index = 0; index < fieldFilters.Count; index++)
             {
-                if (fieldFilters[index - 1].PeerOperator == AcmeSearchGroupOperatorEnum.And)
-                    sbFilter.Append(" and ");
-                else sbFilter.Append(" or ");
+                var oneFieldFilter = fieldFilters[index];
+                if (index > 0)
+                {
+                    if (fieldFilters[index - 1].PeerOperator == AcmeSearchGroupOperatorEnum.And)
+                        sbFilter.Append(" and ");
+                    else sbFilter.Append(" or ");
+                }
+
+                // Note: The call to BuildODataFilterForOneFieldFilter will surround the resulting OData filter
+                //       with parenthesis if two or more filters are OR'ed together.
+                string oneFieldODataFilter = BuildODataFilterForOneFieldFilter(oneFieldFilter);
+
+                sbFilter.Append(oneFieldODataFilter);
             }
-
-            // Note: The call to BuildODataFilterForOneFieldFilter will surround the resulting OData filter
-            //       with parenthesis if two or more filters are OR'ed together.
-            string oneFieldODataFilter = BuildODataFilterForOneFieldFilter(oneFieldFilter);
-
-            sbFilter.Append(oneFieldODataFilter);
         }
 
         // Warning!! If the object of T that you're passing into the Azure Suggest or Azure Search methods does not have the Roles property on it,
