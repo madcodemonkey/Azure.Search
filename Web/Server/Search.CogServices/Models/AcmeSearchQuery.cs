@@ -43,6 +43,11 @@ public class AcmeSearchQuery
     /// The name of the Azure Search Index
     /// </summary>
     public string IndexName { get; set; }
+    
+    /// <summary>
+    /// The names of the fields that should be used as facets.
+    /// </summary>
+    public IList<string>? SearchFields { get; set; }
 
     /// <summary>
     /// The names of the fields that should be used as facets.

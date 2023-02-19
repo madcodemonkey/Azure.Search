@@ -69,7 +69,7 @@ public class AcmeSearchService : IAcmeSearchService
     /// being used for security trimming.  It's assumed that it is a string collection.</param>
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
-    protected virtual SearchOptions CreateDefaultSearchOptions(AcmeSearchQuery request,
+    public virtual SearchOptions CreateDefaultSearchOptions(AcmeSearchQuery request,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
     {
         string filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFieldName, securityTrimmingValues);
@@ -87,6 +87,14 @@ public class AcmeSearchService : IAcmeSearchService
             Skip = skip < 1 ? (int?)null : skip
         };
 
+        if (request.SearchFields != null)
+        {
+            foreach (string fieldName in request.SearchFields)
+            {
+                options.SearchFields.Add(fieldName);
+            }
+        }
+         
         if (request.FacetFields != null)
         {
             foreach (string fieldName in request.FacetFields)
@@ -127,7 +135,7 @@ public class AcmeSearchService : IAcmeSearchService
     /// being used for security trimming.  It's assumed that it is a string collection.</param>
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
-    protected virtual SearchOptions CreateSemanticSearchOptions(AcmeSearchQuery request, string configurationName,
+    public virtual SearchOptions CreateSemanticSearchOptions(AcmeSearchQuery request, string configurationName,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
     {
         string filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFieldName, securityTrimmingValues);
