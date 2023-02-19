@@ -11,13 +11,13 @@ public interface IAcmeSearchService
     /// being used for security trimming.  It's assumed that it is a string collection.</param>
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
-    Task<AcmeSearchQueryResultV2<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQueryV2 request,
+    Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null);
 
     /// <summary>Searches using the Azure Search API.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="options">The search options to use when searching for data in Azure Search.</param>
-    Task<AcmeSearchQueryResultV2<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQueryV2 request, SearchOptions options);
+    Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request, SearchOptions options);
 
     /// <summary>Searches using the Azure Search API.</summary>
     /// <param name="request">The request from the user.</param>
@@ -26,6 +26,6 @@ public interface IAcmeSearchService
     /// being used for security trimming.  It's assumed that it is a string collection.</param>
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
-    Task<AcmeSearchQueryResultV2<SearchResult<SearchDocument>>> SemanticSearchAsync(AcmeSearchQueryV2 request, string configurationName,
+    Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SemanticSearchAsync(AcmeSearchQuery request, string configurationName,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null);
 }

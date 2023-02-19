@@ -6,7 +6,7 @@ public class AcmeSearchQueryDto
 {
     /// <summary>Filters to narrow the search.  This help with response time a lot.</summary>
     /// <remarks>I'm not letting the user build them because filters are also part of security</remarks>
-    public List<AcmeSearchFilterField> Filters { get; set; } = new List<AcmeSearchFilterField>();
+    public List<AcmeSearchFilterFieldV2>? Filters { get; set; } 
 
     /// <summary>There really are only two options.  All or Any.
     /// The default is Any (false is this case which is also the default value of a boolean)</summary>
@@ -21,7 +21,7 @@ public class AcmeSearchQueryDto
     /// <summary>A list of fields that you want to use to order the results.  You can have more than one order by
     /// and the order they appear in this list matters!!  If nothing is specified, we will sort by Score order
     /// descending order (highest to lowest score)</summary>
-    public List<AcmeSearchOrderBy> OrderByFields { get; set; } = new List<AcmeSearchOrderBy>();
+    public List<AcmeSearchOrderBy>? OrderByFields { get; set; }
 
     /// <summary>Current page number</summary>
     public int PageNumber { get; set; }

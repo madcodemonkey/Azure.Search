@@ -15,25 +15,26 @@ namespace Search.Controllers;
 public class HotelSearchController : ControllerBase
 {
     private readonly IHotelAutoCompleteService _autoCompleteService;
-    private readonly IHotelSearchService _hotelSearchService;
-    private readonly IHotelSuggestorService _hotelSuggestorService;
+   private readonly IHotelSuggestorService _hotelSuggestorService;
     private readonly IMapper _mapper;
     private readonly IValidator<AcmeSearchQueryDto> _searchValidator;
     private readonly IValidator<AcmeSuggestorQuery> _suggestValidator;
+    private readonly IAcmeSearchService _searchService;
 
     /// <summary>Constructor</summary>
-    public HotelSearchController(IHotelSearchService hotelSearchService,
+    public HotelSearchController(
         IHotelSuggestorService hotelSuggestorService,
         IHotelAutoCompleteService autoCompleteService, IMapper mapper,
         IValidator<AcmeSearchQueryDto> searchValidator,
-        IValidator<AcmeSuggestorQuery> suggestValidator)
+        IValidator<AcmeSuggestorQuery> suggestValidator,
+        IAcmeSearchService searchService)
     {
-        _hotelSearchService = hotelSearchService;
         _hotelSuggestorService = hotelSuggestorService;
         _autoCompleteService = autoCompleteService;
         _mapper = mapper;
         _searchValidator = searchValidator;
         _suggestValidator = suggestValidator;
+        _searchService = searchService;
     }
 
     [HttpPost("AutoComplete")]
@@ -63,15 +64,27 @@ public class HotelSearchController : ControllerBase
             return new BadRequestObjectResult(validationResult.ToString());
         }
 
-        var query = _mapper.Map<AcmeSearchQuery>(queryDto);
-
-        // Reference to paging: https://docs.microsoft.com/en-us/azure/search/tutorial-csharp-paging#extend-your-app-with-numbered-paging
-        // Note on how continuation is really used https://stackoverflow.com/questions/33826731/how-to-use-microsoft-azure-search-searchcontinuationtoken
-        AcmeSearchQueryResult<SearchResult<HotelDocument>> searchResult = await _hotelSearchService.SearchAsync(query, GetRoles());
-
-        AcmeSearchQueryResult<HotelDocumentDto>? mapResult = _mapper.Map<AcmeSearchQueryResult<HotelDocumentDto>>(searchResult);
-
-        return new OkObjectResult(mapResult);
+        AcmeSearchQuery request = new AcmeSearchQuery()
+        {
+            FacetFields = new List<string>()
+                { "baseRate", "category", "parkingIncluded", "rating", "smokingAllowed", "tags" },
+            Filters = queryDto.Filters,
+            HighlightFields = new List<string>() { "hotelName", "category", "description" },
+            HighlightPreTag = "<b>",
+            HighlightPostTag = "</b>",
+            IncludeAllWords = queryDto.IncludeAllWords,
+            IncludeCount = queryDto.IncludeCount,
+            IndexName = "hotels-idx",
+            ItemsPerPage = queryDto.ItemsPerPage,
+            OrderByFields = queryDto.OrderByFields,
+            PageNumber = queryDto.PageNumber,
+            Query = queryDto.Query,
+            QueryType = queryDto.UseSemanticSearch ? SearchQueryType.Semantic : SearchQueryType.Simple  // TODO: Surface query type
+        };
+        
+        AcmeSearchQueryResult<SearchResult<SearchDocument>> searchResult = await _searchService.SearchAsync(request, "roles", GetRoles());
+        
+        return new OkObjectResult(searchResult);
     }
 
     [HttpPost("Suggest")]

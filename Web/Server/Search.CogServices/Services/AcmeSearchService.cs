@@ -25,7 +25,7 @@ public class AcmeSearchService : IAcmeSearchService
     /// being used for security trimming.  It's assumed that it is a string collection.</param>
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
-    public virtual async Task<AcmeSearchQueryResultV2<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQueryV2 request,
+    public virtual async Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
     {
         SearchOptions options = CreateDefaultSearchOptions(request, securityTrimmingFieldName, securityTrimmingValues);
@@ -36,7 +36,7 @@ public class AcmeSearchService : IAcmeSearchService
     /// <summary>Searches using the Azure Search API.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="options">The search options to use when searching for data in Azure Search.</param>
-    public virtual async Task<AcmeSearchQueryResultV2<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQueryV2 request, SearchOptions options)
+    public virtual async Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request, SearchOptions options)
     {
         if (string.IsNullOrWhiteSpace(request.IndexName))
             throw new ArgumentNullException(request.IndexName, "You must specify the name of the index to search!");
@@ -55,7 +55,7 @@ public class AcmeSearchService : IAcmeSearchService
     /// being used for security trimming.  It's assumed that it is a string collection.</param>
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
-    public virtual async Task<AcmeSearchQueryResultV2<SearchResult<SearchDocument>>> SemanticSearchAsync(AcmeSearchQueryV2 request, string configurationName,
+    public virtual async Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SemanticSearchAsync(AcmeSearchQuery request, string configurationName,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
     {
         SearchOptions options = CreateSemanticSearchOptions(request, configurationName, securityTrimmingFieldName, securityTrimmingValues);
@@ -69,7 +69,7 @@ public class AcmeSearchService : IAcmeSearchService
     /// being used for security trimming.  It's assumed that it is a string collection.</param>
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
-    protected virtual SearchOptions CreateDefaultSearchOptions(AcmeSearchQueryV2 request,
+    protected virtual SearchOptions CreateDefaultSearchOptions(AcmeSearchQuery request,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
     {
         string filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFieldName, securityTrimmingValues);
@@ -127,7 +127,7 @@ public class AcmeSearchService : IAcmeSearchService
     /// being used for security trimming.  It's assumed that it is a string collection.</param>
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
-    protected virtual SearchOptions CreateSemanticSearchOptions(AcmeSearchQueryV2 request, string configurationName,
+    protected virtual SearchOptions CreateSemanticSearchOptions(AcmeSearchQuery request, string configurationName,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
     {
         string filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFieldName, securityTrimmingValues);
@@ -175,10 +175,10 @@ public class AcmeSearchService : IAcmeSearchService
     /// You will still get the raw result, but with additional information that you can return the the client.</summary>
     /// <param name="request">The search request from the client side.</param>
     /// <param name="azSearchResult">The response from the Azure Search index.</param>
-    protected virtual async Task<AcmeSearchQueryResultV2<SearchResult<SearchDocument>>> WrapResultsAsync(
-        AcmeSearchQueryV2 request, Response<SearchResults<SearchDocument>> azSearchResult)
+    protected virtual async Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> WrapResultsAsync(
+        AcmeSearchQuery request, Response<SearchResults<SearchDocument>> azSearchResult)
     {
-        var result = new AcmeSearchQueryResultV2<SearchResult<SearchDocument>>
+        var result = new AcmeSearchQueryResult<SearchResult<SearchDocument>>
         {
             Docs = await GetPagedResultsAsync(azSearchResult.Value),
             Facets = ConvertFacets(azSearchResult.Value.Facets, request.Filters),
@@ -196,7 +196,7 @@ public class AcmeSearchService : IAcmeSearchService
     /// <param name="facets">Facets from an Azure Search call</param>
     /// <param name="fieldFilters">A list of field filter where each represents a grouping of filters for one field.</param>
     /// <returns></returns>
-    private List<AcmeSearchFacet> ConvertFacets(IDictionary<string, IList<FacetResult>>? facets, List<AcmeSearchFilterFieldV2> fieldFilters)
+    private List<AcmeSearchFacet> ConvertFacets(IDictionary<string, IList<FacetResult>>? facets, List<AcmeSearchFilterFieldV2>? fieldFilters)
     {
         var result = new List<AcmeSearchFacet>();
 
@@ -234,8 +234,10 @@ public class AcmeSearchService : IAcmeSearchService
     /// <param name="fieldFilters">A list of field filter where each represents a grouping of filters for one field.</param>
     /// <param name="fieldName">The name of the filter to examine for the values</param>
     /// <param name="facetText">The text of the facet item</param>
-    private bool IsFacetSelected(List<AcmeSearchFilterFieldV2> fieldFilters, string fieldName, string facetText)
+    private bool IsFacetSelected(List<AcmeSearchFilterFieldV2>? fieldFilters, string fieldName, string facetText)
     {
+        if (fieldFilters == null) return false;
+
         var group = fieldFilters.FirstOrDefault(w => w.FieldName == fieldName);
         if (group == null) return false;
 

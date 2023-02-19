@@ -18,8 +18,6 @@ public static class ServiceCollectionExtensions
         sc.AddTransient<IHotelFieldService, HotelFieldService>();
         sc.AddTransient<IHotelIndexerService, HotelIndexerService>();
         sc.AddTransient<IHotelIndexService, HotelIndexService>();
-        sc.AddTransient<IHotelSearchHighlightService, HotelSearchHighlightService>();
-        sc.AddTransient<IHotelSearchService, HotelSearchService>();
         sc.AddTransient<IHotelSuggestorService, HotelSuggestorService>();
         sc.AddTransient<IHotelSynonymService, HotelSynonymService>();
     }
