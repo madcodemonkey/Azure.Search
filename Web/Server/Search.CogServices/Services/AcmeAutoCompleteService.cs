@@ -16,7 +16,7 @@ public class AcmeAutoCompleteService : IAcmeAutoCompleteService
         _oDataService = oDataService;
         _searchIndexService = searchIndexService;
     }
-    
+
     /// <summary>Autocomplete</summary>
     /// <param name="request">A request for a suggestion</param>
     /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
@@ -44,7 +44,6 @@ public class AcmeAutoCompleteService : IAcmeAutoCompleteService
         return autoCompleteResult;
     }
 
-
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
@@ -61,9 +60,9 @@ public class AcmeAutoCompleteService : IAcmeAutoCompleteService
             Filter = filter,
             HighlightPreTag = request.HighlightPreTag,
             HighlightPostTag = request.HighlightPostTag,
-            Mode = AutocompleteMode.TwoTerms,
+            Mode = request.Mode ?? AutocompleteMode.OneTerm,
             Size = request.NumberOfSuggestionsToRetrieve,
-            UseFuzzyMatching = request.UseFuzzyMatching // the default is false for performance reasons.  My experience shows that it really does not work well with autocomplete, but works fine with Suggest.
+            UseFuzzyMatching = request.UseFuzzyMatching ?? false // the default is false for performance reasons.  My experience shows that it really does not work well with autocomplete, but works fine with Suggest.
         };
 
         if (request.SearchFields != null)
@@ -73,9 +72,7 @@ public class AcmeAutoCompleteService : IAcmeAutoCompleteService
                 options.SearchFields.Add(fieldName);
             }
         }
-  
-       
+
         return options;
     }
- 
 }

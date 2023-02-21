@@ -1,4 +1,5 @@
-﻿using Search.CogServices;
+﻿using Azure.Search.Documents.Models;
+using Search.CogServices;
 
 namespace Search.Web.Models;
 
@@ -6,7 +7,7 @@ public class AcmeSearchQueryDto
 {
     /// <summary>Filters to narrow the search.  This help with response time a lot.</summary>
     /// <remarks>I'm not letting the user build them because filters are also part of security</remarks>
-    public List<AcmeSearchFilterField>? Filters { get; set; } 
+    public List<AcmeSearchFilterField>? Filters { get; set; }
 
     /// <summary>There really are only two options.  All or Any.
     /// The default is Any (false is this case which is also the default value of a boolean)</summary>
@@ -29,6 +30,7 @@ public class AcmeSearchQueryDto
     /// <summary>The simple or Lucene style query</summary>
     public string Query { get; set; }
 
-    /// <summary>Indicates if we should use semantic search or not.</summary>
-    public bool UseSemanticSearch { get; set; }
+    /// <summary> A value that specifies the syntax of the search query. The default is simple Use full; if your query uses the Lucene query syntax. </summary>
+    /// <remarks>You need a beta version of the search NuGet package to get semantic search as an option!</remarks>
+    public SearchQueryType? QueryType { get; set; }
 }

@@ -3,7 +3,7 @@
 namespace Search.Web.Models;
 
 /// <summary>Used by either the suggest or autocomplete services</summary>
-public class AcmeSuggestorQueryDto
+public class AcmeAutoCompleteQueryDto
 {
     private int _numberOfSuggestionsToRetrieve = 5;
 
@@ -21,9 +21,14 @@ public class AcmeSuggestorQueryDto
     /// <summary>The simple or Lucene style query</summary>
     public string Query { get; set; } = string.Empty;
 
+    /// <summary>
+    /// The names of the fields that should be used as facets.
+    /// </summary>
+    public IList<string>? SearchFields { get; set; }
+
     /// <summary> A value indicating whether to use fuzzy matching for the suggestion query. Default is false.
     /// When set to true, the query will find suggestions even if there's a substituted or missing character in
     /// the search text. While this provides a better experience in some scenarios, it comes at a performance cost
     /// as fuzzy suggestion searches are slower and consume more resources. </summary>
-    public bool UseFuzzyMatching { get; set; } = false;
+    public bool? UseFuzzyMatching { get; set; }
 }

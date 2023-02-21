@@ -1,20 +1,23 @@
-﻿using Azure.Search.Documents.Models;
+﻿namespace Search.CogServices;
 
-namespace Search.CogServices;
-
-/// <summary>Used by the autocomplete services</summary>
-public class AcmeAutoCompleteQuery
+/// <summary>Used by the suggest services</summary>
+public class AcmeSuggestQuery
 {
     private int _numberOfSuggestionsToRetrieve = 5;
+
+    /// <summary>
+    /// The names of the fields that we should retrieve in the document.  If left null, then only the id field will be retrieved.
+    /// </summary>
+    public IList<string>? DocumentFields { get; set; }
 
     /// <summary>Filters to narrow the search.  This help with response time a lot.</summary>
     /// <remarks>I'm not letting the user build them because filters are also part of security</remarks>
     public List<AcmeSearchFilterField>? Filters { get; set; }
 
-    /// <summary> A string tag that is appended to hit highlights. Must be set with highlightPreTag. Default is &amp;lt;/em&amp;gt;. </summary>
+    /// <summary> A string tag that is appended to hit highlights. Must be set with highlightPreTag. Default is the opening em html tag.</summary>
     public string? HighlightPostTag { get; set; }
 
-    /// <summary> A string tag that is prepended to hit highlights. Must be set with highlightPostTag. Default is &amp;lt;em&amp;gt;. </summary>
+    /// <summary> A string tag that is prepended to hit highlights. Must be set with highlightPostTag. Default is the closing em html tag.</summary>
     public string? HighlightPreTag { get; set; }
 
     /// <summary>
@@ -22,21 +25,17 @@ public class AcmeAutoCompleteQuery
     /// </summary>
     public string IndexName { get; set; }
 
-    /// <summary>
-    /// Specifies the mode for Autocomplete. The default is
-    /// <see cref="AutocompleteMode.OneTerm"/>. Use
-    /// <see cref="AutocompleteMode.TwoTerms"/> to get shingles and
-    /// <see cref="AutocompleteMode.OneTermWithContext"/> to use the
-    /// current context while producing auto-completed terms.
-    /// </summary>
-    public AutocompleteMode? Mode { get; set; }
-
     /// <summary>The number of suggestions to retrieve. This must be a value between 1 and 100.</summary>
     public int NumberOfSuggestionsToRetrieve
     {
         get => _numberOfSuggestionsToRetrieve;
         set => _numberOfSuggestionsToRetrieve = value > 0 ? value : 5;
     }
+
+    /// <summary>A list of fields that you want to use to order the results.  You can have more than one order by
+    /// and the order they appear in this list matters!!  If nothing is specified, we will sort by Score order
+    /// descending order (highest to lowest score)</summary>
+    public List<AcmeSearchOrderBy>? OrderByFields { get; set; }
 
     /// <summary>The simple or Lucene style query</summary>
     public string Query { get; set; } = string.Empty;

@@ -7,30 +7,6 @@ public interface IAcmeSearchService
 {
     /// <summary>The Search index service, which is a wrapper around Microsoft's SearchIndexClient class.</summary>
 
-    /// <summary>Searches using the Azure Search API.</summary>
-    /// <param name="request">The request from the user.</param>
-    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
-    /// being used for security trimming.  It's assumed that it is a string collection.</param>
-    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
-    /// we will only bring back records that have the 'admin' role on them.</param>
-    Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request,
-        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null);
-
-    /// <summary>Searches using the Azure Search API.</summary>
-    /// <param name="request">The request from the user.</param>
-    /// <param name="options">The search options to use when searching for data in Azure Search.</param>
-    Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request, SearchOptions options);
-
-    /// <summary>Searches using the Azure Search API.</summary>
-    /// <param name="request">The request from the user.</param>
-    /// <param name="configurationName">The name of the semantic configuration in the Azure Portal that should be used.</param>
-    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
-    /// being used for security trimming.  It's assumed that it is a string collection.</param>
-    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
-    /// we will only bring back records that have the 'admin' role on them.</param>
-    Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SemanticSearchAsync(AcmeSearchQuery request, string configurationName,
-        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null);
-
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
@@ -49,5 +25,29 @@ public interface IAcmeSearchService
     /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
     /// we will only bring back records that have the 'admin' role on them.</param>
     SearchOptions CreateSemanticSearchOptions(AcmeSearchQuery request, string configurationName,
+        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null);
+
+    /// <summary>Searches using the Azure Search API.  Used for Simple or Full searches only.</summary>
+    /// <param name="request">The request from the user.</param>
+    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
+    /// being used for security trimming.  It's assumed that it is a string collection.</param>
+    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
+    /// we will only bring back records that have the 'admin' role on them.</param>
+    Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request,
+        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null);
+
+    /// <summary>Searches using the Azure Search API for the search type of your choice since you are controlling the options.</summary>
+    /// <param name="request">The request from the user.</param>
+    /// <param name="options">The search options to use when searching for data in Azure Search.</param>
+    Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request, SearchOptions options);
+
+    /// <summary>Searches using the Azure Search API for semantic searches only.</summary>
+    /// <param name="request">The request from the user.</param>
+    /// <param name="configurationName">The name of the semantic configuration in the Azure Portal that should be used.</param>
+    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
+    /// being used for security trimming.  It's assumed that it is a string collection.</param>
+    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
+    /// we will only bring back records that have the 'admin' role on them.</param>
+    Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SemanticSearchAsync(AcmeSearchQuery request, string configurationName,
         string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null);
 }
