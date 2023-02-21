@@ -27,6 +27,8 @@ public interface IAcmeSuggestService
     /// <summary>Suggest</summary>
     /// <param name="request">A request for a suggestion</param>
     /// <param name="options">The search options to apply</param>
+    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
+    /// being used for security trimming.  It's needed here to remove it from the document results.</param>
     /// <returns>List of suggestions</returns>
-    Task<SuggestResults<SearchDocument>> SuggestAsync(AcmeSuggestQuery request, SuggestOptions options);
+    Task<SuggestResults<SearchDocument>> SuggestAsync(AcmeSuggestQuery request, SuggestOptions options, string? securityTrimmingFieldName);
 }

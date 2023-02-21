@@ -4,11 +4,11 @@ using System.Text;
 namespace Search.CogServices;
 
 // TODO: Move into a standalone highlight helper!
-//public abstract class AcmeSearchHighlightServiceBase<TIndexClass> : IAcmeSearchHighlightService<TIndexClass>
+//public class AcmeSearchHighlightService<TIndexClass> : IAcmeSearchHighlightService<TIndexClass>
 //    where TIndexClass : class
 //{
 //    /// <summary>Constructor</summary>
-//    protected AcmeSearchHighlightServiceBase(IAcmeFieldService fieldService)
+//    public AcmeSearchHighlightService(IAcmeFieldService fieldService)
 //    {
 //        FieldService = fieldService;
 //    }

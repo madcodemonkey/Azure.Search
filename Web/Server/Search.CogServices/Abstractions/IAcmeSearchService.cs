@@ -39,7 +39,9 @@ public interface IAcmeSearchService
     /// <summary>Searches using the Azure Search API for the search type of your choice since you are controlling the options.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="options">The search options to use when searching for data in Azure Search.</param>
-    Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request, SearchOptions options);
+    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
+    /// being used for security trimming.  It's needed here to remove it from the document results.</param>
+    Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request, SearchOptions options, string? securityTrimmingFieldName);
 
     /// <summary>Searches using the Azure Search API for semantic searches only.</summary>
     /// <param name="request">The request from the user.</param>

@@ -133,20 +133,23 @@ public class AcmeSearchService : IAcmeSearchService
     {
         SearchOptions options = CreateDefaultSearchOptions(request, securityTrimmingFieldName, securityTrimmingValues);
 
-        return await SearchAsync(request, options);
+        return await SearchAsync(request, options, securityTrimmingFieldName);
     }
 
     /// <summary>Searches using the Azure Search API for the search type of your choice since you are controlling the options.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="options">The search options to use when searching for data in Azure Search.</param>
-    public virtual async Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request, SearchOptions options)
+    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
+    /// being used for security trimming.  It's needed here to remove it from the document results.</param>
+    public virtual async Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request, SearchOptions options,
+        string? securityTrimmingFieldName)
     {
         if (string.IsNullOrWhiteSpace(request.IndexName))
             throw new ArgumentNullException(request.IndexName, "You must specify the name of the index to search!");
 
         var azSearchResult = await _searchIndexService.SearchAsync<SearchDocument>(request.IndexName, request.Query, options);
 
-        var result = await WrapResultsAsync(request, azSearchResult);
+        var result = await WrapResultsAsync(request, azSearchResult, securityTrimmingFieldName);
 
         return result;
     }
@@ -163,12 +166,15 @@ public class AcmeSearchService : IAcmeSearchService
     {
         SearchOptions options = CreateSemanticSearchOptions(request, configurationName, securityTrimmingFieldName, securityTrimmingValues);
 
-        return await SearchAsync(request, options);
+        return await SearchAsync(request, options, securityTrimmingFieldName);
     }
 
     /// <summary>Gets the results requested and will page the results out of Azure Search. This method is called by <see cref="WrapResultsAsync"/> </summary>
     /// <param name="azSearchResults">The search results from the call to the Azure Search PAI.</param>
-    protected virtual async Task<List<SearchResult<SearchDocument>>> GetPagedResultsAsync(SearchResults<SearchDocument> azSearchResults)
+    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
+    /// being used for security trimming.  It's needed here to remove it from the document results.</param>
+    protected virtual async Task<List<SearchResult<SearchDocument>>> GetPagedResultsAsync(SearchResults<SearchDocument> azSearchResults,
+        string? securityTrimmingFieldName)
     {
         var result = new List<SearchResult<SearchDocument>>();
 
@@ -176,6 +182,11 @@ public class AcmeSearchService : IAcmeSearchService
 
         await foreach (SearchResult<SearchDocument> item in azOnePageOfSearchDocuments)
         {
+            if (securityTrimmingFieldName != null && item.Document.ContainsKey(securityTrimmingFieldName))
+            {
+                item.Document.Remove(securityTrimmingFieldName);
+            }
+
             result.Add(item);
         }
 
@@ -186,12 +197,15 @@ public class AcmeSearchService : IAcmeSearchService
     /// You will still get the raw result, but with additional information that you can return the the client.</summary>
     /// <param name="request">The search request from the client side.</param>
     /// <param name="azSearchResult">The response from the Azure Search index.</param>
+    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
+    /// being used for security trimming.  It's needed here to remove it from the document results.</param>
     protected virtual async Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> WrapResultsAsync(
-        AcmeSearchQuery request, Response<SearchResults<SearchDocument>> azSearchResult)
+        AcmeSearchQuery request, Response<SearchResults<SearchDocument>> azSearchResult,
+        string? securityTrimmingFieldName)
     {
         var result = new AcmeSearchQueryResult<SearchResult<SearchDocument>>
         {
-            Docs = await GetPagedResultsAsync(azSearchResult.Value),
+            Docs = await GetPagedResultsAsync(azSearchResult.Value, securityTrimmingFieldName),
             Facets = ConvertFacets(azSearchResult.Value.Facets, request.Filters),
             ItemsPerPage = request.ItemsPerPage,
             PageNumber = request.PageNumber,

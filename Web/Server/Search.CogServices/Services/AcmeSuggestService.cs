@@ -81,16 +81,29 @@ public class AcmeSuggestService : IAcmeSuggestService
     {
         var options = CreateDefaultOptions(request, securityTrimmingFieldName, securityTrimmingValues);
 
-        return await SuggestAsync(request, options);
+        return await SuggestAsync(request, options, securityTrimmingFieldName);
     }
 
     /// <summary>Suggest</summary>
     /// <param name="request">A request for a suggestion</param>
     /// <param name="options">The search options to apply</param>
+    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
+    /// being used for security trimming.  It's needed here to remove it from the document results.</param>
     /// <returns>List of suggestions</returns>
-    public virtual async Task<SuggestResults<SearchDocument>> SuggestAsync(AcmeSuggestQuery request, SuggestOptions options)
+    public virtual async Task<SuggestResults<SearchDocument>> SuggestAsync(AcmeSuggestQuery request, SuggestOptions options, string? securityTrimmingFieldName)
     {
         var suggestResult = await _searchIndexService.SuggestAsync<SearchDocument>(request.IndexName, request.Query, request.SuggestorName, options);
+
+        if (securityTrimmingFieldName != null)
+        {
+            foreach (SearchSuggestion<SearchDocument> item in suggestResult.Results)
+            {
+                if (item.Document.ContainsKey(securityTrimmingFieldName))
+                {
+                    item.Document.Remove(securityTrimmingFieldName);
+                }
+            }
+        }
 
         return suggestResult;
     }
