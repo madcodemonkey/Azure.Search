@@ -8,8 +8,6 @@ public static class ServiceCollectionExtensions
     {
         sc.AddSingleton(settings);
 
-        sc.AddSingleton<IAcmeIndexInfoService, AcmeIndexInfoService>();
-
         sc.AddScoped<IAcmeAutoCompleteService, AcmeAutoCompleteService>();
         sc.AddScoped<IAcmeODataService, AcmeODataService>();
         sc.AddScoped<IAcmeSearchDataSourceService, AcmeSearchDataSourceService>();

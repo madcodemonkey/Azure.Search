@@ -3,6 +3,7 @@ using Azure.Search.Documents.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Search.CogServices;
+using Search.Services;
 using Search.Web.Models;
 
 namespace Search.Controllers;
@@ -15,20 +16,23 @@ public class HotelSearchController : SearchControllerBase
     private readonly IValidator<AcmeAutoCompleteQueryDto> _autoCompleteValidator;
     private readonly IMapper _mapper;
     private readonly IAcmeSearchService _searchService;
+    private readonly SearchServiceSettings _searchServiceSettings;
     private readonly IValidator<AcmeSearchQueryDto> _searchValidator;
     private readonly IAcmeSuggestService _suggestService;
     private readonly IValidator<AcmeSuggestQueryDto> _suggestValidator;
 
     /// <summary>Constructor</summary>
     public HotelSearchController(
-         IMapper mapper,
+        SearchServiceSettings searchServiceSettings,
+        IMapper mapper,
         IValidator<AcmeSearchQueryDto> searchValidator,
         IValidator<AcmeSuggestQueryDto> suggestValidator,
-         IValidator<AcmeAutoCompleteQueryDto> autoCompleteValidator,
+        IValidator<AcmeAutoCompleteQueryDto> autoCompleteValidator,
         IAcmeSearchService searchService,
         IAcmeSuggestService suggestService,
         IAcmeAutoCompleteService autoCompleteService)
     {
+        _searchServiceSettings = searchServiceSettings;
         _mapper = mapper;
         _searchValidator = searchValidator;
         _suggestValidator = suggestValidator;
@@ -53,12 +57,12 @@ public class HotelSearchController : SearchControllerBase
             Filters = queryDto.Filters,
             HighlightPostTag = "</b>",
             HighlightPreTag = "<b>",
-            IndexName = "hotels-idx",
+            IndexName = _searchServiceSettings.Hotel.IndexName,
             Mode = AutocompleteMode.OneTerm,
             NumberOfSuggestionsToRetrieve = queryDto.NumberOfSuggestionsToRetrieve,
             Query = queryDto.Query,
             SearchFields = queryDto.SearchFields,
-            SuggestorName = "sg",
+            SuggestorName = _searchServiceSettings.Hotel.SuggestorName,
             UseFuzzyMatching = queryDto.UseFuzzyMatching
         };
 
@@ -88,7 +92,7 @@ public class HotelSearchController : SearchControllerBase
             HighlightPreTag = "<b>",
             IncludeAllWords = queryDto.IncludeAllWords,
             IncludeCount = queryDto.IncludeCount,
-            IndexName = "hotels-idx",
+            IndexName = _searchServiceSettings.Hotel.IndexName,
             ItemsPerPage = queryDto.ItemsPerPage,
             OrderByFields = queryDto.OrderByFields,
             PageNumber = queryDto.PageNumber,
@@ -118,12 +122,12 @@ public class HotelSearchController : SearchControllerBase
             Filters = queryDto.Filters,
             HighlightPostTag = "</b>",
             HighlightPreTag = "<b>",
-            IndexName = "hotels-idx",
+            IndexName = _searchServiceSettings.Hotel.IndexName,
             NumberOfSuggestionsToRetrieve = queryDto.NumberOfSuggestionsToRetrieve,
             OrderByFields = queryDto.OrderByFields,
             Query = queryDto.Query,
             SearchFields = queryDto.SearchFields,
-            SuggestorName = "sg",
+            SuggestorName = _searchServiceSettings.Hotel.SuggestorName,
             UseFuzzyMatching = queryDto.UseFuzzyMatching ?? false,
         };
 

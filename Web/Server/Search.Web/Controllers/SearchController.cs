@@ -3,7 +3,6 @@ using Azure.Search.Documents.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Search.CogServices;
-using Search.Web.Models;
 
 namespace Search.Controllers;
 

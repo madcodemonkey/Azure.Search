@@ -11,7 +11,6 @@ public class AcmeSearchFacet
     /// <summary>What to display on the screen</summary>
     public string DisplayText { get; set; }
 
-    public int Id { get; set; } // TODO: Delete
     /// <summary>
     /// The name of the field associated with this facet.
     /// </summary>

@@ -23,7 +23,6 @@ public class AcmeSearchODataHandlerNumber : AcmeSearchODataHandlerBase
         if (values == null || values.Count == 0)
             return string.Empty;
 
-        // TODO: Implement range
         if (searchOperator == AcmeSearchFilterOperatorEnum.WithinRange)
         {
             if (values.Count < 2)
