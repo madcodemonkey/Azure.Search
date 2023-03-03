@@ -1,10 +1,21 @@
 ﻿using Azure.Search.Documents.Models;
 using Search.CogServices;
+using Search.CogServices.Extensions;
 
 namespace Search.Web.Models;
 
 public class AcmeSearchQueryDto
 {
+    /// <summary>
+    /// Used to remap field on the document
+    /// </summary>
+    public IList<SearchDocumentFieldMap>? DocumentFieldMaps { get; set; }
+
+    /// <summary>
+    /// The fields to retrieve on the document.
+    /// </summary>
+    public IList<string>? DocumentFields { get; set; }
+
     /// <summary>Filters to narrow the search.  This help with response time a lot.</summary>
     /// <remarks>I'm not letting the user build them because filters are also part of security</remarks>
     public List<AcmeSearchFilterField>? Filters { get; set; }

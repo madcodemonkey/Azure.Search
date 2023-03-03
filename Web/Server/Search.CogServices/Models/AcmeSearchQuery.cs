@@ -1,9 +1,20 @@
 ﻿using Azure.Search.Documents.Models;
+using Search.CogServices.Extensions;
 
 namespace Search.CogServices;
 
 public class AcmeSearchQuery
 {
+    /// <summary>
+    /// Used to remap field on the document
+    /// </summary>
+    public IList<SearchDocumentFieldMap>? DocumentFieldMaps { get; set; }
+
+    /// <summary>
+    /// The names of the fields that we should retrieve in the document.  If left null, then only all fields will be retrieved.
+    /// </summary>
+    public IList<string>? DocumentFields { get; set; }
+
     /// <summary>
     /// The names of the fields that should be used as facets.
     /// </summary>
@@ -55,6 +66,11 @@ public class AcmeSearchQuery
     /// <summary> A value that specifies the syntax of the search query. The default is simple Use full; if your query uses the Lucene query syntax. </summary>
     /// <remarks>You need a beta version of the search NuGet package to get semantic search as an option!</remarks>
     public SearchQueryType? QueryType { get; set; }
+
+    /// <summary>
+    /// The name of the scoring profile to use that will give extra weight to certain fields.
+    /// </summary>
+    public string? ScoringProfileName { get; set; }
 
     /// <summary>
     /// The list of field names to which to scope the full-text search.

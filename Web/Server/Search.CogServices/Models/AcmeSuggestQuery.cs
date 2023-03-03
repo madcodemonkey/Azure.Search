@@ -1,9 +1,16 @@
-﻿namespace Search.CogServices;
+﻿using Search.CogServices.Extensions;
+
+namespace Search.CogServices;
 
 /// <summary>Used by the suggest services</summary>
 public class AcmeSuggestQuery
 {
     private int _numberOfSuggestionsToRetrieve = 5;
+
+    /// <summary>
+    /// Used to remap field on the document
+    /// </summary>
+    public IList<SearchDocumentFieldMap>? DocumentFieldMaps { get; set; }
 
     /// <summary>
     /// The names of the fields that we should retrieve in the document.  If left null, then only the id field will be retrieved.

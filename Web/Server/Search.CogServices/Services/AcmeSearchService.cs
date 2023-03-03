@@ -1,9 +1,11 @@
 ﻿using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
+using Search.CogServices.Extensions;
 
 namespace Search.CogServices;
 
+/// <summary>The Search index service, which is a wrapper around Microsoft's SearchIndexClient class.</summary>
 public class AcmeSearchService : IAcmeSearchService
 {
     private readonly IAcmeODataService _oDataService;
@@ -16,8 +18,6 @@ public class AcmeSearchService : IAcmeSearchService
         _oDataService = oDataService;
         _searchIndexService = searchIndexService;
     }
-
-    /// <summary>The Search index service, which is a wrapper around Microsoft's SearchIndexClient class.</summary>
 
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
@@ -39,15 +39,16 @@ public class AcmeSearchService : IAcmeSearchService
             IncludeTotalCount = request.IncludeCount,
             QueryType = request.QueryType ?? SearchQueryType.Simple,
             SearchMode = request.IncludeAllWords ? SearchMode.All : SearchMode.Any,
+            ScoringProfile = string.IsNullOrWhiteSpace(request.ScoringProfileName) ? null : request.ScoringProfileName,
             Size = request.ItemsPerPage,
             Skip = skip < 1 ? (int?)null : skip
         };
 
-        if (request.SearchFields != null)
+        if (request.DocumentFields != null)
         {
-            foreach (string fieldName in request.SearchFields)
+            foreach (string fieldName in request.DocumentFields)
             {
-                options.SearchFields.Add(fieldName);
+                options.Select.Add(fieldName);
             }
         }
 
@@ -78,6 +79,14 @@ public class AcmeSearchService : IAcmeSearchService
         else
         {
             options.OrderBy.Add("search.score() desc");
+        }
+
+        if (request.SearchFields != null)
+        {
+            foreach (string fieldName in request.SearchFields)
+            {
+                options.SearchFields.Add(fieldName);
+            }
         }
 
         return options;
@@ -172,9 +181,10 @@ public class AcmeSearchService : IAcmeSearchService
     /// <summary>Gets the results requested and will page the results out of Azure Search. This method is called by <see cref="WrapResultsAsync"/> </summary>
     /// <param name="azSearchResults">The search results from the call to the Azure Search PAI.</param>
     /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
-    /// being used for security trimming.  It's needed here to remove it from the document results.</param>
+    ///     being used for security trimming.  It's needed here to remove it from the document results.</param>
+    /// <param name="documentFieldMaps">Used to remap field on the document</param>
     protected virtual async Task<List<SearchResult<SearchDocument>>> GetPagedResultsAsync(SearchResults<SearchDocument> azSearchResults,
-        string? securityTrimmingFieldName)
+        string? securityTrimmingFieldName, IList<SearchDocumentFieldMap>? documentFieldMaps)
     {
         var result = new List<SearchResult<SearchDocument>>();
 
@@ -182,10 +192,8 @@ public class AcmeSearchService : IAcmeSearchService
 
         await foreach (SearchResult<SearchDocument> item in azOnePageOfSearchDocuments)
         {
-            if (securityTrimmingFieldName != null && item.Document.ContainsKey(securityTrimmingFieldName))
-            {
-                item.Document.Remove(securityTrimmingFieldName);
-            }
+            item.Document.RemoveField(securityTrimmingFieldName);
+            item.Document.ReMapFields(documentFieldMaps);
 
             result.Add(item);
         }
@@ -205,7 +213,7 @@ public class AcmeSearchService : IAcmeSearchService
     {
         var result = new AcmeSearchQueryResult<SearchResult<SearchDocument>>
         {
-            Docs = await GetPagedResultsAsync(azSearchResult.Value, securityTrimmingFieldName),
+            Docs = await GetPagedResultsAsync(azSearchResult.Value, securityTrimmingFieldName, request.DocumentFieldMaps),
             Facets = ConvertFacets(azSearchResult.Value.Facets, request.Filters),
             ItemsPerPage = request.ItemsPerPage,
             PageNumber = request.PageNumber,
@@ -235,7 +243,7 @@ public class AcmeSearchService : IAcmeSearchService
             string facetName = facet.Key;
 
             oneFacet.FieldName = facetName;
-            oneFacet.DisplayText = facetName; // searchFilter.DisplayName;   // TODO: Figure out how to do the display name by splitting on camel case values.
+            oneFacet.DisplayText = facetName.SplitOnCamelCasing()?.FirstLetterToUpper() ?? "Unknown";
 
             foreach (FacetResult item in facet.Value)
             {

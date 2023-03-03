@@ -79,6 +79,8 @@ public class HotelSearchController : SearchControllerBase
 
         var request = new AcmeSearchQuery
         {
+            DocumentFields = queryDto.DocumentFields,
+            DocumentFieldMaps = queryDto.DocumentFieldMaps,
             FacetFields = new List<string> { "baseRate", "category", "parkingIncluded", "rating", "smokingAllowed", "tags" },
             Filters = queryDto.Filters,
             HighlightFields = new List<string> { "hotelName", "category", "description" },
@@ -112,6 +114,7 @@ public class HotelSearchController : SearchControllerBase
         var request = new AcmeSuggestQuery
         {
             DocumentFields = queryDto.DocumentFields,
+            DocumentFieldMaps = queryDto.DocumentFieldMaps,
             Filters = queryDto.Filters,
             HighlightPostTag = "</b>",
             HighlightPreTag = "<b>",

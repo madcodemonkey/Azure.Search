@@ -1,5 +1,6 @@
 ﻿using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
+using Search.CogServices.Extensions;
 
 namespace Search.CogServices;
 
@@ -37,6 +38,14 @@ public class AcmeSuggestService : IAcmeSuggestService
             UseFuzzyMatching = request.UseFuzzyMatching // false by default for performance reasons
         };
 
+        if (request.DocumentFields != null)
+        {
+            foreach (string fieldName in request.DocumentFields)
+            {
+                options.Select.Add(fieldName);
+            }
+        }
+
         if (request.OrderByFields != null && request.OrderByFields.Count > 0)
         {
             foreach (AcmeSearchOrderBy orderBy in request.OrderByFields)
@@ -55,14 +64,6 @@ public class AcmeSuggestService : IAcmeSuggestService
             foreach (string fieldName in request.SearchFields)
             {
                 options.SearchFields.Add(fieldName);
-            }
-        }
-
-        if (request.DocumentFields != null)
-        {
-            foreach (string fieldName in request.DocumentFields)
-            {
-                options.Select.Add(fieldName);
             }
         }
 
@@ -90,7 +91,8 @@ public class AcmeSuggestService : IAcmeSuggestService
     /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
     /// being used for security trimming.  It's needed here to remove it from the document results.</param>
     /// <returns>List of suggestions</returns>
-    public virtual async Task<SuggestResults<SearchDocument>> SuggestAsync(AcmeSuggestQuery request, SuggestOptions options, string? securityTrimmingFieldName)
+    public virtual async Task<SuggestResults<SearchDocument>> SuggestAsync(AcmeSuggestQuery request, SuggestOptions options,
+        string? securityTrimmingFieldName)
     {
         var suggestResult = await _searchIndexService.SuggestAsync<SearchDocument>(request.IndexName, request.Query, request.SuggestorName, options);
 
@@ -98,10 +100,8 @@ public class AcmeSuggestService : IAcmeSuggestService
         {
             foreach (SearchSuggestion<SearchDocument> item in suggestResult.Results)
             {
-                if (item.Document.ContainsKey(securityTrimmingFieldName))
-                {
-                    item.Document.Remove(securityTrimmingFieldName);
-                }
+                item.Document.RemoveField(securityTrimmingFieldName);
+                item.Document.ReMapFields(request.DocumentFieldMaps);
             }
         }
 
