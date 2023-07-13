@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomBlobIndexer", "CustomBlobIndexer\CustomBlobIndexer.csproj", "{83E51F74-6C3F-484E-BD30-9D4BD4735721}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomBlobIndexer.Services", "CustomBlobIndexer.Services\CustomBlobIndexer.Services.csproj", "{B811AABD-CFA3-4AD8-AB8D-D3210672E176}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83E51F74-6C3F-484E-BD30-9D4BD4735721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83E51F74-6C3F-484E-BD30-9D4BD4735721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83E51F74-6C3F-484E-BD30-9D4BD4735721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83E51F74-6C3F-484E-BD30-9D4BD4735721}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B811AABD-CFA3-4AD8-AB8D-D3210672E176}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B811AABD-CFA3-4AD8-AB8D-D3210672E176}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B811AABD-CFA3-4AD8-AB8D-D3210672E176}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B811AABD-CFA3-4AD8-AB8D-D3210672E176}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B2DEF5E6-D8B7-4C77-8B12-B197B9053DD0}
+	EndGlobalSection
+EndGlobal
