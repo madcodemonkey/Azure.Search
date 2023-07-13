@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Azure;
 using Azure.Search.Documents.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Search.CogServices;
-using Search.Model;
 using Search.Services;
 using Search.Web.Models;
 
@@ -12,45 +10,65 @@ namespace Search.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class HotelSearchController : ControllerBase
+public class HotelSearchController : SearchControllerBase
 {
-    private readonly IHotelAutoCompleteService _autoCompleteService;
-    private readonly IHotelSearchService _hotelSearchService;
-    private readonly IHotelSuggestorService _hotelSuggestorService;
+    private readonly IAcmeAutoCompleteService _autoCompleteService;
+    private readonly IValidator<AcmeAutoCompleteQueryDto> _autoCompleteValidator;
     private readonly IMapper _mapper;
+    private readonly IAcmeSearchService _searchService;
+    private readonly SearchServiceSettings _searchServiceSettings;
     private readonly IValidator<AcmeSearchQueryDto> _searchValidator;
-    private readonly IValidator<AcmeSuggestorQuery> _suggestValidator;
+    private readonly IAcmeSuggestService _suggestService;
+    private readonly IValidator<AcmeSuggestQueryDto> _suggestValidator;
 
     /// <summary>Constructor</summary>
-    public HotelSearchController(IHotelSearchService hotelSearchService,
-        IHotelSuggestorService hotelSuggestorService,
-        IHotelAutoCompleteService autoCompleteService, IMapper mapper,
+    public HotelSearchController(
+        SearchServiceSettings searchServiceSettings,
+        IMapper mapper,
         IValidator<AcmeSearchQueryDto> searchValidator,
-        IValidator<AcmeSuggestorQuery> suggestValidator)
+        IValidator<AcmeSuggestQueryDto> suggestValidator,
+        IValidator<AcmeAutoCompleteQueryDto> autoCompleteValidator,
+        IAcmeSearchService searchService,
+        IAcmeSuggestService suggestService,
+        IAcmeAutoCompleteService autoCompleteService)
     {
-        _hotelSearchService = hotelSearchService;
-        _hotelSuggestorService = hotelSuggestorService;
-        _autoCompleteService = autoCompleteService;
+        _searchServiceSettings = searchServiceSettings;
         _mapper = mapper;
         _searchValidator = searchValidator;
         _suggestValidator = suggestValidator;
+        _autoCompleteValidator = autoCompleteValidator;
+        _searchService = searchService;
+        _suggestService = suggestService;
+        _autoCompleteService = autoCompleteService;
     }
 
     [HttpPost("AutoComplete")]
-    public async Task<IActionResult> AutoComplete(AcmeSuggestorQuery query)
+    public async Task<IActionResult> AutoComplete(AcmeAutoCompleteQueryDto queryDto)
     {
-        var validationResult = await _suggestValidator.ValidateAsync(query);
+        var validationResult = await _autoCompleteValidator.ValidateAsync(queryDto);
 
         if (validationResult.IsValid == false)
         {
             return new BadRequestObjectResult(validationResult.ToString());
         }
 
-        Response<AutocompleteResults> autoCompleteResult = await _autoCompleteService.AutoCompleteAsync(query, GetRoles());
+        var request = new AcmeAutoCompleteQuery
+        {
+            Filters = queryDto.Filters,
+            HighlightPostTag = "</b>",
+            HighlightPreTag = "<b>",
+            IndexName = _searchServiceSettings.Hotel.IndexName,
+            Mode = AutocompleteMode.OneTerm,
+            NumberOfSuggestionsToRetrieve = queryDto.NumberOfSuggestionsToRetrieve,
+            Query = queryDto.Query,
+            SearchFields = queryDto.SearchFields,
+            SuggestorName = _searchServiceSettings.Hotel.SuggestorName,
+            UseFuzzyMatching = queryDto.UseFuzzyMatching
+        };
 
-        List<HotelAutocompleteDto> mapResult = _mapper.Map<List<HotelAutocompleteDto>>(autoCompleteResult.Value.Results);
+        var result = await _autoCompleteService.AutoCompleteAsync(request, "roles", GetRoles());
 
-        return new OkObjectResult(mapResult);
+        return Ok(result);
     }
 
     [HttpPost("Search")]
@@ -63,38 +81,58 @@ public class HotelSearchController : ControllerBase
             return new BadRequestObjectResult(validationResult.ToString());
         }
 
-        var query = _mapper.Map<AcmeSearchQuery>(queryDto);
+        var request = new AcmeSearchQuery
+        {
+            DocumentFields = queryDto.DocumentFields,
+            DocumentFieldMaps = queryDto.DocumentFieldMaps,
+            FacetFields = new List<string> { "baseRate", "category", "parkingIncluded", "rating", "smokingAllowed", "tags" },
+            Filters = queryDto.Filters,
+            HighlightFields = new List<string> { "hotelName", "category", "description" },
+            HighlightPostTag = "</b>",
+            HighlightPreTag = "<b>",
+            IncludeAllWords = queryDto.IncludeAllWords,
+            IncludeCount = queryDto.IncludeCount,
+            IndexName = _searchServiceSettings.Hotel.IndexName,
+            ItemsPerPage = queryDto.ItemsPerPage,
+            OrderByFields = queryDto.OrderByFields,
+            PageNumber = queryDto.PageNumber,
+            Query = queryDto.Query,
+            QueryType = queryDto.QueryType,
+        };
 
-        // Reference to paging: https://docs.microsoft.com/en-us/azure/search/tutorial-csharp-paging#extend-your-app-with-numbered-paging
-        // Note on how continuation is really used https://stackoverflow.com/questions/33826731/how-to-use-microsoft-azure-search-searchcontinuationtoken
-        AcmeSearchQueryResult<SearchResult<HotelDocument>> searchResult = await _hotelSearchService.SearchAsync(query, GetRoles());
+        AcmeSearchQueryResult<SearchResult<SearchDocument>> searchResult = await _searchService.SearchAsync(request, "roles", GetRoles());
 
-        AcmeSearchQueryResult<HotelDocumentDto>? mapResult = _mapper.Map<AcmeSearchQueryResult<HotelDocumentDto>>(searchResult);
-
-        return new OkObjectResult(mapResult);
+        return new OkObjectResult(searchResult);
     }
 
     [HttpPost("Suggest")]
-    public async Task<IActionResult> Suggest(AcmeSuggestorQuery query)
+    public async Task<IActionResult> Suggest(AcmeSuggestQueryDto queryDto)
     {
-        var validationResult = await _suggestValidator.ValidateAsync(query);
+        var validationResult = await _suggestValidator.ValidateAsync(queryDto);
 
         if (validationResult.IsValid == false)
         {
             return new BadRequestObjectResult(validationResult.ToString());
         }
 
-        SuggestResults<HotelDocument> suggestResult = await _hotelSuggestorService.SuggestAsync(query, GetRoles());
+        var request = new AcmeSuggestQuery
+        {
+            DocumentFields = queryDto.DocumentFields,
+            DocumentFieldMaps = queryDto.DocumentFieldMaps,
+            Filters = queryDto.Filters,
+            HighlightPostTag = "</b>",
+            HighlightPreTag = "<b>",
+            IndexName = _searchServiceSettings.Hotel.IndexName,
+            NumberOfSuggestionsToRetrieve = queryDto.NumberOfSuggestionsToRetrieve,
+            OrderByFields = queryDto.OrderByFields,
+            Query = queryDto.Query,
+            SearchFields = queryDto.SearchFields,
+            SuggestorName = _searchServiceSettings.Hotel.SuggestorName,
+            UseFuzzyMatching = queryDto.UseFuzzyMatching ?? false,
+        };
 
-        List<HotelSuggestorDto> mapResult = _mapper.Map<List<HotelSuggestorDto>>(suggestResult.Results);
+        SuggestResults<SearchDocument> suggestResult = await _suggestService.SuggestAsync(request, "roles", GetRoles());
 
-        return new OkObjectResult(mapResult);
-    }
-
-    private List<string> GetRoles()
-    {
-        return new List<string>() { "admin" };
-        //ClaimsPrincipal currentUser = this.User;
-        //return currentUser.FindAll(ClaimTypes.Role).Select(s => s.Value.ToLower()).ToArray();
+        return new OkObjectResult(suggestResult);
     }
 }

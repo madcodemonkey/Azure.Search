@@ -3,12 +3,14 @@ using Search.CogServices;
 
 namespace Search.Web;
 
-public class AcmeSuggestQueryValidator : AbstractValidator<AcmeSuggestorQuery>
+public class AcmeSuggestQueryValidator : AbstractValidator<AcmeSuggestQuery>
 {
     public AcmeSuggestQueryValidator()
     {
+        RuleFor(x => x.IndexName).NotEmpty();
         RuleFor(x => x.Query).NotEmpty();
         RuleFor(x => x.NumberOfSuggestionsToRetrieve).InclusiveBetween(1, 100);
-        RuleForEach(x => x.Filters).SetValidator(new AcmeSearchFilterGroupValidator());
+        RuleFor(x => x.SuggestorName).NotEmpty();
+        RuleForEach(x => x.Filters).SetValidator(new AcmeSearchFilterFieldValidator());
     }
 }

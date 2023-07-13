@@ -14,9 +14,7 @@ public class MappingProfiles : Profile
         CreateSuggestionMappings();
         CreateSearchMappings();
 
-        CreateMap<AcmeSearchQueryDto, AcmeSearchQuery>()
-            .ForMember(m => m.QueryType, opt => opt.MapFrom(mf => mf.UseSemanticSearch ? SearchQueryType.Semantic : SearchQueryType.Simple));
-    }
+     }
 
     private void CreateAutoCompleteMappings()
     {
@@ -38,7 +36,7 @@ public class MappingProfiles : Profile
             .ForMember(m => m.LastRenovationDate, opt => opt.MapFrom(m => m.Document.LastRenovationDate))
             .ForMember(m => m.Rating, opt => opt.MapFrom(m => m.Document.Rating))
             .ForMember(m => m.Location, opt => opt.MapFrom(m => m.Document.Location));
-        CreateMap<AcmeSearchQueryResult<SearchResult<HotelDocument>>, AcmeSearchQueryResult<HotelDocumentDto>>();
+        // CreateMap<AcmeSearchQueryResult<SearchResult<HotelDocument>>, AcmeSearchQueryResult<HotelDocumentDto>>();
     }
 
     private void CreateSuggestionMappings()

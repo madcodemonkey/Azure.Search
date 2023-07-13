@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "BlobAccessKey": "---your blob access key here---",
+    "BlobAccountName": "---the name of your storage account---",
+    // If you change the BlobContainerName, be sure to update it in BlobTriggerFunction.cs as well!
+    "BlobContainerName": "my-files",
+    "BlobStorageConnectionString": "---your blob connection string here---",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
+  }
+}
