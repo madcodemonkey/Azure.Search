@@ -8,6 +8,7 @@ namespace CustomBlobIndexer.Services;
 /// </summary>
 /// <remarks>
 /// Requires the Microsoft.Azure.WebJobs.Extensions.Storage NuGet package!
+/// https://stackoverflow.com/questions/71638718/unable-to-get-blob-sas-url-using-azure-function-blob-trigger
 /// </remarks>
 public class BlobSasBuilderService : IBlobSasBuilderService
 {

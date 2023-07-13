@@ -9,6 +9,10 @@ public static class ServiceCollectionExtensions
         sc.AddSingleton(settings);
 
         sc.AddScoped<IBlobSasBuilderService, BlobSasBuilderService>();
+
+        sc.AddTransient<ICustomComputerVisionService, CustomComputerVisionService>();
+        sc.AddTransient<ICustomTextAnalyticsService, CustomTextAnalyticsService>();
+        sc.AddTransient<ICustomSearchIndexService, CustomSearchIndexService>();
         
         return sc;
     }

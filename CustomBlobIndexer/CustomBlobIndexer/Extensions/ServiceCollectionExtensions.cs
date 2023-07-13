@@ -11,11 +11,16 @@ public static class ServiceCollectionExtensions
         // Warning!! Use of  Environment.GetEnvironmentVariable("RunInformation") will not currently get you secrets.json overrides; thus, I'm injecting IConfiguration will does have the overrides!
         var serviceSettings = new ServiceSettings
         {
+            BlobAccessKey = config["BlobAccessKey"],
             BlobAccountName = config["BlobAccountName"],
             BlobContainerName = config["BlobContainerName"],
-            BlobAccessKey = config["BlobAccessKey"],
+            CognitiveSearchIndexName = config["CognitiveSearchIndexName"],
+            CognitiveSearchKey = config["CognitiveSearchKey"],
+            CognitiveSearchName = config["CognitiveSearchName"],
+            CognitiveServiceEndpoint = config["CognitiveServiceEndpoint"],
+            CognitiveServiceKey = config["CognitiveServiceKey"],
         };
-
+        
         sc.AddServices(serviceSettings);
 
         return sc;
