@@ -55,7 +55,7 @@ public class ServiceSettings
     /// <summary>
     /// Determines if we should redact certain pieces of data from the content and attach that result to the document.
     /// </summary>
-    public bool CognitiveSearchSkillRedactedText { get; set; }
+    public bool CognitiveSearchSkillRedactText { get; set; }
 
     /// <summary>
     /// This is the endpoint of the Cognitive Service endpoint (NOT the Cognitive Search endpoint!).

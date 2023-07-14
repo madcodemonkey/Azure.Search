@@ -25,117 +25,94 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
     /// <summary>
     /// Detect entities
     /// </summary>
-    /// <param name="input"></param>
+    /// <param name="content"></param>
     /// <returns></returns>
-    public async Task<List<SearchEntity>> DetectedEntitiesAsync(string input)
+    public async Task<List<SearchEntity>> DetectedEntitiesAsync(string content)
     {
         var client = GetClient();
 
         var entityList = new List<SearchEntity>();
 
-        try
+        var chunks = ChunksUpto(content, 5120);
+
+        foreach (var chunk in chunks)
         {
-            var chunks = ChunksUpto(input, 5120);
+            Response<CategorizedEntityCollection> response = await client.RecognizeEntitiesAsync(chunk);
+            CategorizedEntityCollection entitiesInDocument = response.Value;
 
-            foreach (var chunk in chunks)
+            // Console.WriteLine($"Recognized {entitiesInDocument.Count} entities:");
+            foreach (CategorizedEntity entity in entitiesInDocument)
             {
-                Response<CategorizedEntityCollection> response = await client.RecognizeEntitiesAsync(chunk);
-                CategorizedEntityCollection entitiesInDocument = response.Value;
-
-                Console.WriteLine($"Recognized {entitiesInDocument.Count} entities:");
-                foreach (CategorizedEntity entity in entitiesInDocument)
+                SearchEntity e = new SearchEntity
                 {
-                    SearchEntity e = new SearchEntity
-                    {
-                        Category = (string)entity.Category,
-                        Subcategory = entity.SubCategory,
-                        Text = entity.Text
-                    };
+                    Category = (string)entity.Category,
+                    Subcategory = entity.SubCategory,
+                    Text = entity.Text
+                };
 
-                    if (entityList.Count(ent => ent.Text == e.Text) == 0)
-                    {
-                        entityList.Add(e);
-                        Console.WriteLine($"  Text: {entity.Text}");
-                        Console.WriteLine($"  Offset: {entity.Offset}");
-                        Console.WriteLine($"  Length: {entity.Length}");
-                        Console.WriteLine($"  Category: {entity.Category}");
-                        if (!string.IsNullOrEmpty(entity.SubCategory))
-                            Console.WriteLine($"  SubCategory: {entity.SubCategory}");
-                        Console.WriteLine($"  Confidence score: {entity.ConfidenceScore}");
-                        Console.WriteLine("");
-                    }
+                if (entityList.Count(ent => ent.Text == e.Text) == 0)
+                {
+                    entityList.Add(e);
+                    //Console.WriteLine($"  Text: {entity.Text}");
+                    //Console.WriteLine($"  Offset: {entity.Offset}");
+                    //Console.WriteLine($"  Length: {entity.Length}");
+                    //Console.WriteLine($"  Category: {entity.Category}");
+                    //if (!string.IsNullOrEmpty(entity.SubCategory))
+                    //    Console.WriteLine($"  SubCategory: {entity.SubCategory}");
+                    //Console.WriteLine($"  Confidence score: {entity.ConfidenceScore}");
+                    //Console.WriteLine("");
                 }
             }
-        }
-        catch (RequestFailedException exception)
-        {
-            Console.WriteLine($"Error Code: {exception.ErrorCode}");
-            Console.WriteLine($"Message: {exception.Message}");
         }
 
         return entityList;
     }
 
-    public async Task<List<string>> DetectedKeyPhrases(string input)
+    public async Task<List<string>> DetectedKeyPhrases(string content)
     {
         var client = GetClient();
 
-        List<string> keyPhraseList = new List<string>();
+        var keyPhraseList = new List<string>();
+        
+        var chunks = ChunksUpto(content, 5120);
 
-        try
+        foreach (var chunk in chunks)
         {
-            var chunks = ChunksUpto(input, 5120);
+            Response<KeyPhraseCollection> response = await client.ExtractKeyPhrasesAsync(chunk);
+            KeyPhraseCollection keyPhrases = response.Value;
 
-            foreach (var chunk in chunks)
+            // Console.WriteLine($"Extracted {keyPhrases.Count} key phrases:");
+            foreach (string keyPhrase in keyPhrases)
             {
-                Response<KeyPhraseCollection> response = await client.ExtractKeyPhrasesAsync(chunk);
-                KeyPhraseCollection keyPhrases = response.Value;
-
-                Console.WriteLine($"Extracted {keyPhrases.Count} key phrases:");
-                foreach (string keyPhrase in keyPhrases)
+                if (!keyPhraseList.Contains(keyPhrase))
                 {
-                    if (!keyPhraseList.Contains(keyPhrase))
-                    {
-                        keyPhraseList.Add(keyPhrase);
-                        Console.WriteLine($"  {keyPhrase}");
-                    }
+                    keyPhraseList.Add(keyPhrase);
+                    // Console.WriteLine($"  {keyPhrase}");
                 }
             }
         }
-        catch (RequestFailedException exception)
-        {
-            Console.WriteLine($"Error Code: {exception.ErrorCode}");
-            Console.WriteLine($"Message: {exception.Message}");
-        }
-
+        
         return keyPhraseList;
     }
 
-    public async Task<List<SentenceSentiment>> DetectedSentiment(string input)
+    public async Task<List<SentenceSentiment>> DetectedSentiment(string content)
     {
         var client = GetClient();
 
         List<SentenceSentiment> sentiments = new List<SentenceSentiment>();
 
-        try
-        {
-            var chunks = ChunksUpto(input, 5120);
 
-            foreach (var chunk in chunks)
+        var chunks = ChunksUpto(content, 5120);
+
+        foreach (var chunk in chunks)
+        {
+            Response<DocumentSentiment> response = await client.AnalyzeSentimentAsync(chunk);
+            foreach (SentenceSentiment sentenceSentiment in response.Value.Sentences)
             {
-                Response<DocumentSentiment> response = await client.AnalyzeSentimentAsync(chunk);
-                foreach (SentenceSentiment sentenceSentiment in response.Value.Sentences)
-                {
-                    sentiments.Add(sentenceSentiment);
-                }
+                sentiments.Add(sentenceSentiment);
             }
         }
-        catch (RequestFailedException exception)
-        {
-            Console.WriteLine($"Error Code: {exception.ErrorCode}");
-            Console.WriteLine($"Message: {exception.Message}");
-        }
-
+        
         return sentiments;
     }
 
@@ -143,71 +120,67 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
     /// <summary>
     /// Takes the content text and summarizes it into sentences.
     /// </summary>
-    /// <param name="input">The content text</param>
+    /// <param name="content">The content text</param>
     /// <returns>A list of sentences</returns>
-    public async Task<List<ExtractiveSummarySentence>> ExtractSummarySentencesAsync(string input)
+    public async Task<List<ExtractiveSummarySentence>> ExtractSummarySentencesAsync(string content)
     {
         var client = GetClient();
 
         List<ExtractiveSummarySentence> summaryList = new List<ExtractiveSummarySentence>();
 
-        try
+
+        var chunks = ChunksUpto(content, 125000);
+
+        foreach (string chunk in chunks)
         {
-            var chunks = ChunksUpto(input, 125000);
-
-            foreach (string chunk in chunks)
+            TextAnalyticsActions actions = new TextAnalyticsActions()
             {
-                TextAnalyticsActions actions = new TextAnalyticsActions()
-                {
-                    ExtractiveSummarizeActions = new List<ExtractiveSummarizeAction>() { new ExtractiveSummarizeAction() }
-                };
+                ExtractiveSummarizeActions = new List<ExtractiveSummarizeAction>() { new ExtractiveSummarizeAction() }
+            };
 
-                var doc = new List<string>();
-                doc.Add(chunk);
-                var operation = await client.StartAnalyzeActionsAsync(doc, actions);
-                await operation.WaitForCompletionAsync();
-                await foreach (AnalyzeActionsResult documentsInPage in operation.Value)
-                {
-                    IReadOnlyCollection<ExtractiveSummarizeActionResult> summaryResults = documentsInPage.ExtractiveSummarizeResults;
+            var doc = new List<string>();
+            doc.Add(chunk);
+            var operation = await client.StartAnalyzeActionsAsync(doc, actions);
+            await operation.WaitForCompletionAsync();
+            await foreach (AnalyzeActionsResult documentsInPage in operation.Value)
+            {
+                IReadOnlyCollection<ExtractiveSummarizeActionResult> summaryResults =
+                    documentsInPage.ExtractiveSummarizeResults;
 
-                    foreach (ExtractiveSummarizeActionResult summaryActionResults in summaryResults)
+                foreach (ExtractiveSummarizeActionResult summaryActionResults in summaryResults)
+                {
+                    if (summaryActionResults.HasError)
                     {
-                        if (summaryActionResults.HasError)
+                        _logger.LogError($"  Action error code: {summaryActionResults.Error.ErrorCode}.  Message: {summaryActionResults.Error.Message}");
+                        //Console.WriteLine($"  Error!");
+                        //Console.WriteLine($"  Action error code: {summaryActionResults.Error.ErrorCode}.");
+                        //Console.WriteLine($"  Message: {summaryActionResults.Error.Message}");
+                        continue;
+                    }
+
+                    foreach (ExtractiveSummarizeResult documentResults in summaryActionResults.DocumentsResults)
+                    {
+                        if (documentResults.HasError)
                         {
-                            Console.WriteLine($"  Error!");
-                            Console.WriteLine($"  Action error code: {summaryActionResults.Error.ErrorCode}.");
-                            Console.WriteLine($"  Message: {summaryActionResults.Error.Message}");
+                            _logger.LogError($"  Document error code: {documentResults.Error.ErrorCode}.   Message: {documentResults.Error.Message}");
+                            //Console.WriteLine($"  Error!");
+                            //Console.WriteLine($"  Document error code: {documentResults.Error.ErrorCode}.");
+                            //Console.WriteLine($"  Message: {documentResults.Error.Message}");
                             continue;
                         }
 
-                        foreach (ExtractiveSummarizeResult documentResults in summaryActionResults.DocumentsResults)
+                        //Console.WriteLine($"  Extracted the following {documentResults.Sentences.Count} sentence(s):");
+                        //Console.WriteLine();
+
+                        foreach (ExtractiveSummarySentence sentence in documentResults.Sentences)
                         {
-                            if (documentResults.HasError)
-                            {
-                                Console.WriteLine($"  Error!");
-                                Console.WriteLine($"  Document error code: {documentResults.Error.ErrorCode}.");
-                                Console.WriteLine($"  Message: {documentResults.Error.Message}");
-                                continue;
-                            }
-
-                            Console.WriteLine($"  Extracted the following {documentResults.Sentences.Count} sentence(s):");
-                            Console.WriteLine();
-
-                            foreach (ExtractiveSummarySentence sentence in documentResults.Sentences)
-                            {
-                                summaryList.Add(sentence);
-                                Console.WriteLine($"  Sentence: {sentence.Text}");
-                                Console.WriteLine();
-                            }
+                            summaryList.Add(sentence);
+                            //Console.WriteLine($"  Sentence: {sentence.Text}");
+                            //Console.WriteLine();
                         }
                     }
                 }
             }
-        }
-        catch (RequestFailedException exception)
-        {
-            Console.WriteLine($"Error Code: {exception.ErrorCode}");
-            Console.WriteLine($"Message: {exception.Message}");
         }
 
         return summaryList;
@@ -217,11 +190,11 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
     /// Takes the content text and summarizes it into one sentence by calling <see cref="ExtractSummarySentencesAsync"/>
     /// and then appending all the sentences together.
     /// </summary>
-    /// <param name="input">The content text</param>
+    /// <param name="content">The content text</param>
     /// <returns>A single sentence</returns>
-    public async Task<string> ExtractSummarySentenceAsync(string input)
+    public async Task<string> ExtractSummarySentenceAsync(string content)
     {
-        var sentenceList = await ExtractSummarySentencesAsync(input);
+        var sentenceList = await ExtractSummarySentencesAsync(content);
 
         StringBuilder sb = new StringBuilder();
         
@@ -234,75 +207,65 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
         return sb.ToString();
     }
 
-    public async Task<string> RedactedText(string input)
+    /// <summary>
+    /// Runs a predictive model to identify a collection of entities containing Personally
+    /// Identifiable Information found in the passed-in document, and categorize those entities
+    /// into types such as US social security number, drivers license number, or credit card number.
+    /// </summary>
+    /// <param name="content">The content text to examine</param>
+    /// <returns>Redacted text</returns>
+    public async Task<string> RedactedText(string content)
     {
         var client = GetClient();
+        
+        var sb = new StringBuilder();
+        
+        var chunks = ChunksUpto(content, 5120);
 
-        // List<PiiEntityCollection> piiList = new List<PiiEntityCollection>();
-        string redactedText = "";
-
-        try
+        foreach (var chunk in chunks)
         {
-            var chunks = ChunksUpto(input, 5120);
+            Response<PiiEntityCollection> response = await client.RecognizePiiEntitiesAsync(chunk);
+            PiiEntityCollection entities = response.Value;
+            sb.Append(entities.RedactedText);
 
-            foreach (var chunk in chunks)
-            {
-                Response<PiiEntityCollection> response = await client.RecognizePiiEntitiesAsync(chunk);
-                PiiEntityCollection entities = response.Value;
-                // piiList.Add(entities);
-                redactedText += entities.RedactedText;
-
-                Console.WriteLine($"Redacted Text: {entities.RedactedText}");
-                Console.WriteLine("");
-                Console.WriteLine($"Recognized {entities.Count} PII entities:");
-                foreach (PiiEntity entity in entities)
-                {
-                    Console.WriteLine($"  Text: {entity.Text}");
-                    Console.WriteLine($"  Category: {entity.Category}");
-                    if (!string.IsNullOrEmpty(entity.SubCategory))
-                        Console.WriteLine($"  SubCategory: {entity.SubCategory}");
-                    Console.WriteLine($"  Confidence score: {entity.ConfidenceScore}");
-                    Console.WriteLine("");
-                }
-            }
-        }
-        catch (RequestFailedException exception)
-        {
-            Console.WriteLine($"Error Code: {exception.ErrorCode}");
-            Console.WriteLine($"Message: {exception.Message}");
+            //Console.WriteLine($"Redacted Text: {entities.RedactedText}");
+            //Console.WriteLine("");
+            //Console.WriteLine($"Recognized {entities.Count} PII entities:");
+            //foreach (PiiEntity entity in entities)
+            //{
+            //    Console.WriteLine($"  Text: {entity.Text}");
+            //    Console.WriteLine($"  Category: {entity.Category}");
+            //    if (!string.IsNullOrEmpty(entity.SubCategory))
+            //        Console.WriteLine($"  SubCategory: {entity.SubCategory}");
+            //    Console.WriteLine($"  Confidence score: {entity.ConfidenceScore}");
+            //    Console.WriteLine("");
+            //}
         }
 
-        return redactedText;
+        return sb.ToString();
     }
 
-    public async Task<List<SearchLanguage>> DetectLanguageInput(string input)
+    public async Task<List<SearchLanguage>> DetectLanguageInput(string content)
     {
         var client = GetClient();
 
         List<SearchLanguage> languages = new List<SearchLanguage>();
 
-        try
-        {
-            var chunks = ChunksUpto(input, 5120);
 
-            foreach (var chunk in chunks)
-            {
-                Response<DetectedLanguage> response = await client.DetectLanguageAsync(chunk);
-                SearchLanguage l = new SearchLanguage();
-                l.Confidence = response.Value.ConfidenceScore;
-                l.Name = response.Value.Name;
-                l.Iso6391Name = response.Value.Iso6391Name;
-                if (languages.Where(lang => lang.Iso6391Name != l.Iso6391Name).Count() == 0)
-                {
-                    languages.Add(l);
-                }
-                // Console.WriteLine($"Detected language {response.Value.Name} with confidence score {response.Value.ConfidenceScore}.");
-            }
-        }
-        catch (RequestFailedException exception)
+        var chunks = ChunksUpto(content, 5120);
+
+        foreach (var chunk in chunks)
         {
-            Console.WriteLine($"Error Code: {exception.ErrorCode}");
-            Console.WriteLine($"Message: {exception.Message}");
+            Response<DetectedLanguage> response = await client.DetectLanguageAsync(chunk);
+            SearchLanguage l = new SearchLanguage();
+            l.Confidence = response.Value.ConfidenceScore;
+            l.Name = response.Value.Name;
+            l.Iso6391Name = response.Value.Iso6391Name;
+            if (languages.Count(lang => lang.Iso6391Name != l.Iso6391Name) == 0)
+            {
+                languages.Add(l);
+            }
+            // Console.WriteLine($"Detected language {response.Value.Name} with confidence score {response.Value.ConfidenceScore}.");
         }
 
         return languages;

@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
             CognitiveSearchSkillDetectKeyPhrases = bool.Parse(config["CognitiveSearchSkillDetectKeyPhrases"] ?? "true"),
             CognitiveSearchSkillDetectLanguage = bool.Parse(config["CognitiveSearchSkillDetectLanguage"] ?? "true"),
             CognitiveSearchSkillDetectSentiment = bool.Parse(config["CognitiveSearchSkillDetectSentiment"] ?? "false"),
-            CognitiveSearchSkillRedactedText = bool.Parse(config["CognitiveSearchSkillRedactedText"] ?? "false"),
+            CognitiveSearchSkillRedactText = bool.Parse(config["CognitiveSearchSkillRedactText"] ?? "false"),
             CognitiveServiceEndpoint = config["CognitiveServiceEndpoint"],
             CognitiveServiceKey = config["CognitiveServiceKey"],
         };

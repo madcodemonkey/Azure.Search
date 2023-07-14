@@ -13,8 +13,9 @@
     "CognitiveSearchSkillDetectEntities": "true",
     "CognitiveSearchSkillDetectKeyPhrases": "true",
     "CognitiveSearchSkillDetectLanguage": "true",
+    // Sentiment has not been implmented fully!
     "CognitiveSearchSkillDetectSentiment": "false",
-    "CognitiveSearchSkillRedactedText": "false",
+    "CognitiveSearchSkillRedactText": "true",
     "CognitiveServiceEndpoint": "---your endpoint https://{name}.search.windows.net here---",
     "CognitiveServiceKey": "---your key here---",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"

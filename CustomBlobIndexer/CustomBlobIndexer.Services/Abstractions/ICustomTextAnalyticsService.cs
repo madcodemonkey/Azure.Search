@@ -8,28 +8,28 @@ public interface ICustomTextAnalyticsService
     /// <summary>
     /// Detect entities
     /// </summary>
-    /// <param name="input"></param>
+    /// <param name="content"></param>
     /// <returns></returns>
-    Task<List<SearchEntity>> DetectedEntitiesAsync(string input);
+    Task<List<SearchEntity>> DetectedEntitiesAsync(string content);
 
-    Task<List<string>> DetectedKeyPhrases(string input);
-    Task<List<SentenceSentiment>> DetectedSentiment(string input);
+    Task<List<string>> DetectedKeyPhrases(string content);
+    Task<List<SentenceSentiment>> DetectedSentiment(string content);
 
     /// <summary>
     /// Takes the content text and summarizes it into sentences.
     /// </summary>
-    /// <param name="input">The content text</param>
+    /// <param name="content">The content text</param>
     /// <returns>A list of sentences</returns>
-    Task<List<ExtractiveSummarySentence>> ExtractSummarySentencesAsync(string input);
+    Task<List<ExtractiveSummarySentence>> ExtractSummarySentencesAsync(string content);
 
     /// <summary>
     /// Takes the content text and summarizes it into one sentence by calling <see cref="ExtractSummarySentencesAsync"/>
     /// and then appending all the sentences together.
     /// </summary>
-    /// <param name="input">The content text</param>
+    /// <param name="content">The content text</param>
     /// <returns>A single sentence</returns>
-    Task<string> ExtractSummarySentenceAsync(string input);
+    Task<string> ExtractSummarySentenceAsync(string content);
 
-    Task<string> RedactedText(string input);
-    Task<List<SearchLanguage>> DetectLanguageInput(string input);
+    Task<string> RedactedText(string content);
+    Task<List<SearchLanguage>> DetectLanguageInput(string content);
 }

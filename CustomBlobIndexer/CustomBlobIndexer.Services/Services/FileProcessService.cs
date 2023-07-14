@@ -39,41 +39,43 @@ public class FileProcessService : IFileProcessService
 
         _logger.LogInformation(sasUrl);
 
+        string content = await _computerVisionService.ReadFileAsync(sasUrl);
+
         var d = new SearchIndexDocument
         {
             Id = Base64EncodeString(uri.ToString()),
-            Content = await _computerVisionService.ReadFileAsync(sasUrl),
+            Content = content,
             Title = name,
-            Source = "blob"
+            Source = "blob",
+            Summary = await _textAnalyticsService.ExtractSummarySentenceAsync(content)
         };
 
-        d.Summary = await _textAnalyticsService.ExtractSummarySentenceAsync(d.Content);
         
-        // Call Cognitive Services for enrichment (skillset replacement)
         if (_settings.CognitiveSearchSkillDetectKeyPhrases)
         {
-            d.KeyPhrases = await _textAnalyticsService.DetectedKeyPhrases(d.Content);
+            d.KeyPhrases = await _textAnalyticsService.DetectedKeyPhrases(content);
         }
 
         if (_settings.CognitiveSearchSkillDetectLanguage)
         {
-            d.Languages = await _textAnalyticsService.DetectLanguageInput(d.Content);
+            d.Languages = await _textAnalyticsService.DetectLanguageInput(content);
         }
 
         if (_settings.CognitiveSearchSkillDetectEntities)
         {
-            d.Entities = await _textAnalyticsService.DetectedEntitiesAsync(d.Content);
+            d.Entities = await _textAnalyticsService.DetectedEntitiesAsync(content);
         }
 
         if (_settings.CognitiveSearchSkillDetectSentiment)
         {
-            //d.Sentiments = await _textAnalyticsService.DetectedSentiment(d.Content);
+            //d.Sentiments = await _textAnalyticsService.DetectedSentiment(content);
         }
 
-        if (_settings.CognitiveSearchSkillRedactedText)
+        if (_settings.CognitiveSearchSkillRedactText)
         {
-            d.RedactedText = await _textAnalyticsService.RedactedText(d.Content);
+            d.RedactedText = await _textAnalyticsService.RedactedText(content);
         }
+
 
         _searchIndexService.UploadDocuments(d);
     }
