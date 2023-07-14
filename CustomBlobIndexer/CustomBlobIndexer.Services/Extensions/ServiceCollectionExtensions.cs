@@ -13,7 +13,8 @@ public static class ServiceCollectionExtensions
         sc.AddTransient<ICustomComputerVisionService, CustomComputerVisionService>();
         sc.AddTransient<ICustomTextAnalyticsService, CustomTextAnalyticsService>();
         sc.AddTransient<ICustomSearchIndexService, CustomSearchIndexService>();
-        
+        sc.AddTransient<IFileProcessService, FileProcessService>();
+
         return sc;
     }
 }

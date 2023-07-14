@@ -1,5 +1,9 @@
 ﻿namespace CustomBlobIndexer.Services;
 
+/// <summary>
+/// Azure's Computer Vision service gives you access to advanced algorithms that process images and return information based on the visual features you're interested in.
+/// It can OCR, do image analysis, face analysis and spatial analysis. 
+/// </summary>
 public interface ICustomComputerVisionService
 {
     /// <summary>

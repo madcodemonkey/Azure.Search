@@ -1,26 +1,30 @@
-﻿using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
+﻿using System.Text;
+using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
+using Microsoft.Extensions.Logging;
 
 namespace CustomBlobIndexer.Services;
 
-// TODO: Remove all Console.WriteLines
-
 /// <summary>
-/// 
+/// Azure's Computer Vision service gives you access to advanced algorithms that process images and return information based on the visual features you're interested in.
+/// It can OCR, do image analysis, face analysis and spatial analysis. 
 /// </summary>
 /// <remarks>
 /// Computer Vision Main documentation: https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/
 /// </remarks>
 public class CustomComputerVisionService : ICustomComputerVisionService
 {
+    private readonly ILogger<CustomComputerVisionService> _logger;
     private readonly ServiceSettings _settings;
     private IComputerVisionClient? _client;
+    private const int NumberOfCharsInAnOperationId = 36;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public CustomComputerVisionService(ServiceSettings settings)
+    public CustomComputerVisionService(ILogger<CustomComputerVisionService> logger, ServiceSettings settings)
     {
+        _logger = logger;
         _settings = settings;
     }
 
@@ -32,47 +36,55 @@ public class CustomComputerVisionService : ICustomComputerVisionService
     public async Task<string> ReadFileAsync(string sasUrl)
     {
         var client = GetClient();
-
-        string returnText = "";
-
+       
         // Read text from URL
         var textHeaders = await client.ReadAsync(sasUrl);
+
         // After the request, get the operation location (operation ID)
         string operationLocation = textHeaders.OperationLocation;
-        Thread.Sleep(2000);
+        Thread.Sleep(2000); // TODO: Can we delete this?  It was part of the demo code, but it's bad practice!
 
         // Retrieve the URI where the extracted text will be stored from the Operation-Location header.
         // We only need the ID and not the full URL
-        const int numberOfCharsInOperationId = 36;
-        string operationId = operationLocation.Substring(operationLocation.Length - numberOfCharsInOperationId);
+        string operationId = operationLocation.Substring(operationLocation.Length - NumberOfCharsInAnOperationId);
 
         // Extract the text
         ReadOperationResult results;
-        Console.WriteLine($"Extracting text from URL file {Path.GetFileName(sasUrl)}...");
-        Console.WriteLine();
+
+        _logger.LogInformation($"Extracting text from URL file {Path.GetFileName(sasUrl)}...");
+
         do
         {
             results = await client.GetReadResultAsync(Guid.Parse(operationId));
         }
-        while ((results.Status == OperationStatusCodes.Running ||
-                results.Status == OperationStatusCodes.NotStarted));
+        while (results.Status == OperationStatusCodes.Running || results.Status == OperationStatusCodes.NotStarted);
 
-        // Display the found text.
-        Console.WriteLine();
+        return ConsolidatePagesToOneString(results);
+    }
+
+    /// <summary>
+    /// Consolidates all the pages of text to a single line.
+    /// </summary>
+    private string ConsolidatePagesToOneString(ReadOperationResult results)
+    {
+        var result = new StringBuilder();
+
         var textUrlFileResults = results.AnalyzeResult.ReadResults;
         foreach (ReadResult page in textUrlFileResults)
         {
             foreach (Line line in page.Lines)
             {
-                returnText += line.Text + "\n";
-                Console.WriteLine(line.Text);
+                result.AppendLine(line.Text);
             }
         }
-        Console.WriteLine();
-        return returnText;
+
+        return result.ToString();
     }
 
  
+    /// <summary>
+    /// Creates or returns the client
+    /// </summary>
     private IComputerVisionClient GetClient()
     {
         return _client ??= new ComputerVisionClient(

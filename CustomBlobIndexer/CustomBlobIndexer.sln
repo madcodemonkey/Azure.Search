@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomBlobIndexer", "Custom
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomBlobIndexer.Services", "CustomBlobIndexer.Services\CustomBlobIndexer.Services.csproj", "{B811AABD-CFA3-4AD8-AB8D-D3210672E176}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomBlobIndexer.Models", "CustomBlobIndexer.Models\CustomBlobIndexer.Models.csproj", "{2B58BE61-1C40-41E7-90C0-A00E501EB5AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomBlobIndexer.Models", "CustomBlobIndexer.Models\CustomBlobIndexer.Models.csproj", "{2B58BE61-1C40-41E7-90C0-A00E501EB5AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
