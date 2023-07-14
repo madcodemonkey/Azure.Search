@@ -2,7 +2,7 @@
 
 # Setup
 You'll need to do the following
-1. In the Azure portal, create instance of an Azure Cognitive Search resource (Create a basic or S1 sku.  Remember that S1 sku will delete an MSDN subscription before the end of the month).
+1. In the Azure portal, create instance of an Azure Cognitive Search resource (Create a basic or S1 sku.  Remember that S1 sku will deplete an MSDN subscription before the end of the month).
 2. In the Azure portal, create instance of an Azure Cognitive Services resource (there is currently on one SKU to pick from so there is no choice to make for that).
 3. In the Azure portal, create instance of a storage account and create a container within it called my-files
 4. Update the local.settings.json entries with information from the portal
