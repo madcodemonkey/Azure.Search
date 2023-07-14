@@ -7,12 +7,10 @@ using CustomBlobIndexer.Models;
 
 namespace CustomBlobIndexer.Services;
 
-// TODO: Remove all Console.WriteLines 
-
 public class CustomSearchIndexService : ICustomSearchIndexService
 {
     private readonly ServiceSettings _settings;
-    private SearchIndexClient? _adminClient;
+    private SearchIndexClient? _indexClient;
     private SearchClient? _searchClient;
 
     /// <summary>
@@ -30,49 +28,40 @@ public class CustomSearchIndexService : ICustomSearchIndexService
     public void CreateOrUpdateIndex()
     {
         FieldBuilder fieldBuilder = new FieldBuilder();
-        var searchFields = fieldBuilder.Build(typeof(Document));
+        var searchFields = fieldBuilder.Build(typeof(SearchIndexDocument));
         
         var definition = new SearchIndex(_settings.CognitiveSearchIndexName, searchFields);
 
         var suggester = new SearchSuggester("sg", new[] { "Title", "Id", "KeyPhrases" });
         definition.Suggesters.Add(suggester);
 
-        var adminClient = GetAdminClient();
-        adminClient.CreateOrUpdateIndex(definition);
+        var indexClient = GetIndexClient();
+        indexClient.CreateOrUpdateIndex(definition);
     }
 
     /// <summary>
     /// Upload documents in a single Upload request.
     /// </summary>
     /// <param name="doc"></param>
-    public void UploadDocuments(Document doc)
+    public void UploadDocuments(SearchIndexDocument doc)
     {
-        IndexDocumentsBatch<Document> batch = IndexDocumentsBatch.Create(
+        IndexDocumentsBatch<SearchIndexDocument> batch = IndexDocumentsBatch.Create(
             IndexDocumentsAction.Upload(doc));
-
-        try
-        {
-            var searchClient = GetSearchClient();
-            IndexDocumentsResult result = searchClient.IndexDocuments(batch);
-        }
-        catch (Exception ex)
-        {
-            // If for some reason any documents are dropped during indexing, you can compensate by delaying and
-            // retrying. This simple demo just logs the failed document keys and continues.
-            Console.WriteLine($"Failed to index some of the documents: {ex.Message}");
-        }
+        
+        var searchClient = GetSearchClient();
+        IndexDocumentsResult result = searchClient.IndexDocuments(batch);
     }
 
-    private SearchIndexClient GetAdminClient()
+    private SearchIndexClient GetIndexClient()
     {
-        if (_adminClient == null)
+        if (_indexClient == null)
         {
             var serviceEndpoint = GetServiceEndpoint();
             var credential = new AzureKeyCredential(_settings.CognitiveSearchKey);
-            _adminClient = new SearchIndexClient(serviceEndpoint, credential);
+            _indexClient = new SearchIndexClient(serviceEndpoint, credential);
         }
 
-        return _adminClient;
+        return _indexClient;
     }
 
     private SearchClient GetSearchClient()

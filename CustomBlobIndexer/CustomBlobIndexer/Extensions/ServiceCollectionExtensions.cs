@@ -17,10 +17,17 @@ public static class ServiceCollectionExtensions
             CognitiveSearchIndexName = config["CognitiveSearchIndexName"],
             CognitiveSearchKey = config["CognitiveSearchKey"],
             CognitiveSearchName = config["CognitiveSearchName"],
+            CognitiveSearchSkillDetectEntities = bool.Parse(config["CognitiveSearchSkillDetectEntities"] ?? "true"),
+            CognitiveSearchSkillDetectKeyPhrases = bool.Parse(config["CognitiveSearchSkillDetectKeyPhrases"] ?? "true"),
+            CognitiveSearchSkillDetectLanguage = bool.Parse(config["CognitiveSearchSkillDetectLanguage"] ?? "true"),
+            CognitiveSearchSkillDetectSentiment = bool.Parse(config["CognitiveSearchSkillDetectSentiment"] ?? "false"),
+            CognitiveSearchSkillRedactedText = bool.Parse(config["CognitiveSearchSkillRedactedText"] ?? "false"),
             CognitiveServiceEndpoint = config["CognitiveServiceEndpoint"],
             CognitiveServiceKey = config["CognitiveServiceKey"],
         };
-        
+
+ 
+
         sc.AddServices(serviceSettings);
 
         return sc;

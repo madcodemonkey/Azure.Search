@@ -10,13 +10,26 @@ public interface ICustomTextAnalyticsService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    Task<List<Entity>> DetectedEntitiesAsync(string input);
+    Task<List<SearchEntity>> DetectedEntitiesAsync(string input);
 
     Task<List<string>> DetectedKeyPhrases(string input);
     Task<List<SentenceSentiment>> DetectedSentiment(string input);
-    Task<List<ExtractiveSummarySentence>> ExtractSummaryResultsAsync(string input);
 
+    /// <summary>
+    /// Takes the content text and summarizes it into sentences.
+    /// </summary>
+    /// <param name="input">The content text</param>
+    /// <returns>A list of sentences</returns>
+    Task<List<ExtractiveSummarySentence>> ExtractSummarySentencesAsync(string input);
+
+    /// <summary>
+    /// Takes the content text and summarizes it into one sentence by calling <see cref="ExtractSummarySentencesAsync"/>
+    /// and then appending all the sentences together.
+    /// </summary>
+    /// <param name="input">The content text</param>
+    /// <returns>A single sentence</returns>
+    Task<string> ExtractSummarySentenceAsync(string input);
 
     Task<string> RedactedText(string input);
-    Task<List<Language>> DetectLanguageInput(string input);
+    Task<List<SearchLanguage>> DetectLanguageInput(string input);
 }

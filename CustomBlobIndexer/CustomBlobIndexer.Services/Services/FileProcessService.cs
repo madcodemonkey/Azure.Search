@@ -1,6 +1,4 @@
-﻿using Azure.AI.TextAnalytics;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using Microsoft.Extensions.Logging;
 using CustomBlobIndexer.Models;
 
 namespace CustomBlobIndexer.Services;
@@ -41,7 +39,7 @@ public class FileProcessService : IFileProcessService
 
         _logger.LogInformation(sasUrl);
 
-        var d = new Document
+        var d = new SearchIndexDocument
         {
             Id = Base64EncodeString(uri.ToString()),
             Content = await _computerVisionService.ReadFileAsync(sasUrl),
@@ -49,21 +47,34 @@ public class FileProcessService : IFileProcessService
             Source = "blob"
         };
 
-        // Call Cognitive Services  for enrichment (skillset replacement)
-        d.KeyPhrases = await _textAnalyticsService.DetectedKeyPhrases(d.Content);
-        d.Languages = await _textAnalyticsService.DetectLanguageInput(d.Content);
-        d.Entities = await _textAnalyticsService.DetectedEntitiesAsync(d.Content);
-        // d.Sentiments = await _textAnalyticsService.DetectedSentiment(d.Content);
-        // d.RedactedText = await _textAnalyticsService.RedactedText(d.Content);
-
-        var summary = await _textAnalyticsService.ExtractSummaryResultsAsync(d.Content);
-        d.Summary = "";
-        foreach (ExtractiveSummarySentence s in summary)
+        d.Summary = await _textAnalyticsService.ExtractSummarySentenceAsync(d.Content);
+        
+        // Call Cognitive Services for enrichment (skillset replacement)
+        if (_settings.CognitiveSearchSkillDetectKeyPhrases)
         {
-            d.Summary += s.Text + " ...\n\n";
+            d.KeyPhrases = await _textAnalyticsService.DetectedKeyPhrases(d.Content);
         }
 
-        
+        if (_settings.CognitiveSearchSkillDetectLanguage)
+        {
+            d.Languages = await _textAnalyticsService.DetectLanguageInput(d.Content);
+        }
+
+        if (_settings.CognitiveSearchSkillDetectEntities)
+        {
+            d.Entities = await _textAnalyticsService.DetectedEntitiesAsync(d.Content);
+        }
+
+        if (_settings.CognitiveSearchSkillDetectSentiment)
+        {
+            //d.Sentiments = await _textAnalyticsService.DetectedSentiment(d.Content);
+        }
+
+        if (_settings.CognitiveSearchSkillRedactedText)
+        {
+            d.RedactedText = await _textAnalyticsService.RedactedText(d.Content);
+        }
+
         _searchIndexService.UploadDocuments(d);
     }
 

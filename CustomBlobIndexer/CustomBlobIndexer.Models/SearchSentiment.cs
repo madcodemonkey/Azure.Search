@@ -1,6 +1,6 @@
 ﻿namespace CustomBlobIndexer.Models;
 
-public class Sentiment
+public class SearchSentiment
 {
     public string Category { get; set; }
     public string Subcategory { get; set; }

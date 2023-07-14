@@ -1,6 +1,8 @@
-﻿using Azure;
+﻿using System.Text;
+using Azure;
 using Azure.AI.TextAnalytics;
 using CustomBlobIndexer.Models;
+using Microsoft.Extensions.Logging;
 
 namespace CustomBlobIndexer.Services;
 
@@ -9,12 +11,14 @@ namespace CustomBlobIndexer.Services;
 public class CustomTextAnalyticsService : ICustomTextAnalyticsService
 {
     private static TextAnalyticsClient? _client;
+    private readonly ILogger<CustomTextAnalyticsService> _logger;
     private readonly ServiceSettings _settings;
     /// <summary>
     /// Constructor 
     /// </summary>
-    public CustomTextAnalyticsService(ServiceSettings settings)
+    public CustomTextAnalyticsService(ILogger<CustomTextAnalyticsService> logger, ServiceSettings settings)
     {
+        _logger = logger;
         _settings = settings;
     }
 
@@ -23,11 +27,11 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    public async Task<List<Entity>> DetectedEntitiesAsync(string input)
+    public async Task<List<SearchEntity>> DetectedEntitiesAsync(string input)
     {
         var client = GetClient();
 
-        List<Entity> entityList = new List<Entity>();
+        var entityList = new List<SearchEntity>();
 
         try
         {
@@ -41,11 +45,14 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
                 Console.WriteLine($"Recognized {entitiesInDocument.Count} entities:");
                 foreach (CategorizedEntity entity in entitiesInDocument)
                 {
-                    Entity e = new Entity();
-                    e.Category = ((string)entity.Category);
-                    e.Subcategory = entity.SubCategory;
-                    e.Text = entity.Text;
-                    if (entityList.Where(ent => ent.Text == e.Text).Count() == 0)
+                    SearchEntity e = new SearchEntity
+                    {
+                        Category = (string)entity.Category,
+                        Subcategory = entity.SubCategory,
+                        Text = entity.Text
+                    };
+
+                    if (entityList.Count(ent => ent.Text == e.Text) == 0)
                     {
                         entityList.Add(e);
                         Console.WriteLine($"  Text: {entity.Text}");
@@ -132,7 +139,13 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
         return sentiments;
     }
 
-    public async Task<List<ExtractiveSummarySentence>> ExtractSummaryResultsAsync(string input)
+
+    /// <summary>
+    /// Takes the content text and summarizes it into sentences.
+    /// </summary>
+    /// <param name="input">The content text</param>
+    /// <returns>A list of sentences</returns>
+    public async Task<List<ExtractiveSummarySentence>> ExtractSummarySentencesAsync(string input)
     {
         var client = GetClient();
 
@@ -200,6 +213,27 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
         return summaryList;
     }
 
+    /// <summary>
+    /// Takes the content text and summarizes it into one sentence by calling <see cref="ExtractSummarySentencesAsync"/>
+    /// and then appending all the sentences together.
+    /// </summary>
+    /// <param name="input">The content text</param>
+    /// <returns>A single sentence</returns>
+    public async Task<string> ExtractSummarySentenceAsync(string input)
+    {
+        var sentenceList = await ExtractSummarySentencesAsync(input);
+
+        StringBuilder sb = new StringBuilder();
+        
+        foreach (ExtractiveSummarySentence s in sentenceList)
+        {
+            sb.Append(s.Text);
+            sb.AppendLine(" ...");
+        }
+
+        return sb.ToString();
+    }
+
     public async Task<string> RedactedText(string input)
     {
         var client = GetClient();
@@ -241,11 +275,11 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
         return redactedText;
     }
 
-    public async Task<List<Language>> DetectLanguageInput(string input)
+    public async Task<List<SearchLanguage>> DetectLanguageInput(string input)
     {
         var client = GetClient();
 
-        List<Language> languages = new List<Language>();
+        List<SearchLanguage> languages = new List<SearchLanguage>();
 
         try
         {
@@ -254,7 +288,7 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
             foreach (var chunk in chunks)
             {
                 Response<DetectedLanguage> response = await client.DetectLanguageAsync(chunk);
-                Language l = new Language();
+                SearchLanguage l = new SearchLanguage();
                 l.Confidence = response.Value.ConfidenceScore;
                 l.Name = response.Value.Name;
                 l.Iso6391Name = response.Value.Iso6391Name;

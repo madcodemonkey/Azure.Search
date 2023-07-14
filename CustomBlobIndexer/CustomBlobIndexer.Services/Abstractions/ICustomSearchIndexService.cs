@@ -13,5 +13,5 @@ public interface ICustomSearchIndexService
     /// Upload documents in a single Upload request.
     /// </summary>
     /// <param name="doc"></param>
-    void UploadDocuments(Document doc);
+    void UploadDocuments(SearchIndexDocument doc);
 }
