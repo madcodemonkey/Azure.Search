@@ -33,10 +33,13 @@ public class CustomComputerVisionService : ICustomComputerVisionService
     /// </summary>
     /// <param name="sasUrl">A complete uri with SAS token to the blob item.</param>
     /// <returns>Extracted text</returns>
+    /// <remarks>
+    /// Example: https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/textanalytics/Azure.AI.TextAnalytics/samples/Sample4_RecognizeEntities.md
+    /// </remarks>
     public async Task<string> ReadFileAsync(string sasUrl)
     {
         var client = GetClient();
-       
+
         // Read text from URL
         var textHeaders = await client.ReadAsync(sasUrl);
 
@@ -81,7 +84,7 @@ public class CustomComputerVisionService : ICustomComputerVisionService
         return result.ToString();
     }
 
- 
+
     /// <summary>
     /// Creates or returns the client
     /// </summary>

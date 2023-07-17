@@ -11,5 +11,8 @@ public interface ICustomComputerVisionService
     /// </summary>
     /// <param name="sasUrl">A complete uri with SAS token to the blob item.</param>
     /// <returns>Extracted text</returns>
+    /// <remarks>
+    /// Example: https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/textanalytics/Azure.AI.TextAnalytics/samples/Sample4_RecognizeEntities.md
+    /// </remarks>
     Task<string> ReadFileAsync(string sasUrl);
 }
