@@ -14,7 +14,13 @@ public interface IAcmeSearchIndexService
     /// <param name="searchText">The partial bit of text to search upon</param>
     /// <param name="suggesterName">The name of the suggester</param>
     Task<Response<AutocompleteResults>> AutocompleteAsync(string indexName, string searchText, string suggesterName);
-    
+
+    /// <summary>
+    /// Clears all documents from the index.
+    /// </summary>
+    /// <param name="indexName">The name of the index that we will clear all the documents out of.</param>
+    Task<long> ClearAllDocumentsAsync(string indexName);
+
     /// <summary>Deletes an index.</summary>
     /// <param name="indexName">The name of the index to delete</param>
     Task<bool> DeleteAsync(string indexName);
