@@ -8,10 +8,13 @@ namespace CustomBlobIndexer.Functions
 {
     public class IndexManipulationFunction
     {
-        private readonly ServiceSettings _settings;
-        private readonly ICustomSearchIndexService _searchIndexService;
         private readonly ILogger _logger;
+        private readonly ICustomSearchIndexService _searchIndexService;
+        private readonly ServiceSettings _settings;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public IndexManipulationFunction(ILoggerFactory loggerFactory, 
             ServiceSettings settings,
             ICustomSearchIndexService searchIndexService)

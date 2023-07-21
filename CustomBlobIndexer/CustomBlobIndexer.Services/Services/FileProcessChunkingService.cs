@@ -39,8 +39,6 @@ public class FileProcessChunkingService : IFileProcessService
 
     public async Task ProcessFileAsync(string name, Uri uri)
     {
-        // uri: https://yateslabstorage.blob.core.windows.net/my-files/OutputTest7-PII-Test.pdf
-        
         _logger.LogInformation($"Process file named: {name} located a uri: {uri} into chunks");
 
         string sasUrl = _sasBuilderService.GenerateSaSUrl(name, uri);
@@ -50,15 +48,19 @@ public class FileProcessChunkingService : IFileProcessService
         string content = await _computerVisionService.ReadFileAsync(sasUrl);
         List<string> contentChunks = _textChunkingService.CreateChunks(content, _settings.ChunkMaximumNumberOfCharacters);
 
+        string chunkId = Guid.NewGuid().ToString();
+        int chunkOrderNumber = 1;
         foreach (var contentChunk in contentChunks)
         {
             var d = new SearchIndexDocument
             {
                 Id = Guid.NewGuid().ToString(), //  Base64EncodeString(uri.ToString()),
+                ChunkId = chunkId,  // The same across all parts of the chunk
+                ChunkOrderNumber = chunkOrderNumber++, // allows you to put the chunks back together in the proper order.
                 Content = contentChunk,
-                Title = name,
-                Source = "blob",
-                Summary = await _textAnalyticsService.ExtractSummarySentenceAsync(contentChunk)
+                SourcePath = uri.GetPathAfterText(_settings.BlobContainerName),
+                Summary = await _textAnalyticsService.ExtractSummarySentenceAsync(contentChunk),
+                Title = name
             };
 
             if (_settings.CognitiveSearchSkillDetectKeyPhrases)

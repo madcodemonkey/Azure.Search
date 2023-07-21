@@ -1,6 +1,4 @@
-﻿using Azure.Search.Documents.Models;
-using Azure.Search.Documents;
-using Azure;
+﻿using Azure.Search.Documents;
 using CustomBlobIndexer.Models;
 
 namespace CustomBlobIndexer.Services;
@@ -21,7 +19,7 @@ public interface ICustomSearchIndexService
     /// <typeparam name="T">The type of data being returned.</typeparam>
     /// <param name="searchText">The text to find</param>
     /// <param name="options">The search options to apply</param>
-    Task<Response<SearchResults<T>>> SearchAsync<T>(string searchText, SearchOptions options);
+    Task<SearchQueryResponse<T>> SearchAsync<T>(string searchText, SearchOptions options) where T : class;
 
     /// <summary>
     /// Upload documents in a single Upload request.

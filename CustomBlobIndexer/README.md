@@ -26,6 +26,10 @@ You'll need to do the following
 2. If you haven't created an index, first hit the  IndexCreator: [GET,POST] http://localhost:7071/api/IndexCreator to create the index.
 3. Upload a document to the my-files container to trigger the blob indexer.  This can be done manually via the portal.
 
+# Postman collection
+There is a POSTMAN collection that can be used againt the HttpTrigger endpoints.
+- If you plan to do semantic searches, you'll need to turn that on in the Azure Portal.  See the "Semantic search (preview)" option under Settings in your Azure Cognitive Search resource.
+
 # Notes
 - A blob trigger was used to make this demo easier to understand and play with; however, it's not the best way to trigger on a blob change.  Using Event Grid is a better choice 
   since it is faster (blob trigger can take up to 10 minutes if the function has gone to sleep).

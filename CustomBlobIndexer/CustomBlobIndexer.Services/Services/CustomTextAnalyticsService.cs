@@ -189,17 +189,27 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
     /// <returns>A single sentence</returns>
     public async Task<string> ExtractSummarySentenceAsync(string content)
     {
-        var sentenceList = await ExtractSummarySentencesAsync(content);
-
-        StringBuilder sb = new StringBuilder();
-
-        foreach (ExtractiveSummarySentence s in sentenceList)
+        // TODO: When sending in short text (e.g., 'SE-CRE-T\r\n1964') I saw an unhelpful exception.  Hidden characters?  Too short?  
+        try
         {
-            sb.Append(s.Text);
-            sb.AppendLine(" ...");
-        }
+            var sentenceList = await ExtractSummarySentencesAsync(content);
 
-        return sb.ToString();
+            StringBuilder sb = new StringBuilder();
+
+            foreach (ExtractiveSummarySentence s in sentenceList)
+            {
+                sb.Append(s.Text);
+                sb.AppendLine(" ...");
+            }
+
+            return sb.ToString();
+        }
+        catch (Exception ex)
+        {
+            string message = "Unable to summarize text!";
+            _logger.LogError(ex, $"{message}: {content.Substring(0, 100)}...");
+            return message;
+        }
     }
 
     /// <summary>
@@ -224,7 +234,8 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
         {
             TextAnalyticsActions actions = new TextAnalyticsActions()
             {
-                ExtractiveSummarizeActions = new List<ExtractiveSummarizeAction>() { new ExtractiveSummarizeAction() }
+                ExtractiveSummarizeActions = new List<ExtractiveSummarizeAction>()
+                        { new ExtractiveSummarizeAction() }
             };
 
             var doc = new List<string>();
@@ -240,7 +251,8 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
                 {
                     if (summaryActionResults.HasError)
                     {
-                        _logger.LogError($"  Action error code: {summaryActionResults.Error.ErrorCode}.  Message: {summaryActionResults.Error.Message}");
+                        _logger.LogError(
+                            $"  Action error code: {summaryActionResults.Error.ErrorCode}.  Message: {summaryActionResults.Error.Message}");
                         //Console.WriteLine($"  Error!");
                         //Console.WriteLine($"  Action error code: {summaryActionResults.Error.ErrorCode}.");
                         //Console.WriteLine($"  Message: {summaryActionResults.Error.Message}");
@@ -251,7 +263,8 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
                     {
                         if (documentResults.HasError)
                         {
-                            _logger.LogError($"  Document error code: {documentResults.Error.ErrorCode}.   Message: {documentResults.Error.Message}");
+                            _logger.LogError(
+                                $"  Document error code: {documentResults.Error.ErrorCode}.   Message: {documentResults.Error.Message}");
                             //Console.WriteLine($"  Error!");
                             //Console.WriteLine($"  Document error code: {documentResults.Error.ErrorCode}.");
                             //Console.WriteLine($"  Message: {documentResults.Error.Message}");
@@ -273,6 +286,7 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
         }
 
         return summaryList;
+
     }
 
     /// <summary>

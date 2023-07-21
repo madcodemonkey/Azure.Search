@@ -46,11 +46,13 @@ public class FileProcessService : IFileProcessService
 
         var d = new SearchIndexDocument
         {
-            Id = Base64EncodeString(uri.ToString()),
+            Id = Guid.NewGuid().ToString(), //  Base64EncodeString(uri.ToString()),
+            ChunkId = Guid.NewGuid().ToString(),  // Not used when we are not chunking.
+            ChunkOrderNumber = 1, // Since we are not chunking, there is only one number
             Content = content,
-            Title = name,
-            Source = "blob",
-            Summary = await _textAnalyticsService.ExtractSummarySentenceAsync(content)
+            SourcePath = uri.GetPathAfterText(_settings.BlobContainerName),
+            Summary = await _textAnalyticsService.ExtractSummarySentenceAsync(content),
+            Title = name
         };
 
         

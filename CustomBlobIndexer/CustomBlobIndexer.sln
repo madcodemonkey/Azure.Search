@@ -11,10 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomBlobIndexer.Models", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0F79018-4303-4098-B075-91FD5EF2CD7A}"
 	ProjectSection(SolutionItems) = preProject
+		CustomBlobIndexer.sln.DotSettings.user = CustomBlobIndexer.sln.DotSettings.user
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomBlobIndexer.Services.UnitTests", "CustomBlobIndexer.Services.UnitTests\CustomBlobIndexer.Services.UnitTests.csproj", "{4A9DDD37-E199-4737-B71D-74EF8D84517C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomBlobIndexer.Services.UnitTests", "CustomBlobIndexer.Services.UnitTests\CustomBlobIndexer.Services.UnitTests.csproj", "{4A9DDD37-E199-4737-B71D-74EF8D84517C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

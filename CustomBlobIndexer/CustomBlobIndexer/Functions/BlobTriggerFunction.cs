@@ -2,7 +2,7 @@ using CustomBlobIndexer.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace CustomBlobIndexer;
+namespace CustomBlobIndexer.Functions;
 
 public class BlobTriggerFunction
 {

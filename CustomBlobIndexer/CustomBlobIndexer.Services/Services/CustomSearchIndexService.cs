@@ -46,7 +46,7 @@ public class CustomSearchIndexService : ICustomSearchIndexService
 
                 var azSearchResults = await this.SearchAsync<SearchDocument>("*", options);
 
-                totalCountCurrent = azSearchResults.Value.TotalCount ?? 0;
+                totalCountCurrent = azSearchResults.TotalCount ?? 0;
 
                 if (totalCountCurrent > 0)
                 {
@@ -55,18 +55,10 @@ public class CustomSearchIndexService : ICustomSearchIndexService
                         // We are stuck and docs aren't be deleted!
                         break;
                     }
+                    
+                    await searchClient.DeleteDocumentsAsync(azSearchResults.Docs);
 
-                    AsyncPageable<SearchResult<SearchDocument>> azOnePageOfSearchDocuments = azSearchResults.Value.GetResultsAsync();
-                    var docsToDelete = new List<SearchDocument>();
-
-                    await foreach (SearchResult<SearchDocument> item in azOnePageOfSearchDocuments)
-                    {
-                        docsToDelete.Add(item.Document);
-                    }
-
-                    await searchClient.DeleteDocumentsAsync(docsToDelete);
-
-                    totalDeleted += docsToDelete.Count;
+                    totalDeleted += azSearchResults.Docs.Count;
                 }
 
                 totalCountOnLastTry = totalCountCurrent;
@@ -104,11 +96,18 @@ public class CustomSearchIndexService : ICustomSearchIndexService
     /// <typeparam name="T">The type of data being returned.</typeparam>
     /// <param name="searchText">The text to find</param>
     /// <param name="options">The search options to apply</param>
-    public async Task<Response<SearchResults<T>>> SearchAsync<T>(string searchText, SearchOptions options)
+    public async Task<SearchQueryResponse<T>> SearchAsync<T>(string searchText, SearchOptions options) where T : class
     {
         var searchClient = GetSearchClient();
         var response = await searchClient.SearchAsync<T>(searchText, options);
-        return response;
+
+        var result = new SearchQueryResponse<T>
+        {
+            Docs = await response.Value.ToSearchResultDocumentsAsync(),
+            TotalCount = response.Value.TotalCount
+        };
+
+        return result;
     }
 
     /// <summary>
