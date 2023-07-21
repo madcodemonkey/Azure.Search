@@ -24,7 +24,7 @@ You'll need to do the following
 # Running
 1. Run the "CustomBlobIndexer" function.
 2. If you haven't created an index, first hit the  IndexCreator: [GET,POST] http://localhost:7071/api/IndexCreator to create the index.
-3. Upload a document to the my-files container to trigger the blob indexer.
+3. Upload a document to the my-files container to trigger the blob indexer.  This can be done manually via the portal.
 
 # Notes
 - A blob trigger was used to make this demo easier to understand and play with; however, it's not the best way to trigger on a blob change.  Using Event Grid is a better choice 
