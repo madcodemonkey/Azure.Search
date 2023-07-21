@@ -3,7 +3,7 @@
 public class ServiceSettings
 {
     /// <summary>
-    /// An Access key to gain access to the storage account.  This could be key1 or key2 from the Access Keys section in the storage account 
+    /// An Access key to gain access to the storage account.  This could be key1 or key2 from the Access Keys section in the storage account
     /// </summary>
     public string BlobAccessKey { get; set; } = string.Empty;
 
@@ -16,6 +16,19 @@ public class ServiceSettings
     /// The name of the container within the storage account (<see cref="BlobAccountName"/>) that contains the files we are watching.
     /// </summary>
     public string BlobContainerName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// If false, it indicates that we don't want to break incoming document apart into multiple documents in the index.  If true, you are
+    /// most likely doing this for OpenAI, so we will break the documents down so that no document has more
+    /// than <see cref="ChunkMaximumNumberOfCharacters"/> characters in it to avoid overwhelming the Open API with too many tokens.
+    /// </summary>
+    public bool ChunkIntoMultipleDocuments { get; set; }
+
+    /// <summary>
+    /// The maximum number of characters in a document when <see cref="ChunkIntoMultipleDocuments"/>
+    /// is true. It's not used when <see cref="ChunkIntoMultipleDocuments"/> is false.
+    /// </summary>
+    public int ChunkMaximumNumberOfCharacters { get; set; } = 1000;
 
     /// <summary>
     /// The name of the index we are creating documents inside.

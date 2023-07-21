@@ -7,6 +7,8 @@
     // If you change the BlobContainerName, be sure to update it in BlobTriggerFunction.cs as well!
     "BlobContainerName": "my-files",
     "BlobStorageConnectionString": "---your blob connection string here---",
+    "ChunkIntoMultipleDocuments": "false",
+    "ChunkMaximumNumberOfCharacters": "1000",
     "CognitiveSearchIndexName": "my-index",
     "CognitiveSearchKey": "---Your cognitive search key---",
     "CognitiveSearchName": "---the name of your cognitive search instance (e.g., davecogservices)---",

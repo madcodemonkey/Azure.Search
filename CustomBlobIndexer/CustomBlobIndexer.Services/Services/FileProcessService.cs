@@ -3,6 +3,9 @@ using CustomBlobIndexer.Models;
 
 namespace CustomBlobIndexer.Services;
 
+/// <summary>
+/// Processes a file and creates ONE search document in the Azure Cognitive Search index.
+/// </summary>
 public class FileProcessService : IFileProcessService
 {
     private readonly ServiceSettings _settings;

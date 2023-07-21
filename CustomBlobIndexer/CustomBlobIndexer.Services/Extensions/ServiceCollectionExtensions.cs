@@ -13,7 +13,16 @@ public static class ServiceCollectionExtensions
         sc.AddTransient<ICustomComputerVisionService, CustomComputerVisionService>();
         sc.AddTransient<ICustomTextAnalyticsService, CustomTextAnalyticsService>();
         sc.AddTransient<ICustomSearchIndexService, CustomSearchIndexService>();
-        sc.AddTransient<IFileProcessService, FileProcessService>();
+        sc.AddTransient<ITextChunkingService, TextChunkingService>();
+
+        if (settings.ChunkIntoMultipleDocuments)
+        {
+            sc.AddTransient<IFileProcessService, FileProcessChunkingService>();
+        }
+        else
+        {
+            sc.AddTransient<IFileProcessService, FileProcessService>();
+        }
 
         return sc;
     }

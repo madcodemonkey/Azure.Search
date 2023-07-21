@@ -16,10 +16,14 @@ You'll need to do the following
    - Cognitive Services inforamtion to update
       - CognitiveServiceEndpoint - This is the endpoint for the cognitive service.  See Resource management section and the "Keys and endpoint" item.
       - CognitiveServiceKey - Get the key for either key 1 or key 2 from the Azure Portal. See Resource management section and the "Keys and endpoint" item.
+5. Optional local.settings.json 
+   - ChunkIntoMultipleDocuments - By default it is false, but if you want to make the docs bite size for Open AI, you should set this to true.
+   - ChunkMaximumNumberOfCharacters - The default doc size is 1000 when chunking in order to control token usage for Open AI.
+ 
 
 # Running
 1. Run the "CustomBlobIndexer" function.
-2. If you haven't created an index, first hit the  IndexCreatorFunction: [GET,POST] http://localhost:7071/api/IndexCreatorFunction to create the index.
+2. If you haven't created an index, first hit the  IndexCreator: [GET,POST] http://localhost:7071/api/IndexCreator to create the index.
 3. Upload a document to the my-files container to trigger the blob indexer.
 
 # Notes

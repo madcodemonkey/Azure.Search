@@ -14,6 +14,8 @@ public static class ServiceCollectionExtensions
             BlobAccessKey = config["BlobAccessKey"],
             BlobAccountName = config["BlobAccountName"],
             BlobContainerName = config["BlobContainerName"],
+            ChunkIntoMultipleDocuments = bool.Parse(config["ChunkIntoMultipleDocuments"] ?? "true"),
+            ChunkMaximumNumberOfCharacters = int.Parse(config["ChunkMaximumNumberOfCharacters"] ?? "1000"),
             CognitiveSearchIndexName = config["CognitiveSearchIndexName"],
             CognitiveSearchKey = config["CognitiveSearchKey"],
             CognitiveSearchName = config["CognitiveSearchName"],
@@ -25,8 +27,6 @@ public static class ServiceCollectionExtensions
             CognitiveServiceEndpoint = config["CognitiveServiceEndpoint"],
             CognitiveServiceKey = config["CognitiveServiceKey"],
         };
-
- 
 
         sc.AddServices(serviceSettings);
 

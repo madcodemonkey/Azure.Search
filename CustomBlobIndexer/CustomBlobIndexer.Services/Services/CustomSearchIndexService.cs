@@ -23,6 +23,67 @@ public class CustomSearchIndexService : ICustomSearchIndexService
 
 
     /// <summary>
+    /// Clears all documents from the index.
+    /// </summary>
+    public async Task<long> ClearAllDocumentsAsync()
+    {
+        try
+        {
+            var searchClient = GetSearchClient();
+
+            long totalDeleted = 0;
+            long totalCountOnLastTry = 0;
+            long totalCountCurrent;
+
+            do
+            {
+                var options = new SearchOptions
+                {
+                    Size = 50,
+                    QueryType = SearchQueryType.Simple,
+                    IncludeTotalCount = true
+                };
+
+                var azSearchResults = await this.SearchAsync<SearchDocument>("*", options);
+
+                totalCountCurrent = azSearchResults.Value.TotalCount ?? 0;
+
+                if (totalCountCurrent > 0)
+                {
+                    if (totalCountCurrent == totalCountOnLastTry)
+                    {
+                        // We are stuck and docs aren't be deleted!
+                        break;
+                    }
+
+                    AsyncPageable<SearchResult<SearchDocument>> azOnePageOfSearchDocuments = azSearchResults.Value.GetResultsAsync();
+                    var docsToDelete = new List<SearchDocument>();
+
+                    await foreach (SearchResult<SearchDocument> item in azOnePageOfSearchDocuments)
+                    {
+                        docsToDelete.Add(item.Document);
+                    }
+
+                    await searchClient.DeleteDocumentsAsync(docsToDelete);
+
+                    totalDeleted += docsToDelete.Count;
+                }
+
+                totalCountOnLastTry = totalCountCurrent;
+
+            } while (totalCountCurrent > 0);
+
+            return totalDeleted;
+        }
+        catch (RequestFailedException ex)
+        {
+            if (ex.Status == 404)
+                return 0;
+            throw;
+        }
+    }
+
+    /// <summary>
     /// Create index or update the index.
     /// </summary>
     public void CreateOrUpdateIndex()
@@ -37,6 +98,17 @@ public class CustomSearchIndexService : ICustomSearchIndexService
 
         var indexClient = GetIndexClient();
         indexClient.CreateOrUpdateIndex(definition);
+    }
+
+    /// <summary>Searches for documents</summary>
+    /// <typeparam name="T">The type of data being returned.</typeparam>
+    /// <param name="searchText">The text to find</param>
+    /// <param name="options">The search options to apply</param>
+    public async Task<Response<SearchResults<T>>> SearchAsync<T>(string searchText, SearchOptions options)
+    {
+        var searchClient = GetSearchClient();
+        var response = await searchClient.SearchAsync<T>(searchText, options);
+        return response;
     }
 
     /// <summary>
