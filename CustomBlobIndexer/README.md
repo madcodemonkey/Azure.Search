@@ -27,14 +27,16 @@ You'll need to do the following
 5. Optional local.settings.json 
    - ChunkIntoMultipleDocuments - By default it is false, but if you want to make the docs bite size for Open AI, you should set this to true.
    - ChunkMaximumNumberOfCharacters - The default doc size is 1000 when chunking in order to control token usage for Open AI.
- 
+   - OpenAIDeploymentOrModelName - The name of your deployment here.  This comes from the Open AI Studio (look under your deployments)
+   - OpenAIEndpoint - Your API endpoint here from the Azure Portal (see Keys and Endpoint in the Resource Management section)
+   - OpenAIKey - Your key here from the Azure Portal (see Keys and Endpoint in the Resource Management section)
 
 # Running
 1. Run the "CustomBlobIndexer" function project.
 2. If you haven't created an index, first hit the  IndexCreator: [GET,POST] http://localhost:7071/api/IndexCreator to create the index.  You can use a browser since GET is available.
 3. Upload a document to the my-files container to trigger the blob indexer.  This can be done manually via the portal.
 4. Use postman (see postman collection) to do searches against the search endpoint, which is searching the cognitive search index.
-5. If you configured Open AI, used the postman collection to do posts against the open ai endpoint.
+5. If you configured Open AI, used the postman collection to do posts against the open ai endpoint; otherwise, avoid it or you will receive errors.
 
 # Postman collection
 There is a POSTMAN collection that can be used againt the HttpTrigger endpoints.
