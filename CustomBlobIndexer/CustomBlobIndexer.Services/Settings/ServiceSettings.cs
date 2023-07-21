@@ -46,6 +46,11 @@ public class ServiceSettings
     public string CognitiveSearchName { get; set; } = string.Empty;
 
     /// <summary>
+    /// The name of the semantic configuration to setup within the index.
+    /// </summary>
+    public string CognitiveSearchSemanticConfigurationName { get; set; } = string.Empty;
+
+    /// <summary>
     /// Determines if we should detect entities from the content and attach that result to the document.
     /// </summary>
     public bool CognitiveSearchSkillDetectEntities { get; set; }
@@ -81,4 +86,19 @@ public class ServiceSettings
     /// This service is used for OCR and languages services that are needed by skillsets.
     /// </summary>
     public string CognitiveServiceKey { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Open AI - this is the name of your deployment model that you are using (see the Azure AI Studio for this information).
+    /// </summary>
+    public string OpenAIDeploymentOrModelName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Open AI - this is the endpoint URI for the open ai resource (see the Azure Portal -- Keys and Endpoint under Resource Management -- for this information).
+    /// </summary>
+    public string OpenAIEndpoint { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Open AI - this is either key 1 or key 2 for the open ai resource (see the Azure Portal -- Keys and Endpoint under Resource Management -- for this information).
+    /// </summary>
+    public string OpenAIKey { get; set; } = string.Empty;
 }

@@ -7,7 +7,27 @@
 	},
 	"item": [
 		{
-			"name": "Search",
+			"name": "Create Index",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:7071/api/IndexCreator",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"IndexCreator"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cognitive Search",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -30,6 +50,55 @@
 					"path": [
 						"api",
 						"IndexSearch"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Open AI Search",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query\": \"did oswald work for russia?\"   \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:7071/api/OpenAISearch",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"OpenAISearch"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Clear all documents from the Index",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:7071/api/IndexDocumentDeleter",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"IndexDocumentDeleter"
 					]
 				}
 			},

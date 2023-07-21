@@ -11,8 +11,9 @@ public static class ServiceCollectionExtensions
         sc.AddScoped<IBlobSasBuilderService, BlobSasBuilderService>();
 
         sc.AddTransient<ICustomComputerVisionService, CustomComputerVisionService>();
-        sc.AddTransient<ICustomTextAnalyticsService, CustomTextAnalyticsService>();
         sc.AddTransient<ICustomSearchIndexService, CustomSearchIndexService>();
+        sc.AddTransient<ICustomTextAnalyticsService, CustomTextAnalyticsService>();
+        sc.AddTransient<IOpenAISearchService, OpenAISearchService>();
         sc.AddTransient<ITextChunkingService, TextChunkingService>();
 
         if (settings.ChunkIntoMultipleDocuments)

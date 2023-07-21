@@ -12,6 +12,7 @@
     "CognitiveSearchIndexName": "my-index",
     "CognitiveSearchKey": "---Your cognitive search key---",
     "CognitiveSearchName": "---the name of your cognitive search instance (e.g., davecogservices)---",
+    "CognitiveSearchSemanticConfigurationName": "my-semantic-config",
     "CognitiveSearchSkillDetectEntities": "true",
     "CognitiveSearchSkillDetectKeyPhrases": "true",
     "CognitiveSearchSkillDetectLanguage": "true",
@@ -20,6 +21,9 @@
     "CognitiveSearchSkillRedactText": "true",
     "CognitiveServiceEndpoint": "---your endpoint https://{name}.search.windows.net here---",
     "CognitiveServiceKey": "---your key here---",
-    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "OpenAIDeploymentOrModelName": "---The name of your deployment here---",
+    "OpenAIEndpoint": "---Your API endpoint here from the Azure Portal (see Keys and Endpoint in the Resource Management section)---",
+    "OpenAIKey": "---Your key here from the Azure Portal (see Keys and Endpoint in the Resource Management section)---"
   }
 }

@@ -19,6 +19,7 @@ public static class ServiceCollectionExtensions
             CognitiveSearchIndexName = config["CognitiveSearchIndexName"],
             CognitiveSearchKey = config["CognitiveSearchKey"],
             CognitiveSearchName = config["CognitiveSearchName"],
+            CognitiveSearchSemanticConfigurationName = config["CognitiveSearchSemanticConfigurationName"],
             CognitiveSearchSkillDetectEntities = bool.Parse(config["CognitiveSearchSkillDetectEntities"] ?? "true"),
             CognitiveSearchSkillDetectKeyPhrases = bool.Parse(config["CognitiveSearchSkillDetectKeyPhrases"] ?? "true"),
             CognitiveSearchSkillDetectLanguage = bool.Parse(config["CognitiveSearchSkillDetectLanguage"] ?? "true"),
@@ -26,6 +27,9 @@ public static class ServiceCollectionExtensions
             CognitiveSearchSkillRedactText = bool.Parse(config["CognitiveSearchSkillRedactText"] ?? "false"),
             CognitiveServiceEndpoint = config["CognitiveServiceEndpoint"],
             CognitiveServiceKey = config["CognitiveServiceKey"],
+            OpenAIDeploymentOrModelName = config["OpenAIDeploymentOrModelName"],
+            OpenAIEndpoint = config["OpenAIEndpoint"],
+            OpenAIKey = config["OpenAIKey"]
         };
 
         sc.AddServices(serviceSettings);

@@ -85,9 +85,32 @@ public class CustomSearchIndexService : ICustomSearchIndexService
         
         var definition = new SearchIndex(_settings.CognitiveSearchIndexName, searchFields);
 
-        var suggester = new SearchSuggester("sg", new[] { "Title", "Id", "KeyPhrases" });
+        // setup the suggestor
+        var suggester = new SearchSuggester("sg", new[]
+        {
+            nameof(SearchIndexDocument.Title), 
+            nameof(SearchIndexDocument.Id), 
+            nameof(SearchIndexDocument.KeyPhrases)
+        });
         definition.Suggesters.Add(suggester);
+        
+        // Setup Semantic Configuration
+        var prioritizedFields = new PrioritizedFields()
+        {
+            TitleField = new SemanticField()
+            {
+                FieldName = nameof(SearchIndexDocument.Title)
+            }
+        };
+        
+        prioritizedFields.ContentFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.Content)});
+        prioritizedFields.KeywordFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.KeyPhrases)});
+        
+        SemanticConfiguration semanticConfig = new SemanticConfiguration(_settings.CognitiveSearchSemanticConfigurationName, prioritizedFields);
+        definition.SemanticSettings = new SemanticSettings();
+        definition.SemanticSettings.Configurations.Add(semanticConfig);
 
+        // Create it using the index client
         var indexClient = GetIndexClient();
         indexClient.CreateOrUpdateIndex(definition);
     }
