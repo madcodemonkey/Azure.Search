@@ -189,7 +189,10 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
     /// <returns>A single sentence</returns>
     public async Task<string> ExtractSummarySentenceAsync(string content)
     {
-        // TODO: When sending in short text (e.g., 'SE-CRE-T\r\n1964') I saw an unhelpful exception.  Hidden characters?  Too short?  
+        if (string.IsNullOrWhiteSpace(content))
+            return content;
+
+        // TODO: When sending in short text (e.g., '1964\r\nS-E-CAR-E-T') I saw an unhelpful exception.  Hidden characters?  Too short?  
         try
         {
             var sentenceList = await ExtractSummarySentencesAsync(content);
@@ -207,7 +210,7 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
         catch (Exception ex)
         {
             string message = "Unable to summarize text!";
-            _logger.LogError(ex, $"{message}: {content.Substring(0, 100)}...");
+            _logger.LogError(ex, $"{message}: {content.Substring(0, content.Length > 100 ? 100 : content.Length)}...");
             return message;
         }
     }

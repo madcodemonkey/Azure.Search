@@ -19,13 +19,19 @@ public class OpenAISearchService : OpenAIClientService, IOpenAISearchService
         _searchIndexService = searchIndexService;
     }
 
+    /// <summary>
+    /// Queries the Cognitive Search endpoint using the semantic option and then using the
+    /// results to query Open AI.
+    /// </summary>
+    /// <param name="request">The request</param>
     public async Task<OpenAIResponse> QueryAsync(OpenAIRequest request)
     {
-        var cognitiveSearchOptions = new SearchOptions()
+        var cognitiveSearchOptions = new SearchOptions
         {
             IncludeTotalCount = true,
-            QueryType = SearchQueryType.Semantic,
             QueryLanguage = QueryLanguage.EnUs,
+            QueryType = SearchQueryType.Semantic,
+            Select = { request.SearchFieldName }, // Avoid retrieving fields we are not going to use!
             SemanticConfigurationName = Settings.CognitiveSearchSemanticConfigurationName
         };
 
@@ -37,10 +43,10 @@ public class OpenAISearchService : OpenAIClientService, IOpenAISearchService
         }
 
         StringBuilder sbPrompt = new StringBuilder();
-        sbPrompt.AppendLine("You are an AI assistant that helps people find information using this data try to answer the question.");
+        sbPrompt.AppendLine(request.SituationStatement);
         foreach (SearchResult<SearchDocument> doc in response.Docs)
         {
-            sbPrompt.AppendLine(doc.Document[nameof(SearchIndexDocument.Content)].ToString());
+            sbPrompt.AppendLine(doc.Document.GetString(request.SearchFieldName));
         }
         sbPrompt.AppendLine(request.Query);
 

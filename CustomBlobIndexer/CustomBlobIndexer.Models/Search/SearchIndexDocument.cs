@@ -9,14 +9,8 @@ public class SearchIndexDocument
     public string Id { get; set; }
 
     /// <summary>
-    /// If we are chunking documents (breaking them apart), this id will be the same for ALL the chunks.
-    /// </summary>
-    [SearchableField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
-    public string ChunkId { get; set; }
-
-    /// <summary>
     /// If we are chunking documents (breaking them apart), this is the order they can be
-    /// recombined; thus, you could use the <see cref="ChunkId"/> to retrieve them and then sort
+    /// recombined; thus, you could use the <see cref="SourcePath"/> to retrieve them and then sort
     /// them by <see cref="ChunkOrderNumber"/> and reassemble all the text.
     /// </summary>
     [SimpleField(IsFilterable = true, IsSortable = true)]

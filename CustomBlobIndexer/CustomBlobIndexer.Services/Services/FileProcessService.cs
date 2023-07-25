@@ -43,18 +43,17 @@ public class FileProcessService : IFileProcessService
         _logger.LogInformation(sasUrl);
 
         string content = await _computerVisionService.ReadFileAsync(sasUrl);
-
+        var sourcePath = uri.GetPathAfterText(_settings.BlobContainerName);
+  
         var d = new SearchIndexDocument
         {
-            Id = Guid.NewGuid().ToString(), //  Base64EncodeString(uri.ToString()),
-            ChunkId = Guid.NewGuid().ToString(),  // Not used when we are not chunking.
+            Id = Base64EncodeString(sourcePath),
             ChunkOrderNumber = 1, // Since we are not chunking, there is only one number
             Content = content,
-            SourcePath = uri.GetPathAfterText(_settings.BlobContainerName),
+            SourcePath = sourcePath,
             Summary = await _textAnalyticsService.ExtractSummarySentenceAsync(content),
-            Title = name
+            Title = Path.GetFileName(name)
         };
-
         
         if (_settings.CognitiveSearchSkillDetectKeyPhrases)
         {

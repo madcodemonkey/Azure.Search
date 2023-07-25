@@ -25,7 +25,9 @@ public class CustomSearchIndexService : ICustomSearchIndexService
     /// <summary>
     /// Clears all documents from the index.
     /// </summary>
-    public async Task<long> ClearAllDocumentsAsync()
+    /// <param name="keyField">The name of the key field that uniquely identifies documents in the index.</param>
+    /// <returns>The number of documents deleted</returns>
+    public async Task<long> DeleteAllDocumentsAsync(string keyField)
     {
         try
         {
@@ -41,7 +43,8 @@ public class CustomSearchIndexService : ICustomSearchIndexService
                 {
                     Size = 50,
                     QueryType = SearchQueryType.Simple,
-                    IncludeTotalCount = true
+                    IncludeTotalCount = true,
+                    Select = { keyField }
                 };
 
                 var azSearchResults = await this.SearchAsync<SearchDocument>("*", options);
@@ -55,8 +58,14 @@ public class CustomSearchIndexService : ICustomSearchIndexService
                         // We are stuck and docs aren't be deleted!
                         break;
                     }
-                    
-                    await searchClient.DeleteDocumentsAsync(azSearchResults.Docs);
+
+                    var keys = new List<string>();
+                    foreach (var doc in azSearchResults.Docs)
+                    {
+                        keys.Add(doc.Document.GetString(keyField));
+                    }
+
+                    await searchClient.DeleteDocumentsAsync(keyField, keys);
 
                     totalDeleted += azSearchResults.Docs.Count;
                 }
@@ -76,24 +85,50 @@ public class CustomSearchIndexService : ICustomSearchIndexService
     }
 
     /// <summary>
+    /// Clears the specified documents from the index.
+    /// </summary>
+    /// <param name="keyField">The name of the key field that uniquely identifies documents in the index.</param>
+    /// <param name="keys">The keys of the documents to delete.</param>
+    /// <returns>The number of documents deleted</returns>
+    public async Task<long> DeleteDocumentsAsync(string keyField, List<string> keys)
+    {
+        if (keys.Count == 0)
+            return 0;
+
+        try
+        {
+            var searchClient = GetSearchClient();
+            await searchClient.DeleteDocumentsAsync(keyField, keys);
+
+            return keys.Count;
+        }
+        catch (RequestFailedException ex)
+        {
+            if (ex.Status == 404)
+                return 0;
+            throw;
+        }
+    }
+
+    /// <summary>
     /// Create index or update the index.
     /// </summary>
     public void CreateOrUpdateIndex()
     {
         FieldBuilder fieldBuilder = new FieldBuilder();
         var searchFields = fieldBuilder.Build(typeof(SearchIndexDocument));
-        
+
         var definition = new SearchIndex(_settings.CognitiveSearchIndexName, searchFields);
 
         // setup the suggestor
         var suggester = new SearchSuggester("sg", new[]
         {
-            nameof(SearchIndexDocument.Title), 
-            nameof(SearchIndexDocument.Id), 
+            nameof(SearchIndexDocument.Title),
+            nameof(SearchIndexDocument.Id),
             nameof(SearchIndexDocument.KeyPhrases)
         });
         definition.Suggesters.Add(suggester);
-        
+
         // Setup Semantic Configuration
         var prioritizedFields = new PrioritizedFields()
         {
@@ -102,10 +137,10 @@ public class CustomSearchIndexService : ICustomSearchIndexService
                 FieldName = nameof(SearchIndexDocument.Title)
             }
         };
-        
-        prioritizedFields.ContentFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.Content)});
-        prioritizedFields.KeywordFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.KeyPhrases)});
-        
+
+        prioritizedFields.ContentFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.Content) });
+        prioritizedFields.KeywordFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.KeyPhrases) });
+
         SemanticConfiguration semanticConfig = new SemanticConfiguration(_settings.CognitiveSearchSemanticConfigurationName, prioritizedFields);
         definition.SemanticSettings = new SemanticSettings();
         definition.SemanticSettings.Configurations.Add(semanticConfig);
@@ -141,7 +176,7 @@ public class CustomSearchIndexService : ICustomSearchIndexService
     {
         IndexDocumentsBatch<SearchIndexDocument> batch = IndexDocumentsBatch.Create(
             IndexDocumentsAction.Upload(doc));
-        
+
         var searchClient = GetSearchClient();
         IndexDocumentsResult result = searchClient.IndexDocuments(batch);
     }

@@ -34,12 +34,26 @@ public class OpenAISearchFunction
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         var data = JsonConvert.DeserializeObject<OpenAIRequest>(requestBody);
 
-        var result = data != null
-            ? await _openAISearchService.QueryAsync(data)
-            : new OpenAIResponse { Answer = "Unable to understand your request object!" };
+        OpenAIResponse openAIResponse;
+
+        if (data != null)
+        {
+            if (string.IsNullOrWhiteSpace(data.SituationStatement))
+                data.SituationStatement = "You are an AI assistant that helps people find information using this data try to answer the question.";
+
+            if (string.IsNullOrWhiteSpace(data.SearchFieldName))
+                data.SearchFieldName = nameof(SearchIndexDocument.Content);
+
+            openAIResponse = await _openAISearchService.QueryAsync(data);
+        }
+        else
+        {
+            openAIResponse = new OpenAIResponse { Answer = "Unable to understand your request object!" };
+        }
+        
         
         var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(result);
+        await response.WriteAsJsonAsync(openAIResponse);
         return response;
     }
 }

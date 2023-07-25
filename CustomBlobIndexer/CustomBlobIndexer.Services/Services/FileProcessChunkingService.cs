@@ -1,4 +1,6 @@
-﻿using CustomBlobIndexer.Models;
+﻿using Azure.Search.Documents.Models;
+using Azure.Search.Documents;
+using CustomBlobIndexer.Models;
 using Microsoft.Extensions.Logging;
 
 namespace CustomBlobIndexer.Services;
@@ -47,20 +49,21 @@ public class FileProcessChunkingService : IFileProcessService
 
         string content = await _computerVisionService.ReadFileAsync(sasUrl);
         List<string> contentChunks = _textChunkingService.CreateChunks(content, _settings.ChunkMaximumNumberOfCharacters);
+        var sourcePath = uri.GetPathAfterText(_settings.BlobContainerName);
 
-        string chunkId = Guid.NewGuid().ToString();
         int chunkOrderNumber = 1;
         foreach (var contentChunk in contentChunks)
         {
+            var id = Base64EncodeString($"{chunkOrderNumber}/{sourcePath}");
+
             var d = new SearchIndexDocument
             {
-                Id = Guid.NewGuid().ToString(), //  Base64EncodeString(uri.ToString()),
-                ChunkId = chunkId,  // The same across all parts of the chunk
+                Id = id,
                 ChunkOrderNumber = chunkOrderNumber++, // allows you to put the chunks back together in the proper order.
                 Content = contentChunk,
                 SourcePath = uri.GetPathAfterText(_settings.BlobContainerName),
                 Summary = await _textAnalyticsService.ExtractSummarySentenceAsync(contentChunk),
-                Title = name
+                Title = Path.GetFileName(name)
             };
 
             if (_settings.CognitiveSearchSkillDetectKeyPhrases)
@@ -90,8 +93,34 @@ public class FileProcessChunkingService : IFileProcessService
 
             _searchIndexService.UploadDocuments(d);
         }
+
+        await DeleteAnyRemainingChunksAsync(chunkOrderNumber, sourcePath);
     }
-     
+
+    /// <summary>
+    /// If we are overwriting an existing document, it's possible that it has fewer chunks than the last time
+    /// it was broken apart.  We should deleting those remaining chunks.
+    /// </summary>
+    /// <param name="chunkOrderNumber">The first chunk number that should be deleted.</param>
+    /// <param name="sourcePath">The name and partial path to the file.  This should be unique if our data is coming out of ONE blob storage container.</param>
+    /// <returns></returns>
+    private async Task DeleteAnyRemainingChunksAsync(int chunkOrderNumber, string sourcePath)
+    {
+        var options = new SearchOptions
+        {
+            QueryType = SearchQueryType.Simple,
+            IncludeTotalCount = true,
+            Select = { nameof(SearchIndexDocument.Id) },
+            Filter = $"{nameof(SearchIndexDocument.SourcePath)} eq '{sourcePath}' and {nameof(SearchIndexDocument.ChunkOrderNumber)} ge {chunkOrderNumber}"
+        };
+        
+        var result = await _searchIndexService.SearchAsync<SearchIndexDocument>("*", options);
+
+        List<string> keys = result.Docs.Select(s => s.Document.Id).ToList();
+        
+        await _searchIndexService.DeleteDocumentsAsync(nameof(SearchIndexDocument.Id), keys);
+    }
+
 
     private string Base64EncodeString(string plainText)
     {
