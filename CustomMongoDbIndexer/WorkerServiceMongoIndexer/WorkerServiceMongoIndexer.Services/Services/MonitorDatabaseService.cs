@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDBServices;
 
 namespace WorkerServiceMongoIndexer.Services;
 
@@ -40,7 +41,7 @@ public class MonitorDatabaseService : IMonitorDatabaseService
         };
         
         IChangeStreamCursor<ChangeStreamDocument<BsonDocument>> streamCursor = await _clientService.Client
-            .GetDatabase(_settings.MongoAtlasNameOfDatabaseToMonitor)
+            .GetDatabase(_settings.MongoDatabaseName)
             .WatchAsync(options, cancellationToken);
 
         foreach (ChangeStreamDocument<BsonDocument> changeItem in streamCursor.ToEnumerable())

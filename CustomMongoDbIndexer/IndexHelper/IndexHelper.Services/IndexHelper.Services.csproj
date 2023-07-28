@@ -8,14 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Search.Documents" Version="11.5.0-beta.3" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.20.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Storage" Version="4.0.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CogSearchServices\CogSearchServices.csproj" />
-    <ProjectReference Include="..\MongoDBServices\MongoDBServices.csproj" />
-    <ProjectReference Include="..\WorkerServiceMongoIndexer.Models\WorkerServiceMongoIndexer.Models.csproj" />
+    <ProjectReference Include="..\IndexHelper.Models\IndexHelper.Models.csproj" />
   </ItemGroup>
 
 </Project>

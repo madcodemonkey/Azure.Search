@@ -9,6 +9,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerServiceMongoIndexer.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerServiceMongoIndexer.Services", "WorkerServiceMongoIndexer.Services\WorkerServiceMongoIndexer.Services.csproj", "{EAE70D5C-6558-43D1-BAD1-2FB6AA9941C3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00 -Solution Items", "00 -Solution Items", "{AE8D455A-518B-42EE-96D9-3F532DE879A5}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CogSearchServices", "CogSearchServices\CogSearchServices.csproj", "{ADF1C233-F287-45F4-82E4-0B26A7B241A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - Indexer", "01 - Indexer", "{8A091CC1-913B-4BC6-8D30-6A03E617825A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 - Common", "02 - Common", "{C499A2A7-C044-480E-BF19-549A5435E75A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDBServices", "MongoDBServices\MongoDBServices.csproj", "{57F71F25-FD5C-4274-87ED-23197EBB052B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,9 +40,24 @@ Global
 		{EAE70D5C-6558-43D1-BAD1-2FB6AA9941C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAE70D5C-6558-43D1-BAD1-2FB6AA9941C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAE70D5C-6558-43D1-BAD1-2FB6AA9941C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADF1C233-F287-45F4-82E4-0B26A7B241A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADF1C233-F287-45F4-82E4-0B26A7B241A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADF1C233-F287-45F4-82E4-0B26A7B241A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADF1C233-F287-45F4-82E4-0B26A7B241A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57F71F25-FD5C-4274-87ED-23197EBB052B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57F71F25-FD5C-4274-87ED-23197EBB052B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57F71F25-FD5C-4274-87ED-23197EBB052B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57F71F25-FD5C-4274-87ED-23197EBB052B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{88DD7617-9810-4465-A670-9F13B036EAB9} = {8A091CC1-913B-4BC6-8D30-6A03E617825A}
+		{AE1C7674-F708-457A-82E9-88218872E0AA} = {8A091CC1-913B-4BC6-8D30-6A03E617825A}
+		{EAE70D5C-6558-43D1-BAD1-2FB6AA9941C3} = {8A091CC1-913B-4BC6-8D30-6A03E617825A}
+		{ADF1C233-F287-45F4-82E4-0B26A7B241A0} = {C499A2A7-C044-480E-BF19-549A5435E75A}
+		{57F71F25-FD5C-4274-87ED-23197EBB052B} = {C499A2A7-C044-480E-BF19-549A5435E75A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B64269B0-B70D-450E-9026-C905884FE51A}

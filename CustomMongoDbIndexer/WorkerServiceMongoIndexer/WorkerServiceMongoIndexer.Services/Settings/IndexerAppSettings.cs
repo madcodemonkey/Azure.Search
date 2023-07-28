@@ -2,6 +2,5 @@
 
 public class IndexerAppSettings
 {
-    public string MongoAtlasConnectionString { get; set; }
-    public string MongoAtlasNameOfDatabaseToMonitor { get; set; }
+    public string MongoDatabaseName { get; set; }
 }

@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CogSearchServices\CogSearchServices.csproj" />
+    <ProjectReference Include="..\MongoDBServices\MongoDBServices.csproj" />
     <ProjectReference Include="..\WorkerServiceMongoIndexer.Services\WorkerServiceMongoIndexer.Services.csproj" />
   </ItemGroup>
 </Project>

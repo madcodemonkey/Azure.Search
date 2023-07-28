@@ -3,15 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IndexHelper", "CustomBlobIndexer\IndexHelper.csproj", "{83E51F74-6C3F-484E-BD30-9D4BD4735721}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IndexHelper", "IndexHelper\IndexHelper.csproj", "{83E51F74-6C3F-484E-BD30-9D4BD4735721}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IndexHelper.Services", "CustomBlobIndexer.Services\IndexHelper.Services.csproj", "{B811AABD-CFA3-4AD8-AB8D-D3210672E176}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IndexHelper.Services", "IndexHelper.Services\IndexHelper.Services.csproj", "{B811AABD-CFA3-4AD8-AB8D-D3210672E176}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IndexHelper.Models", "CustomBlobIndexer.Models\IndexHelper.Models.csproj", "{2B58BE61-1C40-41E7-90C0-A00E501EB5AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IndexHelper.Models", "IndexHelper.Models\IndexHelper.Models.csproj", "{2B58BE61-1C40-41E7-90C0-A00E501EB5AE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A0F79018-4303-4098-B075-91FD5EF2CD7A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00 - Solution Items", "00 - Solution Items", "{A0F79018-4303-4098-B075-91FD5EF2CD7A}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchServices", "SearchServices\SearchServices.csproj", "{873117FD-4CCB-440D-A041-4D0693F6C35D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CogSearchServices", "CogSearchServices\CogSearchServices.csproj", "{873117FD-4CCB-440D-A041-4D0693F6C35D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - Index", "01 - Index", "{8828642B-D7B5-48AB-836D-1EB2B7DE1396}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 - Common", "02 - Common", "{12EE54FF-8701-40EF-812D-34E8876463D0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoDBServices", "MongoDBServices\MongoDBServices.csproj", "{E83763E6-A941-49B4-9252-05E09CAD0837}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,9 +44,20 @@ Global
 		{873117FD-4CCB-440D-A041-4D0693F6C35D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{873117FD-4CCB-440D-A041-4D0693F6C35D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{873117FD-4CCB-440D-A041-4D0693F6C35D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E83763E6-A941-49B4-9252-05E09CAD0837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E83763E6-A941-49B4-9252-05E09CAD0837}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E83763E6-A941-49B4-9252-05E09CAD0837}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E83763E6-A941-49B4-9252-05E09CAD0837}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{83E51F74-6C3F-484E-BD30-9D4BD4735721} = {8828642B-D7B5-48AB-836D-1EB2B7DE1396}
+		{B811AABD-CFA3-4AD8-AB8D-D3210672E176} = {8828642B-D7B5-48AB-836D-1EB2B7DE1396}
+		{2B58BE61-1C40-41E7-90C0-A00E501EB5AE} = {8828642B-D7B5-48AB-836D-1EB2B7DE1396}
+		{873117FD-4CCB-440D-A041-4D0693F6C35D} = {12EE54FF-8701-40EF-812D-34E8876463D0}
+		{E83763E6-A941-49B4-9252-05E09CAD0837} = {12EE54FF-8701-40EF-812D-34E8876463D0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B2DEF5E6-D8B7-4C77-8B12-B197B9053DD0}
