@@ -33,8 +33,7 @@ namespace CustomMongoDbIndexer
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Some error occurred while monitoring the Mongo database!");
-                    Console.WriteLine(ex);
-                    throw;
+                    // TODO: Is there any way to check the connection?  If so check it and reestablish a new connection if necessary.
                 }
             }
 
