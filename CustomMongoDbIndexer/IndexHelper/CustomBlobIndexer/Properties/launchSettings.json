@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "CustomBlobIndexer": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7071",
+      "launchBrowser": false
+    }
+  }
+}
