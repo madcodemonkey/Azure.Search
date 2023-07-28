@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -16,6 +16,8 @@
   <ItemGroup>
     <ProjectReference Include="..\CogSearchServices\CogSearchServices.csproj" />
     <ProjectReference Include="..\IndexHelper.Models\IndexHelper.Models.csproj" />
+    <ProjectReference Include="..\IndexHelper.Repositories\IndexHelper.Repositories.csproj" />
+    <ProjectReference Include="..\MongoDBServices\MongoDBServices.csproj" />
   </ItemGroup>
 
 </Project>

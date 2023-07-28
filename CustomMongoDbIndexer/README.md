@@ -5,29 +5,39 @@ The IndexHelper and WorkerServiceMongoIndexer are designed to be used together.
 - IndexHelper - It will create the Cogntive Search index and allow you to query it.
 - WorkerServiceMongoIndexer - It will monitor the MongoDB database for changes and update the Index created by the IndexHelper.
 
-# IndexHelper Setup
+## Step 1: IndexHelper Setup
 You'll need to do the following
 1. In the Azure portal, create instance of an Azure Cognitive Search resource (Create a basic or S1 sku.  Remember that S1 sku will deplete an MSDN subscription before the end of the month).
 1. Update the local.settings.json entries with information from the portal
    - CognitiveSearchKey - Get the Primary or Secondary admin key from the Azure Portal.  See Setting section and the "Keys" item.
    - CognitiveSearchName - This is what you called the cognitive search when you created it in the portal (e.g., mycoolcogsearch).
-  
-# WorkerServiceMongoIndexer Setup
-1. You'll need a MongoDB Atlas account to run this.  Go to the [start free](https://www.mongodb.com/cloud/atlas/register) page and register for your free account.
-   - Note: You cannot use a docker container since according to the MongoDB documentation on [Change Streams](https://www.mongodb.com/basics/change-streams) it requires:
+   - MongoAtlasConnectionString - This is a connection string to an Atlas Mongo DB.  This is needed when calling the HttpTrigger endpoints in MongoCrudFunction.cs (use the postman collection).
+
+## Step 2: WorkerServiceMongoIndexer Setup
+1. You'll need a MongoDB Atlas account to run this. 
+   - Go to the [start free](https://www.mongodb.com/cloud/atlas/register) page and register for your free account.
+   - Note that you can NOT use a Docker container!! According to the MongoDB documentation on [Change Streams](https://www.mongodb.com/basics/change-streams) it requires a MongoDB that:
       - The database must be in a replica set or sharded cluster.
       - The database must use the WiredTiger storage engine.
       - The replica set or sharded cluster must use replica set protocol version 1.
 1. Update the appsettings.json entries with information from the portal
-   - MongoAtlasConnectionString
-   - MongoDatabaseName
+   - MongoAtlasConnectionString - This is a connection string to an Atlas Mongo DB.  This is needed to monitor the change stream on the database.  Again, this only works with ATLAS MongoDB databases (see comment above)
    - CognitiveSearchKey - Get the Primary or Secondary admin key from the Azure Portal.  See Setting section and the "Keys" item.
    - CognitiveSearchName - This is what you called the cognitive search when you created it in the portal (e.g., mycoolcogsearch).
 
 # Running
-You can run the console app called [SimpleCrudExample1](https://github.com/madcodemonkey/MongoDB/tree/main/SimpleCrudExample1) in 
-my Mongo repository to update the the data.  Just remember to update the connection string to point to MongoDB Atlas since it pointed
-at a local Docker container by default.
+1. **IndexerHelper**. Start the IndexerHelper Azure Function first.
+1. **IndexerHelper**. Using the postman collection (in same directory as the IndexHelperApp.sln file) or a browser, hit the Index-Creator GET endpoint in the IndexManipulationFunction.cs.  This will create the index in Azure Cognitive Search.
+1. **WorkerServiceMongoIndexer**. Start the WorkerServiceMongoIndexer.  This will begin monitoring the change stream of the specified database 
+1. **IndexerHelper**.  You can now use the postman collection (in same directory as the IndexHelperApp.sln file) to perform CRUD actions against the MongoDB.
+   - The Mongo-Create endpoint will create MongoDB records.
+   - The Mongo-Delete endpoint will delete MongoDB records.
+   - The Mongo-Update endpoint will update MongoDB records.
+1. **WorkerServiceMongoIndexer**.  After performing these operations, give the WorkerServiceMongoIndexer project a few seconds to maniuplate the index documents in Azure Cognitive Search index
+1. **IndexerHelper**.  Perform searches against the Azure Cognitive Search index using the postman collection
+   - The Index-SimpleSearch endpoint will perform simple searches (as opposed to Luncene or Semantic searches) against the Azure Cognitive Search index
+
+If you find the new data in the Azure Cognitive Search index, the worker service is working properly!! 
 
 # Compass Tool
 If you want to look into the MongoDB running in the docker container, you can [download MongoDB's free tool called Compass](https://www.mongodb.com/try/download/compass).  

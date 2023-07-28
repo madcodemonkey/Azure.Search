@@ -1,4 +1,5 @@
 ﻿using CogSearchServices.Services;
+using IndexHelper.Models;
 using IndexHelper.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,8 @@ public static class ServiceCollectionExtensions
         var indexAppSettings = new IndexAppSettings
         {
             CognitiveSearchSemanticConfigurationName = config["CognitiveSearchSemanticConfigurationName"],
-            MongoDatabaseName = config["MongoDatabaseName"] 
+            MongoDatabaseName = config["MongoDatabaseName"] ,
+            MongoPeopleCollection = config["MongoPeopleCollection"]
         };
 
         sc.AddServices(indexAppSettings);

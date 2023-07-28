@@ -2,6 +2,6 @@
 
 public class MongoDBServiceSettings
 {
-    public string MongoAtlasConnectionString { get; set; }
+    public string MongoAtlasConnectionString { get; set; } = string.Empty;
 
 }

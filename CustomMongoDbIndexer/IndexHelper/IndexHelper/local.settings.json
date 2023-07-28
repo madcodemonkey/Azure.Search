@@ -8,6 +8,7 @@
     "CognitiveSearchSemanticConfigurationName": "my-semantic-config",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "MongoAtlasConnectionString": "---your connection string here---",
-    "MongoDatabaseName": "simple_db"
+    "MongoDatabaseName": "simple_db",
+    "MongoPeopleCollection": "people"
   }
 }
