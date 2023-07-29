@@ -8,10 +8,11 @@ The IndexHelper and WorkerServiceMongoIndexer are designed to be used together.
 ## Step 1: IndexHelper Setup
 You'll need to do the following
 1. In the Azure portal, create instance of an Azure Cognitive Search resource (Create a basic or S1 sku.  Remember that S1 sku will deplete an MSDN subscription before the end of the month).
-1. Update the local.settings.json entries with information from the portal
+1. Update the appsettings.json entries with information from the Mongo web site
+   - MongoAtlasConnectionString - This is a connection string to an Atlas Mongo DB.  This is needed to monitor the change stream on the database.  Again, this only works with ATLAS MongoDB databases (see comment above)
+1. Update the local.settings.json entries with information from the Azure Portal
    - CognitiveSearchKey - Get the Primary or Secondary admin key from the Azure Portal.  See Setting section and the "Keys" item.
    - CognitiveSearchName - This is what you called the cognitive search when you created it in the portal (e.g., mycoolcogsearch).
-   - MongoAtlasConnectionString - This is a connection string to an Atlas Mongo DB.  This is needed when calling the HttpTrigger endpoints in MongoCrudFunction.cs (use the postman collection).
 
 ## Step 2: WorkerServiceMongoIndexer Setup
 1. You'll need a MongoDB Atlas account to run this. 
@@ -20,8 +21,9 @@ You'll need to do the following
       - The database must be in a replica set or sharded cluster.
       - The database must use the WiredTiger storage engine.
       - The replica set or sharded cluster must use replica set protocol version 1.
-1. Update the appsettings.json entries with information from the portal
+1. Update the appsettings.json entries with information from the Mongo web site
    - MongoAtlasConnectionString - This is a connection string to an Atlas Mongo DB.  This is needed to monitor the change stream on the database.  Again, this only works with ATLAS MongoDB databases (see comment above)
+1. Update the appsettings.json entries with information from the Azure portal
    - CognitiveSearchKey - Get the Primary or Secondary admin key from the Azure Portal.  See Setting section and the "Keys" item.
    - CognitiveSearchName - This is what you called the cognitive search when you created it in the portal (e.g., mycoolcogsearch).
 
