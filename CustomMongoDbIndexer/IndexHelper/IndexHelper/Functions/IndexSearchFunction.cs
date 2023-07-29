@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net;
 using CogSearchServices.Models;
+using Azure.Core;
+using IndexHelper.Models;
 
 namespace CustomBlobIndexer.Functions;
 
@@ -15,17 +17,19 @@ namespace CustomBlobIndexer.Functions;
 /// </summary>
 public class IndexSearchFunction
 {
+    private readonly IndexAppSettings _indexAppSettings;
     private readonly IPersonIndexService _searchIndexService;
     private readonly ILogger _logger;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public IndexSearchFunction(ILoggerFactory loggerFactory, 
-     
+    public IndexSearchFunction(ILoggerFactory loggerFactory,
+        IndexAppSettings indexAppSettings,
         IPersonIndexService searchIndexService)
     {
         _logger = loggerFactory.CreateLogger<IndexSearchFunction>();
+        _indexAppSettings = indexAppSettings;
         _searchIndexService = searchIndexService;
     }
 
@@ -48,6 +52,29 @@ public class IndexSearchFunction
 
         
         var response = req.CreateResponse(HttpStatusCode.OK); 
+        await response.WriteAsJsonAsync(result);
+        return response;
+    }
+
+    [Function("Index-SemanticSearch")]
+    public async Task<HttpResponseData> SemanticSearch([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+    {
+        _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+        string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+        CogSearchRequest? data = JsonConvert.DeserializeObject<CogSearchRequest>(requestBody);
+
+        var result = data != null
+            ? await _searchIndexService.SearchAsync<SearchDocument>(data.Query, new SearchOptions()
+            {
+                IncludeTotalCount = data.IncludeCount,
+                QueryLanguage = QueryLanguage.EnUs,
+                QueryType = SearchQueryType.Semantic,
+                SemanticConfigurationName = _indexAppSettings.CognitiveSearchSemanticConfigurationName
+            })
+            : new CogSearchQueryResponse<SearchDocument>();
+        
+        var response = req.CreateResponse(HttpStatusCode.OK);
         await response.WriteAsJsonAsync(result);
         return response;
     }
