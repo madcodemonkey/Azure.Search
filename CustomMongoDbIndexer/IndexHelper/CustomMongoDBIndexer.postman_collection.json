@@ -31,7 +31,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"query\": \"james\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+					"raw": "{\r\n    \"query\": \"*\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -58,7 +58,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"query\": \"does john have any children?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+					"raw": "{\r\n    \"query\": \"who was a song actor?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -174,7 +174,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/Mongo-Delete?personId=64c445b2e606ea245eb41dc8",
+					"raw": "{{baseUrl}}/api/Mongo-Delete?personId=64c458c3c328d17a1c7d0270",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -185,7 +185,7 @@
 					"query": [
 						{
 							"key": "personId",
-							"value": "64c445b2e606ea245eb41dc8"
+							"value": "64c458c3c328d17a1c7d0270"
 						}
 					]
 				}
@@ -199,7 +199,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"64c445b2e606ea245eb41dc8\",\r\n    \"firstName\": \"David\",\r\n    \"lastName\": \"Bowie\",\r\n    \"age\": 56,\r\n    \"description\": \"David Robert Jones (8 January 1947 – 10 January 2016), known professionally as David Bowie was an English Singer-songwriter and actor. \"\r\n}",
+					"raw": "{\r\n    \"id\": \"64c455afc328d17a1c7d026e\",\r\n    \"firstName\": \"David\",\r\n    \"lastName\": \"Bowie\",\r\n    \"age\": 45,\r\n    \"description\": \"David Robert Jones (8 January 1947 – 10 January 2016), known professionally as David Bowie was an English Singer-songwriter and actor. \"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
