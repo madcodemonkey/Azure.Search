@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
             CognitiveSearchKey = config["CognitiveSearchKey"],
             CognitiveSearchName = config["CognitiveSearchName"],
         };
-        sc.AddCommonCogSearchServices(cogSearchSettings);
+        sc.AddCogSearchServicesForWebBasedClients(cogSearchSettings);
 
 
         var mongoSettings = new MongoDBServiceSettings

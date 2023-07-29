@@ -7,8 +7,6 @@ namespace CogSearchServices.Services;
 
 public abstract class CogSearchIndexService : ICogSearchIndexService
 {
-    protected ICogSearchClientService ClientService { get; }
- 
     /// <summary>
     /// Constructor
     /// </summary>
@@ -16,6 +14,9 @@ public abstract class CogSearchIndexService : ICogSearchIndexService
     {
         ClientService = clientService;
     }
+
+    protected ICogSearchClientService ClientService { get; }
+
 
     /// <summary>
     /// Clears all documents from the index.
@@ -105,6 +106,23 @@ public abstract class CogSearchIndexService : ICogSearchIndexService
         }
     }
 
+    /// <summary>
+    /// Clears the specified documents from the index.
+    /// </summary>
+    /// <param name="keyField">The name of the key field that uniquely identifies documents in the index.</param>
+    /// <param name="key">The key (primary field) of the document to delete.</param>
+    /// <returns>The number of documents deleted</returns>
+    public async Task<bool> DeleteDocumentAsync(string keyField, string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            return false;
+
+        var count = await DeleteDocumentsAsync(keyField, new List<string> { key });
+
+        return count > 0;
+    }
+
+
 
     /// <summary>Searches for documents</summary>
     /// <typeparam name="T">The type of data being returned.</typeparam>
@@ -123,6 +141,40 @@ public abstract class CogSearchIndexService : ICogSearchIndexService
 
         return result;
     }
- 
- 
+
+
+    /// <summary>
+    /// Uploads one document to an index.
+    /// </summary>
+    /// <param name="doc">One document</param>
+    public async Task<IndexDocumentsResult> UploadDocumentAsync<T>(T doc) where T : class
+    {
+        IndexDocumentsAction<T>? actions = IndexDocumentsAction.Upload(doc);
+
+        IndexDocumentsBatch<T> batch = IndexDocumentsBatch.Create(actions);
+
+        var searchClient = this.ClientService.GetSearchClient();
+
+        IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch);
+
+        return result;
+    }
+
+    /// <summary>Uploads multiple documents to an index.</summary>
+    /// <typeparam name="T">The class type that we are uploading.</typeparam>
+    /// <param name="documentList">The list of items of type T to upload.</param>
+    public async Task<IndexDocumentsResult> UploadDocumentsAsync<T>(List<T> documentList) where T : class
+    {
+        // Turn the documentList into an array of Upload Actions
+        IndexDocumentsAction<T>[] actions = documentList.Select(s => IndexDocumentsAction.Upload(s)).ToArray();
+
+        // Create a back of actions
+        IndexDocumentsBatch<T> batch = IndexDocumentsBatch.Create(actions);
+
+        SearchClient searchClient = ClientService.GetSearchClient();
+
+        IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch);
+
+        return result;
+    }
 }

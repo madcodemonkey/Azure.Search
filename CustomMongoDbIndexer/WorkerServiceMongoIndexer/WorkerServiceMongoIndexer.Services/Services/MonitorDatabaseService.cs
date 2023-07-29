@@ -60,7 +60,7 @@ public class MonitorDatabaseService : IMonitorDatabaseService
                     await _documentProcessorService.UpdateDocumentAsync(changeItem.FullDocument);
                     break;
                 case ChangeStreamOperationType.Delete:
-                    await _documentProcessorService.DeleteDocumentAsync(changeItem.DocumentKey.ToString());
+                    await _documentProcessorService.DeleteDocumentAsync(changeItem.DocumentKey["_id"].ToString());
                     break;
             }
 

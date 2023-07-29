@@ -5,10 +5,7 @@ namespace WorkerServiceMongoIndexer.Services;
 
 public interface IPersonIndexService : ICogSearchIndexService
 {
-  
-    /// <summary>
-    /// Upload documents in a single Upload request.
-    /// </summary>
-    /// <param name="doc"></param>
-    void UploadDocuments(PersonIndexDocument doc);
+    Task UpdateDocumentAsync(PersonIndexDocument personDoc);
+    Task CreateDocumentAsync(PersonIndexDocument personDoc);
+    Task DeleteDocumentAsync(string id);
 }

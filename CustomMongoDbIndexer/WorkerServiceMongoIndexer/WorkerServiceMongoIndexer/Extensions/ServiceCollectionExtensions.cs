@@ -11,7 +11,7 @@ public static class ServiceCollectionExtensions
     {
         var cogSearchSettings = new CogSearchServiceSettings();
         config.GetSection("SearchSettings").Bind(cogSearchSettings);
-        sc.AddCommonCogSearchServices(cogSearchSettings);
+        sc.AddCommonCogSearchServicesForWorkerBasedClients(cogSearchSettings);
 
         var mongoSettings = new MongoDBServiceSettings();
         config.GetSection("MongoSettings").Bind(mongoSettings);

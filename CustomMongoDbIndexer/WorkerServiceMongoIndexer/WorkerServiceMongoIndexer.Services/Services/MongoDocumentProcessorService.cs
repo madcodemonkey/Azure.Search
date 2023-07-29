@@ -1,29 +1,26 @@
 ﻿using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
-using System.Text;
+using WorkerServiceMongoIndexer.Models;
 
 namespace WorkerServiceMongoIndexer.Services;
 
 public class MongoDocumentProcessorService : IMongoDocumentProcessorService
 {
     private readonly ILogger<MongoDocumentProcessorService> _logger;
+    private readonly IPersonIndexService _personIndexService;
 
-    public MongoDocumentProcessorService(ILogger<MongoDocumentProcessorService> logger)
+    public MongoDocumentProcessorService(ILogger<MongoDocumentProcessorService> logger,
+        IPersonIndexService personIndexService)
     {
         _logger = logger;
+        _personIndexService = personIndexService;
     }
     public async Task UpdateDocumentAsync(BsonDocument? document)
     {
         if (document != null)
         {
-            var sb = new StringBuilder();
-            // Show all the fields on the document.
-            foreach (string name in document.Names)
-            {
-                sb.AppendLine($"  {name}: {document[name]}");
-            }
-
-            _logger.LogInformation(sb.ToString());
+            var personIndexDoc = MapDocument(document);
+            await _personIndexService.UpdateDocumentAsync(personIndexDoc);
         }
         else
         {
@@ -31,18 +28,13 @@ public class MongoDocumentProcessorService : IMongoDocumentProcessorService
         }
     }
 
+
     public async Task CreateDocumentAsync(BsonDocument? document)
     {
         if (document != null)
         {
-            var sb = new StringBuilder();
-            // Show all the fields on the document.
-            foreach (string name in document.Names)
-            {
-                sb.AppendLine($"  {name}: {document[name]}");
-            }
-
-            _logger.LogInformation(sb.ToString());
+            var personIndexDoc = MapDocument(document);
+            await _personIndexService.CreateDocumentAsync(personIndexDoc);
         }
         else
         {
@@ -60,7 +52,20 @@ public class MongoDocumentProcessorService : IMongoDocumentProcessorService
         }
         else
         {
+            await _personIndexService.DeleteDocumentAsync(id);
             _logger.LogInformation($"Delete this id: {id}");
         }
+    }
+
+    private static PersonIndexDocument MapDocument(BsonDocument document)
+    {
+        return new PersonIndexDocument
+        {
+            Id = document["_id"].ToString() ?? string.Empty,
+            FirstName = document.GetValue(nameof(PersonIndexDocument.FirstName)).AsString,
+            LastName = document.GetValue(nameof(PersonIndexDocument.LastName)).AsString,
+            Age = document.GetValue(nameof(PersonIndexDocument.Age)).AsInt32,
+            Description = document.GetValue(nameof(PersonIndexDocument.Description)).AsString
+        };
     }
 }

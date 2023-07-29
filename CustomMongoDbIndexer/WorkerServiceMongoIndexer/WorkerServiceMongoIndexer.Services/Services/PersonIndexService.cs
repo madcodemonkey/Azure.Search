@@ -1,33 +1,29 @@
-﻿using Azure.Search.Documents.Models;
-using CogSearchServices.Services;
+﻿using CogSearchServices.Services;
 using WorkerServiceMongoIndexer.Models;
 
 namespace WorkerServiceMongoIndexer.Services;
 
 public class PersonIndexService : CogSearchIndexService, IPersonIndexService
 {
-    private readonly CogSearchServiceSettings _settings;
-
     /// <summary>
     /// Constructor
     /// </summary>
-    public PersonIndexService(CogSearchServiceSettings settings, 
-        ICogSearchClientService clientService) : base(clientService)
+    public PersonIndexService(ICogSearchClientService clientService) : base(clientService)
     {
-        _settings = settings;
     }
  
-    /// <summary>
-    /// Upload documents in a single Upload request.
-    /// </summary>
-    /// <param name="doc"></param>
-    public void UploadDocuments(PersonIndexDocument doc)
+    public async Task UpdateDocumentAsync(PersonIndexDocument personDoc)
     {
-        IndexDocumentsBatch<PersonIndexDocument> batch = IndexDocumentsBatch.Create(
-            IndexDocumentsAction.Upload(doc));
+        await this.UploadDocumentAsync(personDoc);
+    }
 
-        var searchClient = this.ClientService.GetSearchClient();
-        IndexDocumentsResult result = searchClient.IndexDocuments(batch);
+    public async Task CreateDocumentAsync(PersonIndexDocument personDoc)
+    {
+        await this.UploadDocumentAsync(personDoc);
     }
- 
+
+    public async Task DeleteDocumentAsync(string id)
+    {
+        await this.DeleteDocumentAsync(nameof(PersonIndexDocument.Id), id);
+    }
 }
