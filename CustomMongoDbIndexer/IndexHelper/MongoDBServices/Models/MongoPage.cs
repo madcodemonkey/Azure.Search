@@ -15,5 +15,5 @@ public class MongoPage<T>
     /// <summary>
     /// The items for the current <see cref="PageNumber"/>!
     /// </summary>
-    public List<T> Items { get; set; }
+    public List<T> Items { get; set; } = new List<T>();
 }
