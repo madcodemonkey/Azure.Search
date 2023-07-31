@@ -94,9 +94,11 @@ public abstract class CogSearchIndexService : ICogSearchIndexService
         try
         {
             var searchClient = ClientService.GetSearchClient();
-            await searchClient.DeleteDocumentsAsync(keyField, keys);
+            var response = await searchClient.DeleteDocumentsAsync(keyField, keys);
 
-            return keys.Count;
+            var numberDeleted = response?.Value.Results.Count(c => c.Succeeded) ?? 0;
+
+            return numberDeleted;
         }
         catch (RequestFailedException ex)
         {

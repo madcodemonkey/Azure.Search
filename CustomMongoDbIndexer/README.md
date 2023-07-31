@@ -9,7 +9,7 @@ The IndexHelper and WorkerServiceMongoIndexer are designed to be used together.
 You'll need to do the following
 1. In the Azure portal, create instance of an Azure Cognitive Search resource (Create a basic or S1 sku.  Remember that S1 sku will deplete an MSDN subscription before the end of the month).
 1. Update the appsettings.json entries with information from the Mongo web site
-   - MongoAtlasConnectionString - This is a connection string to an Atlas Mongo DB.  This is needed to monitor the change stream on the database.  Again, this only works with ATLAS MongoDB databases (see comment above)
+   - MongoAtlasConnectionString - This is a connection string to an Atlas Mongo DB.  This is needed to monitor the change stream on the database.  This only works with ATLAS MongoDB databases (see comments in the worker below)
 1. Update the local.settings.json entries with information from the Azure Portal
    - CognitiveSearchKey - Get the Primary or Secondary admin key from the Azure Portal.  See Setting section and the "Keys" item.
    - CognitiveSearchName - This is what you called the cognitive search when you created it in the portal (e.g., mycoolcogsearch).
