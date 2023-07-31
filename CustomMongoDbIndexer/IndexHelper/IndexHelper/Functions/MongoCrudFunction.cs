@@ -26,7 +26,7 @@ public class MongoCrudFunction
     }
     
     [Function("Mongo-Create")]
-    public async Task<HttpResponseData> CreateOneAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+    public async Task<HttpResponseData> CreateOneAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Requesting a document be created.");
 
@@ -38,41 +38,43 @@ public class MongoCrudFunction
             return req.CreateResponse(HttpStatusCode.BadRequest);
         }
 
-        await _mongoService.CreateAsync(person);
+        await _mongoService.CreateAsync(person, cancellationToken);
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-        response.WriteString("Document was created!");
+        await response.WriteStringAsync("Document was created!", cancellationToken);
         return response;
     }
 
     [Function("Mongo-Delete")]
-    public async Task<HttpResponseData> DeleteOneAsync([HttpTrigger(AuthorizationLevel.Function, "delete")] HttpRequestData req, string personId)
+    public async Task<HttpResponseData> DeleteOneAsync([HttpTrigger(AuthorizationLevel.Function, "delete")] HttpRequestData req,
+        string personId, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Requesting a document be created.");
 
-        await _mongoService.DeleteAsync(personId);
+        await _mongoService.DeleteAsync(personId, cancellationToken);
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-        response.WriteString("Document was deleted!");
+        await response.WriteStringAsync("Document was deleted!", cancellationToken);
         return response;
     }
 
     [Function("Mongo-GetAll")]
-    public async Task<HttpResponseData> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
+    public async Task<HttpResponseData> GetAllAsync([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req,
+         int pageNumber, int itemsPerPage, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Requesting all documents.");
         
-        var result =  await _mongoService.GetAllAsync();
+        var result =  await _mongoService.GetAllAsync(pageNumber, itemsPerPage, cancellationToken);
 
         var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(result);
+        await response.WriteAsJsonAsync(result,cancellationToken);
         return response;
     }
 
     [Function("Mongo-Update")]
-    public async Task<HttpResponseData> UpdateOneAsync([HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req)
+    public async Task<HttpResponseData> UpdateOneAsync([HttpTrigger(AuthorizationLevel.Function, "put")] HttpRequestData req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Requesting a document be updated.");
 
@@ -84,11 +86,11 @@ public class MongoCrudFunction
             return req.CreateResponse(HttpStatusCode.BadRequest);
         }
 
-        await _mongoService.UpdateAsync(person);
+        await _mongoService.UpdateAsync(person, cancellationToken);
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-        response.WriteString("Document was updated!");
+        await response.WriteStringAsync("Document was updated!", cancellationToken);
         return response;
     }
 }
