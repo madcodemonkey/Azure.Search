@@ -1,0 +1,902 @@
+{
+	"info": {
+		"_postman_id": "1a3cb483-f1d8-4a54-9ae8-cb958f63c4ec",
+		"name": "Search.Web (Azure Search)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2277005"
+	},
+	"item": [
+		{
+			"name": "Well Defined Endpoint",
+			"item": [
+				{
+					"name": "Hotel Creation",
+					"item": [
+						{
+							"name": "01-Synonym creation",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelSynonym",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSynonym"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "02-Index creation",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelIndex",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelIndex"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "03-Associate synonym to Index fields",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelSynonym/Associate",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSynonym",
+										"Associate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "04-Data Source creation",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelDataSource",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelDataSource"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "05-Indexer creation",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelIndexer",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelIndexer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "06-Run Indexer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelIndexer/Run",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelIndexer",
+										"Run"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Hotel Delete",
+					"item": [
+						{
+							"name": "01-Indexer delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelIndexer",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelIndexer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "02-Index delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelIndex",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelIndex"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "03-Data Source delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelDataSource",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelDataSource"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "04-Synonym delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelSynonym",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSynonym"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Hotel Queries",
+					"item": [
+						{
+							"name": "Index - Show List",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelIndex",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelIndex"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "IndexER - Show List",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelIndexer",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelIndexer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Data Sources - Show List",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelDataSource",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelDataSource"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Synonym - Show all map names",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelSynonym/Maps",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSynonym",
+										"Maps"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Synonym - Show one map items",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/HotelSynonym/Map?name=hotels-map",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSynonym",
+										"Map"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "hotels-map"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Search",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"murders hilton\",\r\n    \"queryType\": 0, \r\n    \"includeCount\": true,\r\n    \"includeAllWords\": false,\r\n    \"itemsPerPage\": 30,\r\n    \"pageNumber\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/HotelSearch/Search",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSearch",
+										"Search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Search - Lucene",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"hotelName:hilton\",\r\n    \"queryType\": 1, \r\n    \"includeCount\": true,\r\n    \"includeAllWords\": false,\r\n    \"itemsPerPage\": 30,\r\n    \"pageNumber\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/HotelSearch/Search",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSearch",
+										"Search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Search - Filter Category AND parking",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"*\",\r\n    \"queryType\": 0,\r\n    \"includeCount\": true,\r\n    \"includeAllWords\": true,\r\n    \"itemsPerPage\": 30,\r\n    \"pageNumber\": 1,\r\n     \"filters\": [\r\n        {\r\n            \"peerOperator\": 0,\r\n            \"fieldName\": \"parkingIncluded\",\r\n            \"fieldType\": 3,\r\n            \"filtersOperator\": 0,\r\n            \"filters\": [\r\n                {\r\n                    \"operator\": 1,\r\n                    \"values\": [\r\n                        \"true\"\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"peerOperator\": 0,\r\n            \"fieldName\": \"category\",\r\n            \"fieldType\": 1,\r\n            \"filtersOperator\": 0,\r\n            \"filters\": [\r\n                {\r\n                    \"operator\": 1,\r\n                    \"values\": [\r\n                        \"Luxury\"\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"orderByFields\": [\r\n      {\r\n            \"fieldName\": \"category\",\r\n            \"sortDescending\": true\r\n        },\r\n        {\r\n            \"fieldName\": \"hotelName\",\r\n            \"sortDescending\": true\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/HotelSearch/Search",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSearch",
+										"Search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Search - Filter Category OR parking",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"*\",\r\n    \"queryType\": 0,\r\n    \"includeCount\": true,\r\n    \"includeAllWords\": true,\r\n    \"itemsPerPage\": 30,\r\n    \"pageNumber\": 1,\r\n   \"filters\": [\r\n        {\r\n            \"peerOperator\": 1,\r\n            \"fieldName\": \"parkingIncluded\",\r\n            \"fieldType\": 3,\r\n            \"filtersOperator\": 0,\r\n            \"filters\": [\r\n                {\r\n                    \"operator\": 1,\r\n                    \"values\": [\r\n                        \"true\"\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"peerOperator\": 1,\r\n            \"fieldName\": \"category\",\r\n            \"fieldType\": 1,\r\n            \"filtersOperator\": 0,\r\n            \"filters\": [\r\n                {\r\n                    \"operator\": 1,\r\n                    \"values\": [\r\n                        \"Luxury\"\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"orderByFields\": [\r\n        {\r\n            \"fieldName\": \"category\",\r\n            \"sortDescending\": true\r\n        },\r\n        {\r\n            \"fieldName\": \"hotelName\",\r\n            \"sortDescending\": true\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/HotelSearch/Search",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSearch",
+										"Search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Suggestor",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"luxury\",\r\n    \"includeCount\": true,\r\n    \"numberOfSuggestionsToRetrieve\": 10,\r\n    \"useFuzzyMatching\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/HotelSearch/Suggest",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSearch",
+										"Suggest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Suggestor - fuzzy match",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"lurury\",\r\n    \"includeCount\": true,\r\n    \"NumberOfSuggestionsToRetrieve\": 10,\r\n    \"useFuzzyMatching\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/HotelSearch/Suggest",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSearch",
+										"Suggest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Suggestor - Filter Category",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"cloud\",\r\n    \"includeCount\": true,\r\n    \"numberOfSuggestionsToRetrieve\": 10,\r\n     \"filters\": [\r\n        {\r\n            \"peerOperator\": 0,\r\n            \"fieldName\": \"category\",\r\n            \"fieldType\": 1,\r\n            \"filtersOperator\": 0,\r\n            \"filters\": [\r\n                {\r\n                    \"operator\": 1,\r\n                    \"values\": [\r\n                        \"Luxury\"\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"useFuzzyMatching\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/HotelSearch/Suggest",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSearch",
+										"Suggest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Autocomplete",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"luxury\",\r\n    \"includeCount\": true,\r\n    \"NumberOfSuggestionsToRetrieve\": 10,\r\n    \"useFuzzyMatching\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/HotelSearch/AutoComplete",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSearch",
+										"AutoComplete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Autocomplete  - fuzzy",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"lux\",\r\n    \"includeCount\": true,\r\n    \"NumberOfSuggestionsToRetrieve\": 10,\r\n    \"useFuzzyMatching\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/HotelSearch/AutoComplete",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"HotelSearch",
+										"AutoComplete"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Generic Endpoint",
+			"item": [
+				{
+					"name": "Hotel Queries",
+					"item": [
+						{
+							"name": "Hotel Search",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"facetFields\": [\r\n        \"baseRate\",\r\n        \"category\",\r\n        \"parkingIncluded\",\r\n        \"rating\",\r\n        \"smokingAllowed\",\r\n        \"tags\"\r\n    ],\r\n    \"query\": \"murders hilton\",\r\n    \"queryType\": 0,\r\n    \"highlightFields\": [\r\n        \"hotelName\",\r\n        \"category\",\r\n        \"description\"\r\n    ],\r\n    \"indexName\": \"{{hotelsIndexName}}\",\r\n    \"includeCount\": true,\r\n    \"includeAllWords\": false,\r\n    \"itemsPerPage\": 30,\r\n    \"pageNumber\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/Search/Documents",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Search",
+										"Documents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Search - Lucene",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"facetFields\": [\r\n        \"baseRate\",\r\n        \"category\",\r\n        \"parkingIncluded\",\r\n        \"rating\",\r\n        \"smokingAllowed\",\r\n        \"tags\"\r\n    ],\r\n    \"query\": \"hotelName:hilton\",\r\n    \"queryType\": 1,\r\n    \"highlightFields\": [\r\n        \"hotelName\",\r\n        \"category\",\r\n        \"description\"\r\n    ],\r\n    \"includeCount\": true,\r\n    \"includeAllWords\": false,\r\n    \"indexName\": \"{{hotelsIndexName}}\",\r\n    \"itemsPerPage\": 30,\r\n    \"pageNumber\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/Search/Documents",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Search",
+										"Documents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Search - Filter Category AND parking",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"*\",\r\n    \"queryType\": 0,\r\n    \"includeCount\": true,\r\n    \"includeAllWords\": true,\r\n   \"indexName\": \"{{hotelsIndexName}}\",\r\n    \"itemsPerPage\": 30,\r\n    \"pageNumber\": 1,\r\n    \"filters\": [\r\n        {\r\n            \"peerOperator\": 0,\r\n            \"fieldName\": \"parkingIncluded\",\r\n            \"fieldType\": 3,\r\n            \"filtersOperator\": 0,\r\n            \"filters\": [\r\n                {\r\n                    \"operator\": 1,\r\n                    \"values\": [\r\n                        \"true\"\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"peerOperator\": 0,\r\n            \"fieldName\": \"category\",\r\n            \"fieldType\": 1,\r\n            \"filtersOperator\": 0,\r\n            \"filters\": [\r\n                {\r\n                    \"operator\": 1,\r\n                    \"values\": [\r\n                        \"Luxury\"\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"orderByFields\": [\r\n        {\r\n            \"fieldName\": \"category\",\r\n            \"sortDescending\": true\r\n        },\r\n        {\r\n            \"fieldName\": \"hotelName\",\r\n            \"sortDescending\": true\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/Search/Documents",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Search",
+										"Documents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Search - Filter Category OR parking",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"*\",\r\n    \"queryType\": 0,\r\n    \"includeCount\": true,\r\n    \"includeAllWords\": true,\r\n    \"indexName\": \"{{hotelsIndexName}}\",\r\n    \"itemsPerPage\": 30,\r\n    \"pageNumber\": 1,\r\n    \"filters\": [\r\n        {\r\n            \"peerOperator\": 1,\r\n            \"fieldName\": \"parkingIncluded\",\r\n            \"fieldType\": 3,\r\n            \"filtersOperator\": 0,\r\n            \"filters\": [\r\n                {\r\n                    \"operator\": 1,\r\n                    \"values\": [\r\n                        \"true\"\r\n                    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"peerOperator\": 1,\r\n            \"fieldName\": \"category\",\r\n            \"fieldType\": 1,\r\n            \"filtersOperator\": 0,\r\n            \"filters\": [\r\n                {\r\n                    \"operator\": 1,\r\n                    \"values\": [\r\n                        \"Luxury\"\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"orderByFields\": [\r\n        {\r\n            \"fieldName\": \"category\",\r\n            \"sortDescending\": true\r\n        },\r\n        {\r\n            \"fieldName\": \"hotelName\",\r\n            \"sortDescending\": true\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/Search/Documents",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Search",
+										"Documents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Suggestor",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"luxury\",\r\n    \"documentFields\": [\r\n        \"hotelName\",\r\n        \"hotelId\",\r\n        \"roles\"\r\n    ],\r\n    \"indexName\": \"{{hotelsIndexName}}\",\r\n    \"numberOfSuggestionsToRetrieve\": 10,\r\n    \"suggestorName\": \"{{hotelsSuggestorName}}\",\r\n    \"useFuzzyMatching\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/Search/Suggest",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Search",
+										"Suggest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Suggestor - fuzzy match",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"lurury\",\r\n    \"indexName\": \"{{hotelsIndexName}}\",\r\n    \"numberOfSuggestionsToRetrieve\": 10,\r\n    \"suggestorName\": \"{{hotelsSuggestorName}}\",\r\n    \"useFuzzyMatching\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/Search/Suggest",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Search",
+										"Suggest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Suggestor - Filter Category",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"cloud\",\r\n    \"indexName\": \"{{hotelsIndexName}}\",\r\n    \"numberOfSuggestionsToRetrieve\": 10,\r\n    \"filters\": [\r\n        {\r\n            \"peerOperator\": 0,\r\n            \"fieldName\": \"category\",\r\n            \"fieldType\": 1,\r\n            \"filtersOperator\": 0,\r\n            \"filters\": [\r\n                {\r\n                    \"operator\": 1,\r\n                    \"values\": [\r\n                        \"Luxury\"\r\n                    ]\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"suggestorName\": \"{{hotelsSuggestorName}}\",\r\n    \"useFuzzyMatching\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/Search/Suggest",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Search",
+										"Suggest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Autocomplete",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"luxury\",\r\n    \"indexName\": \"{{hotelsIndexName}}\",\r\n    \"numberOfSuggestionsToRetrieve\": 10,\r\n    \"suggestorName\": \"{{hotelsSuggestorName}}\",\r\n    \"useFuzzyMatching\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/Search/AutoComplete",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Search",
+										"AutoComplete"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Hotel Autocomplete  - fuzzy",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"query\": \"lux\",\r\n    \"indexName\": \"{{hotelsIndexName}}\",\r\n    \"numberOfSuggestionsToRetrieve\": 10,\r\n    \"suggestorName\": \"{{hotelsSuggestorName}}\",\r\n    \"useFuzzyMatching\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/Search/AutoComplete",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Search",
+										"AutoComplete"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "https://yatessearch.search.windows.net/indexes/hotels-idx/docs/194cd342-0470-4f54-b9ef-da0bc6395bb2?api-version=2020-06-30",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "api-key",
+						"value": "K2YiAbFTZAYxKTKFMsOVsQBMz5c2a2tuMUYwuqs3e8AzSeCoqS4Q",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://yatessearch.search.windows.net/indexes/hotels-idx/docs/194cd342-0470-4f54-b9ef-da0bc6395bb2?api-version=2020-06-30",
+					"protocol": "https",
+					"host": [
+						"yatessearch",
+						"search",
+						"windows",
+						"net"
+					],
+					"path": [
+						"indexes",
+						"hotels-idx",
+						"docs",
+						"194cd342-0470-4f54-b9ef-da0bc6395bb2"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-06-30"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://localhost:7202",
+			"type": "string"
+		},
+		{
+			"key": "hotelsSuggestorName",
+			"value": "hotels-sg",
+			"type": "string"
+		},
+		{
+			"key": "hotelsIndexName",
+			"value": "hotels-idx",
+			"type": "string"
+		}
+	]
+}

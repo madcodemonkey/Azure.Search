@@ -28,6 +28,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00 - Solution Items", "00 - Solution Items", "{5F3E9488-F34B-49E3-9550-9C6EDF1DCFA9}"
 	ProjectSection(SolutionItems) = preProject
 		..\README.md = ..\README.md
+		..\Search.Web (Azure Search).postman_collection.json = ..\Search.Web (Azure Search).postman_collection.json
 	EndProjectSection
 EndProject
 Global
