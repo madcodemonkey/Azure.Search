@@ -1,7 +1,7 @@
 # Azure Search
 
 ## Projects List
-- Create and Populate (CreateAndPopulateApp) - This is a console application designed to show how to create and populate Azure Cognitve Search indexes in code.  It has a menu system that allows you to try different options. 
+- Create and Populate (CreateAndPopulateApp) - This is a console application designed to show how to create and populate Azure Cognitive Search indexes in code.  It has a menu system that allows you to try different options. 
    - Technology: Console Application
       - Note 1: Name = CreateAndPopulateApp.sln  
       - Note 2: Show how to programmatically create an index, data source, indexer
@@ -16,10 +16,10 @@
 - CustomMongoDbIndexer - This is an example of a custom indexer that will monitor a MongoDB's change stream
    - Technology 1: Azure Function (isolated) 
       - Note 1: Name = IndexHelperApp.sln
-      - Note 2: Used for creating the index and querying the Coginitive Search index as well as creating, updating and deleting MongoDB documents.
+      - Note 2: Used for creating the index and querying the Cognitive Search index as well as creating, updating and deleting MongoDB documents.
    - Technology 2: Worker Service 
       - Note 1: Name = WorkerServiceMongoIndexerApp.sln
-      - Note 2: Used for long term monitoring of MongoDB change stream.  It will create, update and delete Coginitive Search index documents based on MongoDB changes.
+      - Note 2: Used for long term monitoring of MongoDB change stream.  It will create, update and delete Cognitive Search index documents based on MongoDB changes.
 - Web - This is a standalone backend server that demonstrates two different styles of for querying a Coginitive Search index. 
    - Technology: Web API
       - Note 1: Name = SearchWeb.sln
