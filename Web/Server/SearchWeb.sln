@@ -23,7 +23,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 - Core", "02 - Core", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Search.Services.UnitTests", "Search.Services.UnitTests\Search.Services.UnitTests.csproj", "{1867F903-EDEB-47A2-AB01-7368FF004DBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Search.Web.UnitTests", "Search.Web.UnitTests\Search.Web.UnitTests.csproj", "{3D2E416B-DE4B-4405-A464-E82187C175F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Search.Web.UnitTests", "Search.Web.UnitTests\Search.Web.UnitTests.csproj", "{3D2E416B-DE4B-4405-A464-E82187C175F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00 - Solution Items", "00 - Solution Items", "{5F3E9488-F34B-49E3-9550-9C6EDF1DCFA9}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
