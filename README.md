@@ -1,7 +1,7 @@
 # Azure Search
 
 ## Projects List
-- Create and Populate (CreateAndPopulateApp) - This is a console application designed to 
+- Create and Populate (CreateAndPopulateApp) - This is a console application designed to show how to create and populate Azure Cognitve Search indexes in code.  It has a menu system that allows you to try different options. 
    - Technology: Console Application
       - Note 1: Name = CreateAndPopulateApp.sln  
       - Note 2: Show how to programmatically create an index, data source, indexer
