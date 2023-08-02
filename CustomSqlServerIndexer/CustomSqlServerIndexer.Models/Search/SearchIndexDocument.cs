@@ -30,12 +30,10 @@ public class SearchIndexDocument
 
     [SearchableField(IsFilterable = true, IsFacetable = true)]
     public List<SearchEntity> Entities { get; set; } = new List<SearchEntity>();
-
     
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnMicrosoft)]
     public string Summary { get; set; } = string.Empty;
-
-
+    
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnMicrosoft)]
     public string RedactedText { get; set; } = string.Empty;
 }
