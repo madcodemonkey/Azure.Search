@@ -8,6 +8,8 @@
     "CognitiveSearchSemanticConfigurationName": "my-semantic-config",
     "CognitiveServiceEndpoint": "---your endpoint https://{name}.search.windows.net here---",
     "CognitiveServiceKey": "---your key here---",
+    "DatabaseConnectionString": "---your database connection string here--",
+    "DatabaseRunMigrationsOnStartup": "true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
   }
 }

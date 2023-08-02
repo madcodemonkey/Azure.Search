@@ -4,6 +4,7 @@ using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Azure.Search.Documents.Models;
 using CustomSqlServerIndexer.Models;
+using System.Text.Json;
 
 namespace CustomSqlServerIndexer.Services;
 
@@ -121,25 +122,23 @@ public class CustomSearchIndexService : ICustomSearchIndexService
         var definition = new SearchIndex(_settings.CognitiveSearchIndexName, searchFields);
 
         // setup the suggestor
-        var suggester = new SearchSuggester("sg", new[]
-        {
-            nameof(SearchIndexDocument.Title),
-            nameof(SearchIndexDocument.Id),
-            nameof(SearchIndexDocument.KeyPhrases)
-        });
+        string hotelNameFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(SearchIndexDocument.HotelName));
+        string categoryFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(SearchIndexDocument.Category));
+        var suggester = new SearchSuggester("sg", new[] { hotelNameFieldName, categoryFieldName });
         definition.Suggesters.Add(suggester);
+
 
         // Setup Semantic Configuration
         var prioritizedFields = new PrioritizedFields()
         {
             TitleField = new SemanticField()
             {
-                FieldName = nameof(SearchIndexDocument.Title)
+                FieldName = nameof(SearchIndexDocument.HotelName)
             }
         };
 
-        prioritizedFields.ContentFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.Content) });
-        prioritizedFields.KeywordFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.KeyPhrases) });
+        prioritizedFields.ContentFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.HotelName) });
+        prioritizedFields.KeywordFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.Description) });
 
         SemanticConfiguration semanticConfig = new SemanticConfiguration(_settings.CognitiveSearchSemanticConfigurationName, prioritizedFields);
         definition.SemanticSettings = new SemanticSettings();

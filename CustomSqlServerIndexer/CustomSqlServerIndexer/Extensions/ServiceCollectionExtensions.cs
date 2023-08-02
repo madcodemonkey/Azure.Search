@@ -1,4 +1,5 @@
-﻿using CustomSqlServerIndexer.Services;
+﻿using CustomSqlServerIndexer.Repositories;
+using CustomSqlServerIndexer.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +21,13 @@ public static class ServiceCollectionExtensions
             CognitiveServiceKey = config["CognitiveServiceKey"],
         };
 
+        var repositorySettings = new RepositorySettings()
+        {
+            ConnectionString = config["DatabaseConnectionString"],
+            RunMigrationsOnStartup = config.GetValue<bool>("DatabaseRunMigrationsOnStartup")
+        };
+
+        sc.AddRepositories(repositorySettings);
         sc.AddServices(serviceSettings);
 
         return sc;

@@ -44,7 +44,7 @@ public class IndexManipulationFunction
     {
         _logger.LogInformation($"C# HTTP trigger function called to delete/clean documents in the index named {_settings.CognitiveSearchIndexName}.");
 
-        await _searchIndexService.DeleteAllDocumentsAsync(nameof(SearchIndexDocument.Id));
+        await _searchIndexService.DeleteAllDocumentsAsync(nameof(SearchIndexDocument.HotelId));
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");

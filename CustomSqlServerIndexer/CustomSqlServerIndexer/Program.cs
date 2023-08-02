@@ -1,4 +1,5 @@
 using CustomSqlServerIndexer;
+using CustomSqlServerIndexer.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -36,5 +37,9 @@ var host = new HostBuilder()
     })
     .Build();
 
+
+
+// EF migrations!!
+await host.Services.ApplyDatabaseMigrationsAsync();
+
 host.Run();
- 
