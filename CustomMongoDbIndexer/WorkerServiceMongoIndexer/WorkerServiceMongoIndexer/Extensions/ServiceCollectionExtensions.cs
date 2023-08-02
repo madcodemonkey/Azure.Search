@@ -1,5 +1,5 @@
-﻿using CogSearchServices.Services;
-using MongoDBServices;
+﻿using MongoDBServices;
+using Search.CogServices;
 using WorkerServiceMongoIndexer.Services;
 using WorkerServiceMongoIndexer.Services.Extensions;
 
@@ -9,9 +9,9 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCustomDependencies(this IServiceCollection sc, IConfiguration config)
     {
-        var cogSearchSettings = new CogSearchServiceSettings();
+        var cogSearchSettings = new AcmeCogSettings();
         config.GetSection("SearchSettings").Bind(cogSearchSettings);
-        sc.AddCommonCogSearchServicesForWorkerBasedClients(cogSearchSettings);
+        sc.AddCogServicesForWorkerServices(cogSearchSettings);
 
         var mongoSettings = new MongoDBServiceSettings();
         config.GetSection("MongoSettings").Bind(mongoSettings);

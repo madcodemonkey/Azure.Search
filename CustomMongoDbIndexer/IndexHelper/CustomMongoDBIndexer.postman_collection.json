@@ -31,7 +31,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"query\": \"*\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+					"raw": "{\r\n    \"query\": \"*\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"itemsPerPage\": 30,\r\n    \"queryType\": \"Simple\",\r\n    \"pageNumber\": 1,\r\n    \"indexName\": \"my-index\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -39,13 +39,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/Index-SimpleSearch",
+					"raw": "{{baseUrl}}/api/Index-Search",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
-						"Index-SimpleSearch"
+						"Index-Search"
 					]
 				}
 			},
@@ -58,7 +58,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"query\": \"who was a song actor?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+					"raw": "{\r\n    \"query\": \"who was a singer?\",\r\n    \"indexName\": \"my-index\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"itemsPerPage\": 30,\r\n    \"queryType\": \"Semantic\",\r\n    \"pageNumber\": 1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -66,13 +66,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/Index-SemanticSearch",
+					"raw": "{{baseUrl}}/api/Index-Search",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
-						"Index-SemanticSearch"
+						"Index-Search"
 					]
 				}
 			},
@@ -102,13 +102,23 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/Mongo-GetAll",
+					"raw": "{{baseUrl}}/api/Mongo-GetAll?pageNumber=1&itemsPerPage=112",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
 						"Mongo-GetAll"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "itemsPerPage",
+							"value": "112"
+						}
 					]
 				}
 			},
@@ -122,6 +132,33 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n    \"firstName\": \"David\",\r\n    \"lastName\": \"Bowie\",\r\n    \"age\": 45,\r\n    \"description\": \"David Robert Jones (8 January 1947 – 10 January 2016), known professionally as David Bowie was an English Singer-songwriter and actor. \"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/Mongo-Create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"Mongo-Create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mongo-Create Document (John Doe)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Doe\",\r\n    \"age\": 45,\r\n    \"description\": \"He was found, but nobody knows who he is!!!\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -174,7 +211,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/Mongo-Delete?personId=64c458c3c328d17a1c7d0270",
+					"raw": "{{baseUrl}}/api/Mongo-Delete?personId=64c99985d1357e178a619884",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -185,7 +222,7 @@
 					"query": [
 						{
 							"key": "personId",
-							"value": "64c458c3c328d17a1c7d0270"
+							"value": "64c99985d1357e178a619884"
 						}
 					]
 				}
@@ -199,7 +236,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"64c455afc328d17a1c7d026e\",\r\n    \"firstName\": \"David\",\r\n    \"lastName\": \"Bowie\",\r\n    \"age\": 45,\r\n    \"description\": \"David Robert Jones (8 January 1947 – 10 January 2016), known professionally as David Bowie was an English Singer-songwriter and actor. \"\r\n}",
+					"raw": " {\r\n        \"FirstName\": \"Benjamin\",\r\n        \"LastName\": \"Franklin\",\r\n        \"Age\": 84,\r\n        \"Description\": \"Benjamin Franklin FRS FRSA FRSE (January 17, 1706 [O.S. January 6, 1706][Note 1] – April 17, 1790) was an American polymath who was active as a writer, scientist, inventor, statesman, diplomat, printer, publisher, and political philosopher.[1] Among the leading intellectuals of his time, Franklin was one of the Founding Fathers of the United States, a drafter and signer of the Declaration of Independence, and the first postmaster general.\",\r\n        \"Id\": \"64c458c6c328d17a1c7d0271\"\r\n    }",
 					"options": {
 						"raw": {
 							"language": "json"

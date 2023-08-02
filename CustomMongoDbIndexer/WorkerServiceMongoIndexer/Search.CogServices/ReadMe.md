@@ -1,0 +1,1 @@
+﻿I envision this becoming it's own NuGet package since all these items are reusable across multiple indexes.

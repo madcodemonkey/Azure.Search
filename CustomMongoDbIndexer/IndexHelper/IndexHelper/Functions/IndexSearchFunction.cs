@@ -1,14 +1,12 @@
-using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
-using IndexHelper.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net;
-using CogSearchServices.Models;
-using Azure.Core;
+using Azure.Search.Documents;
 using IndexHelper.Models;
+using Search.CogServices;
 
 namespace CustomBlobIndexer.Functions;
 
@@ -18,64 +16,55 @@ namespace CustomBlobIndexer.Functions;
 public class IndexSearchFunction
 {
     private readonly IndexAppSettings _indexAppSettings;
-    private readonly IPersonIndexService _searchIndexService;
+    private readonly IAcmeCogSearchService _cogSearchDocumentService;
     private readonly ILogger _logger;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public IndexSearchFunction(ILoggerFactory loggerFactory,
-        IndexAppSettings indexAppSettings,
-        IPersonIndexService searchIndexService)
+    public IndexSearchFunction(ILoggerFactory loggerFactory, IndexAppSettings indexAppSettings, IAcmeCogSearchService cogSearchDocumentService)
     {
         _logger = loggerFactory.CreateLogger<IndexSearchFunction>();
         _indexAppSettings = indexAppSettings;
-        _searchIndexService = searchIndexService;
+        _cogSearchDocumentService = cogSearchDocumentService;
     }
 
-    [Function("Index-SimpleSearch")]
-    public async Task<HttpResponseData> SimpleSearch([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+    [Function("Index-Search")]
+    public async Task<HttpResponseData> IndexSearchAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("C# HTTP trigger function processed a request.");
+        _logger.LogInformation("C# Search request!!!");
 
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        CogSearchRequest? data = JsonConvert.DeserializeObject<CogSearchRequest>(requestBody);
+        AcmeSearchQuery? request = JsonConvert.DeserializeObject<AcmeSearchQuery>(requestBody);
 
-        var result = data != null
-            ? await _searchIndexService.SearchAsync<SearchDocument>(data.Query, new SearchOptions()
+        AcmeSearchQueryResult<SearchResult<SearchDocument>> result;
+
+        if (request != null)
+        {
+            SearchOptions searchOptions;
+            switch (request.QueryType)
             {
-                IncludeTotalCount = data.IncludeCount,
-                QueryType = SearchQueryType.Simple,
-                SearchMode = data.IncludeAllWords ? SearchMode.All : SearchMode.Any
-            })
-            : new CogSearchQueryResponse<SearchDocument>();
+                case SearchQueryType.Semantic:
+                    searchOptions = _cogSearchDocumentService.CreateSemanticSearchOptions(request,
+                        _indexAppSettings.CognitiveSearchSemanticConfigurationName);
+                    break;
+                default:
+                    searchOptions = _cogSearchDocumentService.CreateDefaultSearchOptions(request);
+                    break;
+            }
 
-        
-        var response = req.CreateResponse(HttpStatusCode.OK); 
-        await response.WriteAsJsonAsync(result);
-        return response;
-    }
+            // SEARCH!!!
+            // SEARCH!!!
+            // SEARCH!!!
+            result = await _cogSearchDocumentService.SearchAsync(request, searchOptions, null, cancellationToken);
+        }
+        else
+        {
+            result = new AcmeSearchQueryResult<SearchResult<SearchDocument>>();
+        }
 
-    [Function("Index-SemanticSearch")]
-    public async Task<HttpResponseData> SemanticSearch([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
-    {
-        _logger.LogInformation("C# HTTP trigger function processed a request.");
-
-        string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        CogSearchRequest? data = JsonConvert.DeserializeObject<CogSearchRequest>(requestBody);
-
-        var result = data != null
-            ? await _searchIndexService.SearchAsync<SearchDocument>(data.Query, new SearchOptions()
-            {
-                IncludeTotalCount = data.IncludeCount,
-                QueryLanguage = QueryLanguage.EnUs,
-                QueryType = SearchQueryType.Semantic,
-                SemanticConfigurationName = _indexAppSettings.CognitiveSearchSemanticConfigurationName
-            })
-            : new CogSearchQueryResponse<SearchDocument>();
-        
         var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(result);
+        await response.WriteAsJsonAsync(result, cancellationToken);
         return response;
     }
 }

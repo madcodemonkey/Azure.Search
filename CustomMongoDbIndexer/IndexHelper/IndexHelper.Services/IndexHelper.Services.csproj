@@ -14,10 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CogSearchServices\CogSearchServices.csproj" />
     <ProjectReference Include="..\IndexHelper.Models\IndexHelper.Models.csproj" />
     <ProjectReference Include="..\IndexHelper.Repositories\IndexHelper.Repositories.csproj" />
     <ProjectReference Include="..\MongoDBServices\MongoDBServices.csproj" />
+    <ProjectReference Include="..\Search.CogServices\Search.CogServices.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,8 +3,8 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "CognitiveSearchIndexName": "my-index",
+    "CognitiveSearchEndPoint": "---the name of your cognitive search instance (e.g., https://[your-service-name].search.windows.net)---",
     "CognitiveSearchKey": "---Your cognitive search key---",
-    "CognitiveSearchName": "---the name of your cognitive search instance (e.g., daveCogSearch)---",
     "CognitiveSearchSemanticConfigurationName": "my-semantic-config",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "MongoAtlasConnectionString": "---your connection string here---",
