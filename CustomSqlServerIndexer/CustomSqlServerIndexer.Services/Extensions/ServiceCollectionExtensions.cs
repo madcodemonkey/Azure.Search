@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace CustomBlobIndexer.Services;
+namespace CustomSqlServerIndexer.Services;
 
 public static class ServiceCollectionExtensions
 {

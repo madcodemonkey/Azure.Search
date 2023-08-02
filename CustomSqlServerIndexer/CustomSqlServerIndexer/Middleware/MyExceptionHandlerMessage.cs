@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace CustomBlobIndexer;
+namespace CustomSqlServerIndexer;
 
 public class MyExceptionHandlerMessage
 {

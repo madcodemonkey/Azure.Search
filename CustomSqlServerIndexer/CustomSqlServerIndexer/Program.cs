@@ -1,4 +1,4 @@
-using CustomBlobIndexer;
+using CustomSqlServerIndexer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 

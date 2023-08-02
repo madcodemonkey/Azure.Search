@@ -1,12 +1,12 @@
 ﻿using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 
-namespace CustomBlobIndexer.Models;
+namespace CustomSqlServerIndexer.Models;
 
 public class SearchIndexDocument
 {
     [SimpleField(IsKey = true, IsFilterable = true)]
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     /// <summary>
     /// If we are chunking documents (breaking them apart), this is the order they can be
@@ -17,29 +17,25 @@ public class SearchIndexDocument
     public int ChunkOrderNumber { get; set; }
 
     [SearchableField(IsSortable = true)]
-    public string Title { get; set; }
-   
-    [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnMicrosoft)]
-    public string Content { get; set; }
-    
-    [SearchableField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
-    public string SourcePath { get; set; }
-    
-    [SearchableField(IsFilterable = true, IsFacetable = true)]
-    public List<string> KeyPhrases { get; set; }
- 
-    [SearchableField(IsFilterable = true, IsFacetable = true)]
-    public List<SearchEntity> Entities { get; set; }
+    public string Title { get; set; } = string.Empty;
 
-    // [SearchableField(IsFilterable = true, IsFacetable = true)]
-    // public List<SearchSentiment> Sentiments { get; set; }
-   
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnMicrosoft)]
-    public string Summary { get; set; }
-  
+    public string Content { get; set; } = string.Empty;
+
+    [SearchableField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
+    public string SourcePath { get; set; } = string.Empty;
+
     [SearchableField(IsFilterable = true, IsFacetable = true)]
-    public List<SearchLanguage> Languages { get; set; }
- 
+    public List<string> KeyPhrases { get; set; } = new List<string>();
+
+    [SearchableField(IsFilterable = true, IsFacetable = true)]
+    public List<SearchEntity> Entities { get; set; } = new List<SearchEntity>();
+
+    
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnMicrosoft)]
-    public string RedactedText { get; set; }
+    public string Summary { get; set; } = string.Empty;
+
+
+    [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnMicrosoft)]
+    public string RedactedText { get; set; } = string.Empty;
 }

@@ -1,6 +1,6 @@
 ﻿using Azure.Search.Documents.Models;
 
-namespace CustomBlobIndexer.Services;
+namespace CustomSqlServerIndexer.Services;
 
 public static class SearchDocumentExtensions
 {

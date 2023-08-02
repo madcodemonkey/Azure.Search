@@ -5,7 +5,7 @@ using Microsoft.Azure.Functions.Worker.Middleware;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace CustomBlobIndexer;
+namespace CustomSqlServerIndexer;
 
 /// <summary>A middleware class designed to handle uncaught errors.</summary>
 /// <remarks>This middleware is added in the program.cs with this line: app.UseMiddleware<ExceptionMiddleware>() </remarks>

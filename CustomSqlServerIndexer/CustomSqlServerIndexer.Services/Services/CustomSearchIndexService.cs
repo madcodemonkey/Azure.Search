@@ -3,9 +3,9 @@ using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Azure.Search.Documents.Models;
-using CustomBlobIndexer.Models;
+using CustomSqlServerIndexer.Models;
 
-namespace CustomBlobIndexer.Services;
+namespace CustomSqlServerIndexer.Services;
 
 public class CustomSearchIndexService : ICustomSearchIndexService
 {

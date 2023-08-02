@@ -1,14 +1,14 @@
 using System.Net;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
-using CustomBlobIndexer.Models;
-using CustomBlobIndexer.Services;
+using CustomSqlServerIndexer.Models;
+using CustomSqlServerIndexer.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace CustomBlobIndexer.Functions;
+namespace CustomSqlServerIndexer.Functions;
 
 public class IndexSearchFunction
 {

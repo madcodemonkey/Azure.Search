@@ -1,8 +1,8 @@
-﻿using CustomBlobIndexer.Services;
+﻿using CustomSqlServerIndexer.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CustomBlobIndexer;
+namespace CustomSqlServerIndexer;
 
 public static class ServiceCollectionExtensions
 {

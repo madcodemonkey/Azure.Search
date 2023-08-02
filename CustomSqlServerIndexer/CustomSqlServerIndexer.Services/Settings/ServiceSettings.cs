@@ -1,4 +1,4 @@
-﻿namespace CustomBlobIndexer.Services;
+﻿namespace CustomSqlServerIndexer.Services;
  
 public class ServiceSettings
 {

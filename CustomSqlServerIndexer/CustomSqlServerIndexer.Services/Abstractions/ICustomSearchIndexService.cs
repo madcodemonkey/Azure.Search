@@ -1,7 +1,7 @@
 ﻿using Azure.Search.Documents;
-using CustomBlobIndexer.Models;
+using CustomSqlServerIndexer.Models;
 
-namespace CustomBlobIndexer.Services;
+namespace CustomSqlServerIndexer.Services;
 
 public interface ICustomSearchIndexService
 {
