@@ -20,6 +20,12 @@
    - Technology 2: Worker Service 
       - Note 1: Name = WorkerServiceMongoIndexerApp.sln
       - Note 2: Used for long term monitoring of MongoDB change stream.  It will create, update and delete Cognitive Search index documents based on MongoDB changes.
+- **CustomSqlServerIndexer** - This is an example of a custom indexer that will use a timer to periodically update a Coginitive Search index with changes.  
+   - Technology: Azure Function (isolated)
+      - Note 1: Name = CustomSqlServerIndexer.sln  
+      - Note 2: Fires a timer periodically to check for changes.  You can also hit an HttpTrigger endpoint and force it to do it immediately.	  
+      - Note 3: It has endpoints for creating the index 
+      - Note 4: It has endpoints for querying the index
 - **Web** - This is a standalone backend server that demonstrates two different styles of for querying a Coginitive Search index. 
    - Technology: Web API
       - Note 1: Name = SearchWeb.sln
