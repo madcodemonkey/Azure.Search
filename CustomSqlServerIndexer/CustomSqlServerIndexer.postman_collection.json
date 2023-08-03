@@ -1,128 +1,543 @@
 {
 	"info": {
-		"_postman_id": "ad7e8a4d-68fa-46c0-9860-82a93d930405",
-		"name": "CustomSqlServerIndexer",
+		"_postman_id": "d4c5ebde-2117-48cb-a642-ffb27f0e6b49",
+		"name": "Github",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "2277005"
 	},
 	"item": [
 		{
-			"name": "Create Index",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:7071/api/IndexCreator",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "7071",
-					"path": [
-						"api",
-						"IndexCreator"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Cognitive Search-simple",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"query\": \"*\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "CustomSqlServerIndexer",
+			"item": [
+				{
+					"name": "Create Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/IndexCreator",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"IndexCreator"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:7071/api/IndexSearch",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "7071",
-					"path": [
-						"api",
-						"IndexSearch"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Cognitive Search-semantic",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"query\": \"which notel has a view of the space needle?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "Cognitive Search-simple",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"*\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/IndexSearch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"IndexSearch"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:7071/api/IndexSearch",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "7071",
-					"path": [
-						"api",
-						"IndexSearch"
-					]
+				{
+					"name": "Cognitive Search-semantic",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"which notel has a view of the space needle?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/IndexSearch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"IndexSearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear all documents from the Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/IndexDocumentDeleter",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"IndexDocumentDeleter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "IndexER Manual Trigger",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/SqlServerTriggerIndexerFunction?retrievalLimit=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"SqlServerTriggerIndexerFunction"
+							],
+							"query": [
+								{
+									"key": "retrievalLimit",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Clear all documents from the Index",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:7071/api/IndexDocumentDeleter",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "7071",
-					"path": [
-						"api",
-						"IndexDocumentDeleter"
-					]
+			"name": "CustomMongoDBIndexer",
+			"item": [
+				{
+					"name": "Cognitive Search-Index Creator",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Index-Creator",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Index-Creator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cognitive-Search-simple",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"*\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"itemsPerPage\": 30,\r\n    \"queryType\": \"Simple\",\r\n    \"pageNumber\": 1,\r\n    \"indexName\": \"my-index\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Index-Search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Index-Search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cognitive Search-semantic",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"who was a singer?\",\r\n    \"indexName\": \"my-index\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"itemsPerPage\": 30,\r\n    \"queryType\": \"Semantic\",\r\n    \"pageNumber\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Index-Search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Index-Search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cognitive Search-Clear all documents from the Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Index-DocumentDeleter",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Index-DocumentDeleter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mongo-Get All Documents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Mongo-GetAll?pageNumber=1&itemsPerPage=112",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Mongo-GetAll"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "itemsPerPage",
+									"value": "112"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mongo-Create Document (David Bowie)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"David\",\r\n    \"lastName\": \"Bowie\",\r\n    \"age\": 45,\r\n    \"description\": \"David Robert Jones (8 January 1947 – 10 January 2016), known professionally as David Bowie was an English Singer-songwriter and actor. \"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Mongo-Create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Mongo-Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mongo-Create Document (John Doe)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Doe\",\r\n    \"age\": 45,\r\n    \"description\": \"He was found, but nobody knows who he is!!!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Mongo-Create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Mongo-Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mongo-Create Document (Benjamin Franklin)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Benjamin\",\r\n    \"lastName\": \"Franklin\",\r\n    \"age\": 84,\r\n    \"description\": \"Benjamin Franklin FRS FRSA FRSE (January 17, 1706 [O.S. January 6, 1706][Note 1] – April 17, 1790) was an American polymath who was active as a writer, scientist, inventor, statesman, diplomat, printer, publisher, and political philosopher.[1] Among the leading intellectuals of his time, Franklin was one of the Founding Fathers of the United States, a drafter and signer of the Declaration of Independence, and the first postmaster general.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Mongo-Create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Mongo-Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mongo-Delete Document",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Mongo-Delete?personId=64c99985d1357e178a619884",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Mongo-Delete"
+							],
+							"query": [
+								{
+									"key": "personId",
+									"value": "64c99985d1357e178a619884"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mongo-Update Document",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n        \"FirstName\": \"Benjamin\",\r\n        \"LastName\": \"Franklin\",\r\n        \"Age\": 84,\r\n        \"Description\": \"Benjamin Franklin FRS FRSA FRSE (January 17, 1706 [O.S. January 6, 1706][Note 1] – April 17, 1790) was an American polymath who was active as a writer, scientist, inventor, statesman, diplomat, printer, publisher, and political philosopher.[1] Among the leading intellectuals of his time, Franklin was one of the Founding Fathers of the United States, a drafter and signer of the Declaration of Independence, and the first postmaster general.\",\r\n        \"Id\": \"64c458c6c328d17a1c7d0271\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Mongo-Update",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Mongo-Update"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "IndexER Manual Trigger",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:7071/api/SqlServerTriggerIndexerFunction",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "7071",
-					"path": [
-						"api",
-						"SqlServerTriggerIndexerFunction"
-					]
+			"name": "CustomBlobIndexer",
+			"item": [
+				{
+					"name": "Create Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7071/api/IndexCreator",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"IndexCreator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cognitive Search-simple",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"kennedy\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/IndexSearch",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"IndexSearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cognitive Search-semantic",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"did oswald work for russia?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/IndexSearch",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"IndexSearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Open AI Search",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"did oswald work for russia?\",\r\n    \"searchFieldName\": \"Content\",\r\n    \"situationStatement\": \"You are an AI assistant that helps people find information using this data try to answer the question.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/OpenAISearch",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"OpenAISearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear all documents from the Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7071/api/IndexDocumentDeleter",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"IndexDocumentDeleter"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:7071",
+			"type": "string"
 		}
 	]
 }

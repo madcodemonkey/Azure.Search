@@ -30,12 +30,15 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
     /// <summary>
     /// Does the work necessary when changes are found in the database.
     /// </summary>
+    /// <param name="retrievalLimit">The maximum number of records to retrieve</param>
+    /// <param name="cancellationToken">A cancellation token</param>
     /// <returns>The number of changes made to the index.</returns>
-    public async Task<int> DoWorkAsync(CancellationToken cancellationToken)
+    public async Task<int> DoWorkAsync(int retrievalLimit = Int32.MaxValue, CancellationToken cancellationToken = default)
     {
         byte[] highWaterMarkRowVersion = await _highWaterMarkStorage.GetHighWaterMarkRowVersionAsync();
 
-        List<Hotel> hotels = await _hotelRepository.GetChangedRecordsInAscendingOrderAsync(highWaterMarkRowVersion);
+        List<Hotel> hotels = await _hotelRepository.GetChangedRecordsInAscendingOrderAsync(
+            highWaterMarkRowVersion, retrievalLimit, cancellationToken);
 
         _logger.LogInformation($"The SQL Indexer found {hotels.Count} changes.");
 

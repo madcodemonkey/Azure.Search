@@ -8,5 +8,9 @@ public interface IHotelRepository : IRepositoryPrimaryKeyBase<Hotel, int>
     /// Gets the latest changes based on the row version number in ASCENDING order.
     /// </summary>
     /// <param name="highWaterMarkRowVersion">The last row version number we processed.</param>
-    Task<List<Hotel>> GetChangedRecordsInAscendingOrderAsync(byte[] highWaterMarkRowVersion);
+    /// <param name="retrievalLimit">The maximum number of records to retrieve.</param>
+    /// <param name="cancellationToken">A cancellation token</param>
+    Task<List<Hotel>> GetChangedRecordsInAscendingOrderAsync(byte[] highWaterMarkRowVersion,
+        int retrievalLimit = Int32.MaxValue, CancellationToken cancellationToken = default);
+
 }
