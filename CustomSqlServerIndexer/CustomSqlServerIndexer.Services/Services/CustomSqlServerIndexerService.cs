@@ -6,12 +6,15 @@ namespace CustomSqlServerIndexer.Services;
 
 public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
 {
+    private const int MaximumBatchSize = 5;
     private readonly ILogger<CustomSqlServerIndexerService> _logger;
     private readonly ICustomSearchIndexService _cognitiveIndexService;
     private readonly IHotelRepository _hotelRepository;
     private readonly IHighWaterMarkStorageService _highWaterMarkStorage;
-    private readonly Random _random = new Random(DateTime.Now.Millisecond);
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public CustomSqlServerIndexerService(ILogger<CustomSqlServerIndexerService> logger,
         ICustomSearchIndexService cognitiveIndexService,
         IHotelRepository hotelRepository, IHighWaterMarkStorageService highWaterMarkStorage)
@@ -39,25 +42,32 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
             return 0;
         }
 
-        int successfulChanges = 0;
+        int numberOfItemsChanged = 0;
+        List<string> listOfKeysToDelete = new List<string>();
+        List<SearchIndexDocument> listOfChangedItems = new List<SearchIndexDocument>();
+        
         foreach (var hotel in hotels)
         {
             try
             {
                 if (hotel.IsDeleted)
                 {
-                    await ProcessDeletionAsync(hotel);
+                    listOfKeysToDelete.Add(hotel.Id.ToString());
                 }
                 else
                 {
-                    await ProcessChangeAsync(hotel);
+                    listOfChangedItems.Add(MapDocument(hotel));
                 }
 
-                // Since the hotels are sorted in the oldest to newest change order, we can update
-                // this high watermark as we process each file.  
-                await _highWaterMarkStorage.SetHighWaterMarkRowVersionAsync(hotels[^1].RowVersion);
+                if ((listOfKeysToDelete.Count + listOfChangedItems.Count) >= MaximumBatchSize)
+                {
+                    numberOfItemsChanged += await SaveItemsAsync(listOfKeysToDelete, listOfChangedItems, hotels);
 
-                successfulChanges++;
+                    // Since the hotels are sorted in the oldest to newest change order, we can update
+                    // this high watermark as we process files.  
+                    await _highWaterMarkStorage.SetHighWaterMarkRowVersionAsync(hotel.RowVersion);
+                }
+
             }
             catch (Exception ex)
             {
@@ -68,24 +78,41 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
             }
         }
 
-        return successfulChanges;
+        numberOfItemsChanged += await SaveItemsAsync(listOfKeysToDelete, listOfChangedItems, hotels);
+
+        // Since the hotels are sorted in the oldest to newest change order, we can update
+        // this high watermark as we process each file.  
+        await _highWaterMarkStorage.SetHighWaterMarkRowVersionAsync(hotels[^1].RowVersion);
+
+        return numberOfItemsChanged;
     }
 
-    /// <summary>
-    /// Deletes a record from the Azure Cognitive Search index.
-    /// </summary>
-    private async Task ProcessDeletionAsync(Hotel hotel)
+    private async Task<int> SaveItemsAsync(List<string> listOfKeysToDelete, List<SearchIndexDocument> listOfChangedItems, List<Hotel> hotels)
     {
-        await _cognitiveIndexService.DeleteDocumentsAsync(nameof(SearchIndexDocument.HotelId),
-            new List<string>() { hotel.Id.ToString() });
+        if (listOfKeysToDelete.Any())
+        {
+            await _cognitiveIndexService.DeleteDocumentsAsync(nameof(SearchIndexDocument.HotelId), listOfKeysToDelete);
+        }
+
+        if (listOfChangedItems.Any())
+        {
+            await _cognitiveIndexService.UploadDocumentsAsync(listOfChangedItems);
+        }
+
+        int changedItems = listOfKeysToDelete.Count + listOfChangedItems.Count;
+
+        listOfKeysToDelete.Clear();
+        listOfChangedItems.Clear();
+
+        return changedItems;
     }
 
     /// <summary>
     /// Creates or Updates records in the Azure Cognitive Search index.
     /// </summary>
-    private async Task ProcessChangeAsync(Hotel hotel)
-    {
-        var indexDocument = new SearchIndexDocument
+    private SearchIndexDocument MapDocument(Hotel hotel)
+    { 
+        return new SearchIndexDocument
         {
             HotelId = hotel.Id.ToString(),
             BaseRate = hotel.BaseRate,
@@ -97,30 +124,10 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
             LastRenovationDate = hotel.LastRenovationDate,
             ParkingIncluded = hotel.ParkingIncluded,
             Rating = hotel.Rating,
-            Roles = CreateRandomRoles(),
+            Roles = hotel.Roles.Split(',').ToArray(),
             SmokingAllowed = hotel.SmokingAllowed,
             Tags = hotel.Amenities?.Split(',') ?? Array.Empty<string>(),
         };
-
-
-        await _cognitiveIndexService.UploadDocumentsAsync(indexDocument);
-    }
-
-    private string[] CreateRandomRoles()
-    {
-        var result = new List<string> { "Admin" };
-
-        if (_random.Next(1, 100) > 50)
-        {
-            result.Add("Guest");
-        }
-
-        if (_random.Next(1, 100) > 50)
-        {
-            result.Add("Member");
-        }
-
-        return result.ToArray();
     }
 }
  

@@ -165,9 +165,9 @@ public class CustomSearchIndexService : ICustomSearchIndexService
     }
 
     /// <summary>
-    /// Upload documents in a single Upload request.
+    /// Upload one document in a single Upload request.
     /// </summary>
-    /// <param name="doc"></param>
+    /// <param name="doc">One document to upload</param>
     public async Task UploadDocumentsAsync(SearchIndexDocument doc)
     {
         IndexDocumentsBatch<SearchIndexDocument> batch = IndexDocumentsBatch.Create(
@@ -176,6 +176,20 @@ public class CustomSearchIndexService : ICustomSearchIndexService
         var searchClient = GetSearchClient();
         IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch);
     }
+
+    /// <summary>
+    /// Upload multiple documents in a single Upload request.
+    /// </summary>
+    /// <param name="docs">A list of docs to upload</param>
+    public async Task UploadDocumentsAsync(List<SearchIndexDocument> docs)
+    {
+        IndexDocumentsBatch<SearchIndexDocument> batch = IndexDocumentsBatch.Create(
+            docs.Select(s => IndexDocumentsAction.Upload(s)).ToArray());
+        
+        var searchClient = GetSearchClient();
+        IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch);
+    }
+
 
     private SearchIndexClient GetIndexClient()
     {

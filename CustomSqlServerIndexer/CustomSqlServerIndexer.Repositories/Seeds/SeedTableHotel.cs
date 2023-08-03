@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using CustomSqlServerIndexer.Models;
 
 namespace CustomSqlServerIndexer.Repositories;
@@ -103,19 +104,24 @@ public class SeedTableHotel
 
     private static string AddRoles(Random rand, bool isSecret)
     {
+        var sb = new StringBuilder();
+        sb.Append("admin");
+
         var possibleNonAdminRoles = new List<string> { "nonmember", "member" };
-        var actualRoles = new List<string> { "admin" };  // Admin is always in the list
 
         if (isSecret == false)
         {
             foreach (var possibleRole in possibleNonAdminRoles)
             {
                 if (rand.Next(1, 100) > 50)
-                    actualRoles.Add(possibleRole);
+                {
+                    sb.Append(",");
+                    sb.Append(possibleRole);
+                }
             }
         }
-        
-        return JsonSerializer.Serialize(actualRoles);
+
+        return sb.ToString();
     }
 
     

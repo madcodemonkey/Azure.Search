@@ -33,8 +33,15 @@ public interface ICustomSearchIndexService
     Task<SearchQueryResponse<T>> SearchAsync<T>(string searchText, SearchOptions options) where T : class;
 
     /// <summary>
-    /// Upload documents in a single Upload request.
+    /// Upload one document in a single Upload request.
     /// </summary>
-    /// <param name="doc"></param>
+    /// <param name="doc">One document to upload</param>
     Task UploadDocumentsAsync(SearchIndexDocument doc);
+
+    /// <summary>
+    /// Upload multiple documents in a single Upload request.
+    /// </summary>
+    /// <param name="docs">A list of docs to upload</param>
+    Task UploadDocumentsAsync(List<SearchIndexDocument> docs);
+
 }
