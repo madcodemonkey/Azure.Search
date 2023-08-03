@@ -13,10 +13,11 @@ public static class ServiceCollectionExtensions
         // Warning 2!! The use of config.GetSection("values").Bind(serviceSettings) does not appear to be using values from secrets.json!
         var serviceSettings = new ServiceSettings
         {
+            CognitiveSearchEndpoint = config["CognitiveSearchEndpoint"],
             CognitiveSearchIndexName = config["CognitiveSearchIndexName"],
             CognitiveSearchKey = config["CognitiveSearchKey"],
-            CognitiveSearchEndpoint = config["CognitiveSearchEndpoint"],
-            CognitiveSearchSemanticConfigurationName = config["CognitiveSearchSemanticConfigurationName"]
+            CognitiveSearchMaxUpsertBatchSize = config.GetValue<int>("CognitiveSearchMaxUpsertBatchSize"),
+            CognitiveSearchSemanticConfigurationName = config["CognitiveSearchSemanticConfigurationName"],
         };
 
         var repositorySettings = new RepositorySettings()

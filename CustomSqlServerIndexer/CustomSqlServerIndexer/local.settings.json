@@ -2,9 +2,10 @@
   "IsEncrypted": false,
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "CognitiveSearchEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
     "CognitiveSearchIndexName": "my-index",
     "CognitiveSearchKey": "---Your cognitive search key---",
-    "CognitiveSearchEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
+    "CognitiveSearchMaxUpsertBatchSize": "5",
     "CognitiveSearchSemanticConfigurationName": "my-semantic-config",
     "DatabaseConnectionString": "---your database connection string here--",
     "DatabaseRunMigrationsOnStartup": "true",

@@ -6,8 +6,8 @@ namespace CustomSqlServerIndexer.Services;
 
 public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
 {
-    private const int MaximumBatchSize = 5;
     private readonly ILogger<CustomSqlServerIndexerService> _logger;
+    private readonly ServiceSettings _serviceSettings;
     private readonly ICustomSearchIndexService _cognitiveIndexService;
     private readonly IHotelRepository _hotelRepository;
     private readonly IHighWaterMarkStorageService _highWaterMarkStorage;
@@ -16,10 +16,12 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
     /// Constructor
     /// </summary>
     public CustomSqlServerIndexerService(ILogger<CustomSqlServerIndexerService> logger,
+        ServiceSettings serviceSettings,
         ICustomSearchIndexService cognitiveIndexService,
         IHotelRepository hotelRepository, IHighWaterMarkStorageService highWaterMarkStorage)
     {
         _logger = logger;
+        _serviceSettings = serviceSettings;
         _cognitiveIndexService = cognitiveIndexService;
         _hotelRepository = hotelRepository;
         _highWaterMarkStorage = highWaterMarkStorage;
@@ -59,9 +61,9 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
                     listOfChangedItems.Add(MapDocument(hotel));
                 }
 
-                if ((listOfKeysToDelete.Count + listOfChangedItems.Count) >= MaximumBatchSize)
+                if ((listOfKeysToDelete.Count + listOfChangedItems.Count) >= _serviceSettings.CognitiveSearchMaxUpsertBatchSize)
                 {
-                    numberOfItemsChanged += await SaveItemsAsync(listOfKeysToDelete, listOfChangedItems, hotels);
+                    numberOfItemsChanged += await SaveBatchAsync(listOfKeysToDelete, listOfChangedItems);
 
                     // Since the hotels are sorted in the oldest to newest change order, we can update
                     // this high watermark as we process files.  
@@ -78,7 +80,7 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
             }
         }
 
-        numberOfItemsChanged += await SaveItemsAsync(listOfKeysToDelete, listOfChangedItems, hotels);
+        numberOfItemsChanged += await SaveBatchAsync(listOfKeysToDelete, listOfChangedItems);
 
         // Since the hotels are sorted in the oldest to newest change order, we can update
         // this high watermark as we process each file.  
@@ -87,7 +89,7 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
         return numberOfItemsChanged;
     }
 
-    private async Task<int> SaveItemsAsync(List<string> listOfKeysToDelete, List<SearchIndexDocument> listOfChangedItems, List<Hotel> hotels)
+    private async Task<int> SaveBatchAsync(List<string> listOfKeysToDelete, List<SearchIndexDocument> listOfChangedItems)
     {
         if (listOfKeysToDelete.Any())
         {
