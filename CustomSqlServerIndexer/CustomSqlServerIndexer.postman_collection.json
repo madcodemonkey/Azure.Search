@@ -1,0 +1,128 @@
+{
+	"info": {
+		"_postman_id": "ad7e8a4d-68fa-46c0-9860-82a93d930405",
+		"name": "CustomSqlServerIndexer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2277005"
+	},
+	"item": [
+		{
+			"name": "Create Index",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:7071/api/IndexCreator",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"IndexCreator"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cognitive Search-simple",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query\": \"*\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:7071/api/IndexSearch",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"IndexSearch"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cognitive Search-semantic",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query\": \"which notel has a view of the space needle?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:7071/api/IndexSearch",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"IndexSearch"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Clear all documents from the Index",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:7071/api/IndexDocumentDeleter",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"IndexDocumentDeleter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "IndexER Manual Trigger",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:7071/api/SqlServerTriggerIndexerFunction",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7071",
+					"path": [
+						"api",
+						"SqlServerTriggerIndexerFunction"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
