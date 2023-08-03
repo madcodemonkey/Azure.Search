@@ -1,21 +1,25 @@
 using System;
+using CustomSqlServerIndexer.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 namespace CustomSqlServerIndexer.Functions
 {
-    public class SqlServerIndexerFunction
+    public class SqlServerTimerIndexerFunction
     {
+        private readonly ICustomSqlServerIndexerService _indexerService;
         private readonly ILogger _logger;
 
-        public SqlServerIndexerFunction(ILoggerFactory loggerFactory)
+        public SqlServerTimerIndexerFunction(ILoggerFactory loggerFactory, ICustomSqlServerIndexerService indexerService)
         {
-            _logger = loggerFactory.CreateLogger<SqlServerIndexerFunction>();
+            _indexerService = indexerService;
+            _logger = loggerFactory.CreateLogger<SqlServerTimerIndexerFunction>();
         }
 
-        [Function("SqlServerIndexerFunction")]
-        public void Run([TimerTrigger("0 */5 * * * *")] MyInfo myTimer)
+        [Function("SqlServerTimerIndexerFunction")]
+        public async Task Run([TimerTrigger("0 */15 * * * *")] MyInfo myTimer)
         {
+            await _indexerService.DoWorkAsync();
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
             _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
         }
