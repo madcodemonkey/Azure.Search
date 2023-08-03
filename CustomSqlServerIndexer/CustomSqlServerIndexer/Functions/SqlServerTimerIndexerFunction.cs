@@ -1,4 +1,3 @@
-using System;
 using CustomSqlServerIndexer.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -18,11 +17,12 @@ namespace CustomSqlServerIndexer.Functions
 
         // Cron timers: https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer?tabs=python-v2%2Cin-process&pivots=programming-language-csharp#ncrontab-expressions
         [Function("SqlServerTimerIndexerFunction")]
-        public async Task Run([TimerTrigger("0 */15 * * * *")] MyInfo myTimer)
+        public async Task Run([TimerTrigger("0 0 */1 * * *")] MyInfo myTimer) // Once per hour
         {
-            await _indexerService.DoWorkAsync();
+             int cogSearchIndexChangeCount = await _indexerService.DoWorkAsync();
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
             _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
+            _logger.LogInformation($"Timer Trigger made {cogSearchIndexChangeCount} changes to the Cognitive Search index!");
         }
     }
 

@@ -18,15 +18,15 @@ namespace CustomSqlServerIndexer.Functions
         }
 
         [Function("SqlServerTriggerIndexerFunction")]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req, CancellationToken cancellationToken)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            await _indexerService.DoWorkAsync();
+            int cogSearchIndexChangeCount = await _indexerService.DoWorkAsync(cancellationToken);
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
-            response.WriteString("Manual Trigger of the SQL Indexer!");
+            await response.WriteStringAsync($"Manual Trigger made {cogSearchIndexChangeCount} changes to the Cognitive Search index!", cancellationToken);
             
             return response;
         }

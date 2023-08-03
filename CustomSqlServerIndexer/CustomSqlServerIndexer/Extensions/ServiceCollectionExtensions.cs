@@ -15,10 +15,8 @@ public static class ServiceCollectionExtensions
         {
             CognitiveSearchIndexName = config["CognitiveSearchIndexName"],
             CognitiveSearchKey = config["CognitiveSearchKey"],
-            CognitiveSearchName = config["CognitiveSearchName"],
-            CognitiveSearchSemanticConfigurationName = config["CognitiveSearchSemanticConfigurationName"],
-            CognitiveServiceEndpoint = config["CognitiveServiceEndpoint"],
-            CognitiveServiceKey = config["CognitiveServiceKey"],
+            CognitiveSearchEndpoint = config["CognitiveSearchEndpoint"],
+            CognitiveSearchSemanticConfigurationName = config["CognitiveSearchSemanticConfigurationName"]
         };
 
         var repositorySettings = new RepositorySettings()

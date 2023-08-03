@@ -16,23 +16,10 @@ public class ServiceSettings
     /// <summary>
     /// The name of the overall Azure Search instance.
     /// </summary>
-    public string CognitiveSearchName { get; set; } = string.Empty;
+    public string CognitiveSearchEndpoint { get; set; } = string.Empty;
 
     /// <summary>
     /// The name of the semantic configuration to setup within the index.
     /// </summary>
     public string CognitiveSearchSemanticConfigurationName { get; set; } = string.Empty;
-  
-    /// <summary>
-    /// This is the endpoint of the Cognitive Service endpoint (NOT the Cognitive Search endpoint!).
-    /// This service is used for OCR and languages services that are needed by skillsets.
-    /// </summary>
-    public string CognitiveServiceEndpoint { get; set; } = string.Empty;
-
-    /// <summary>
-    /// This is the key needed to access the Cognitive Service endpoint (NOT the Cognitive Search endpoint!).
-    /// This service is used for OCR and languages services that are needed by skillsets.
-    /// </summary>
-    public string CognitiveServiceKey { get; set; } = string.Empty;
- 
 }

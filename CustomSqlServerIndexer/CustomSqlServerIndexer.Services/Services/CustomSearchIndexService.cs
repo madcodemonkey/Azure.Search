@@ -4,7 +4,6 @@ using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Azure.Search.Documents.Models;
 using CustomSqlServerIndexer.Models;
-using System.Text.Json;
 
 namespace CustomSqlServerIndexer.Services;
 
@@ -122,9 +121,7 @@ public class CustomSearchIndexService : ICustomSearchIndexService
         var definition = new SearchIndex(_settings.CognitiveSearchIndexName, searchFields);
 
         // setup the suggestor
-        string hotelNameFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(SearchIndexDocument.HotelName));
-        string categoryFieldName = JsonNamingPolicy.CamelCase.ConvertName(nameof(SearchIndexDocument.Category));
-        var suggester = new SearchSuggester("sg", new[] { hotelNameFieldName, categoryFieldName });
+        var suggester = new SearchSuggester("sg", new[] { nameof(SearchIndexDocument.HotelName), nameof(SearchIndexDocument.Category) });
         definition.Suggesters.Add(suggester);
 
 
@@ -171,13 +168,13 @@ public class CustomSearchIndexService : ICustomSearchIndexService
     /// Upload documents in a single Upload request.
     /// </summary>
     /// <param name="doc"></param>
-    public void UploadDocuments(SearchIndexDocument doc)
+    public async Task UploadDocumentsAsync(SearchIndexDocument doc)
     {
         IndexDocumentsBatch<SearchIndexDocument> batch = IndexDocumentsBatch.Create(
             IndexDocumentsAction.Upload(doc));
 
         var searchClient = GetSearchClient();
-        IndexDocumentsResult result = searchClient.IndexDocuments(batch);
+        IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch);
     }
 
     private SearchIndexClient GetIndexClient()
@@ -206,7 +203,7 @@ public class CustomSearchIndexService : ICustomSearchIndexService
 
     private Uri GetServiceEndpoint()
     {
-        Uri serviceEndpoint = new Uri($"https://{_settings.CognitiveSearchName}.search.windows.net/");
+        Uri serviceEndpoint = new Uri(_settings.CognitiveSearchEndpoint);
         return serviceEndpoint;
     }
 }
