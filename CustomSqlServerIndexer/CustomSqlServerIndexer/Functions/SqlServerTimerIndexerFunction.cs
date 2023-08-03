@@ -16,6 +16,7 @@ namespace CustomSqlServerIndexer.Functions
             _logger = loggerFactory.CreateLogger<SqlServerTimerIndexerFunction>();
         }
 
+        // Cron timers: https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer?tabs=python-v2%2Cin-process&pivots=programming-language-csharp#ncrontab-expressions
         [Function("SqlServerTimerIndexerFunction")]
         public async Task Run([TimerTrigger("0 */15 * * * *")] MyInfo myTimer)
         {

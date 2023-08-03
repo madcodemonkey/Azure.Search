@@ -27,6 +27,7 @@ public class HotelRepository : RepositoryPrimaryKeyBase<Hotel, CustomSqlServerCo
         }
         else
         {
+            // https://stackoverflow.com/a/20816340/97803
             long rowVersionNumber = BitConverter.ToInt64(highWaterMarkRowVersion.Reverse().ToArray(), 0); //  0x00000000000007E4;
 
             result = await Context.Hotels
