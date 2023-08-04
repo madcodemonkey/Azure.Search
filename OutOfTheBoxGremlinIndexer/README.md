@@ -27,3 +27,6 @@ You'll need to do the following
 2. If you haven't created an index, first hit the  IndexCreator: [GET,POST] http://localhost:7071/api/IndexCreator to create the index.  You can use a browser since GET is available.
 3. Use the postman to do searches against the search endpoint, which is searching the cognitive search index.
 4. Use the postman collection to manipulate the gremlin vertices or edges.
+
+# Documentation
+- Based loosely on this example: https://learn.microsoft.com/en-us/azure/search/search-howto-index-cosmosdb-gremlin

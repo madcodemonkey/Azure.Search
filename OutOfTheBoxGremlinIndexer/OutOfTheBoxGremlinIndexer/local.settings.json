@@ -9,6 +9,7 @@
     "CognitiveSearchSemanticConfigurationName": "my-semantic-config",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "GremlinContainerName": "sample-graph",
+    "GremlinDatabaseConnectionString": "--a Gremlin connection...WARNING: the one from the portal is missing the database name (see comments in ServiceSettings.cs for more info)---",
     "GremlinDatabaseName": "sample-database",
     "GremlinHostName": "---your host name minus any https prefix (e.g., mystuff.gremlin.cosmos.azure.com) here--",
     "GremlinKey": "--your primary or secondary key here---"

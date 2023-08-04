@@ -9,6 +9,9 @@ public static class ServiceCollectionExtensions
     {
         sc.AddSingleton(settings);
         sc.AddSingleton<IMemoryCache, MemoryCache>();
+
+        sc.AddScoped<ICogClientWrapperService, CogClientWrapperService>();
+        sc.AddScoped<ICogSearchDataSourceService, CogSearchDataSourceService>();
         sc.AddScoped<ICustomSearchIndexService, CustomSearchIndexService>();
         
         return sc;
