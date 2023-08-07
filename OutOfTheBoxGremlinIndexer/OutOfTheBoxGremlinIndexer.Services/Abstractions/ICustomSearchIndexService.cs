@@ -19,7 +19,12 @@ public interface ICustomSearchIndexService
     /// <param name="keys">The keys of the documents to delete.</param>
     /// <returns>The number of documents deleted</returns>
     Task<long> DeleteDocumentsAsync(string keyField, List<string> keys);
-
+    
+    /// <summary>
+    /// Deletes the entire index and all it's documents!
+    /// </summary>
+    /// <returns></returns>
+    Task DeleteIndexAsync();
 
     /// <summary>
     /// Create index or update the index.

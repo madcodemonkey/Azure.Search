@@ -39,6 +39,20 @@ public class IndexManipulationFunction
         return response;
     }
 
+    [Function("IndexDeleter")]
+    public async Task<HttpResponseData> IndexDelete([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
+    {
+        _logger.LogInformation($"C# HTTP trigger function called to delete an index named {_settings.CognitiveSearchIndexName}.");
+
+        await _searchIndexService.DeleteIndexAsync();
+
+        var response = req.CreateResponse(HttpStatusCode.OK);
+        response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+        await response.WriteStringAsync($"An index named {_settings.CognitiveSearchIndexName} was deleted!");
+
+        return response;
+    }
+
     [Function("IndexDocumentDeleter")]
     public async Task<HttpResponseData> IndexDocumentDeleter([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
     {
@@ -48,7 +62,7 @@ public class IndexManipulationFunction
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-        response.WriteString($"All documents in the index named {_settings.CognitiveSearchIndexName} were deleted!");
+        await response.WriteStringAsync($"All documents in the index named {_settings.CognitiveSearchIndexName} were deleted!");
 
         return response;
     }
