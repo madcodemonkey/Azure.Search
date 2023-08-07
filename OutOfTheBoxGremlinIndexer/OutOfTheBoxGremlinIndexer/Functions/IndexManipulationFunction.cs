@@ -12,29 +12,32 @@ public class IndexManipulationFunction
     private readonly ILogger _logger;
     private readonly ICustomSearchIndexService _searchIndexService;
     private readonly ServiceSettings _settings;
+    private readonly IGremlinService _gremlinService;
 
     /// <summary>
     /// Constructor
     /// </summary>
     public IndexManipulationFunction(ILoggerFactory loggerFactory, 
         ServiceSettings settings,
+        IGremlinService gremlinService,
         ICustomSearchIndexService searchIndexService)
     {
         _settings = settings;
+        _gremlinService = gremlinService;
         _searchIndexService = searchIndexService;
         _logger = loggerFactory.CreateLogger<IndexManipulationFunction>();
     }
 
     [Function("IndexCreator")]
-    public HttpResponseData IndexCreator([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
+    public async Task<HttpResponseData> IndexCreator([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
     {
         _logger.LogInformation($"C# HTTP trigger function called to create An index named {_settings.CognitiveSearchIndexName}.");
 
-        _searchIndexService.CreateOrUpdateIndex();
+        await _gremlinService.CreateAsync();
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-        response.WriteString($"An index named {_settings.CognitiveSearchIndexName} was created/updated!");
+        await response.WriteStringAsync($"An index named {_settings.CognitiveSearchIndexName} was created/updated!");
 
         return response;
     }
@@ -58,7 +61,7 @@ public class IndexManipulationFunction
     {
         _logger.LogInformation($"C# HTTP trigger function called to delete/clean documents in the index named {_settings.CognitiveSearchIndexName}.");
 
-        await _searchIndexService.DeleteAllDocumentsAsync(nameof(SearchIndexDocument.HotelId));
+        await _searchIndexService.DeleteAllDocumentsAsync(nameof(SearchIndexDocument.Id));
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");

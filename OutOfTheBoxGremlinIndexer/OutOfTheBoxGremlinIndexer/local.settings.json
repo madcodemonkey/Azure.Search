@@ -3,7 +3,9 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "CognitiveSearchEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
-    "CognitiveSearchIndexName": "my-index",
+    "CognitiveSearchIndexName": "my-gremlin-index1",
+    "CognitiveSearchDataSourceName": "my-gremlin-ds1",
+    "CognitiveSearchIndexerName": "my-gremlin-indexer1",
     "CognitiveSearchKey": "---Your cognitive search key---",
     "CognitiveSearchMaxUpsertBatchSize": "5",
     "CognitiveSearchSemanticConfigurationName": "my-semantic-config",

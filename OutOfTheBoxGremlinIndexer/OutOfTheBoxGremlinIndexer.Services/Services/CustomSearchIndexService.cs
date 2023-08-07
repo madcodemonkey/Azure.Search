@@ -9,16 +9,16 @@ namespace CustomSqlServerIndexer.Services;
 
 public class CustomSearchIndexService : ICustomSearchIndexService
 {
-    private readonly ServiceSettings _settings;
-    private readonly ICogClientWrapperService _clientService;
+    protected ServiceSettings ServiceSettings { get; }
+    protected ICogClientWrapperService ClientService { get; }
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public CustomSearchIndexService(ServiceSettings settings, ICogClientWrapperService clientService)
+    public CustomSearchIndexService(ServiceSettings serviceSettings, ICogClientWrapperService clientService)
     {
-        _settings = settings;
-        _clientService = clientService;
+        ServiceSettings = serviceSettings;
+        ClientService = clientService;
     }
 
 
@@ -31,7 +31,7 @@ public class CustomSearchIndexService : ICustomSearchIndexService
     {
         try
         {
-            var searchClient = _clientService.GetSearchClient();
+            var searchClient = ClientService.GetSearchClient();
 
             long totalDeleted = 0;
             long totalCountOnLastTry = 0;
@@ -97,7 +97,7 @@ public class CustomSearchIndexService : ICustomSearchIndexService
 
         try
         {
-            var searchClient = _clientService.GetSearchClient();
+            var searchClient = ClientService.GetSearchClient();
             await searchClient.DeleteDocumentsAsync(keyField, keys);
 
             return keys.Count;
@@ -116,8 +116,8 @@ public class CustomSearchIndexService : ICustomSearchIndexService
     /// <returns></returns>
     public async Task DeleteIndexAsync()
     {
-        var indexClient = _clientService.GetIndexClient();
-        await indexClient.DeleteIndexAsync(_settings.CognitiveSearchIndexName);
+        var indexClient = ClientService.GetIndexClient();
+        await indexClient.DeleteIndexAsync(ServiceSettings.CognitiveSearchIndexName);
     }
 
     /// <summary>
@@ -125,13 +125,14 @@ public class CustomSearchIndexService : ICustomSearchIndexService
     /// </summary>
     public void CreateOrUpdateIndex()
     {
+
         FieldBuilder fieldBuilder = new FieldBuilder();
         var searchFields = fieldBuilder.Build(typeof(SearchIndexDocument));
 
-        var definition = new SearchIndex(_settings.CognitiveSearchIndexName, searchFields);
+        var definition = new SearchIndex(ServiceSettings.CognitiveSearchIndexName, searchFields);
 
         // setup the suggestor
-        var suggester = new SearchSuggester("sg", new[] { nameof(SearchIndexDocument.HotelName), nameof(SearchIndexDocument.Category) });
+        var suggester = new SearchSuggester("sg", new[] { nameof(SearchIndexDocument.FirstName), nameof(SearchIndexDocument.Label) });
         definition.Suggesters.Add(suggester);
 
 
@@ -140,19 +141,19 @@ public class CustomSearchIndexService : ICustomSearchIndexService
         {
             TitleField = new SemanticField()
             {
-                FieldName = nameof(SearchIndexDocument.HotelName)
+                FieldName = nameof(SearchIndexDocument.FirstName)
             }
         };
 
-        prioritizedFields.ContentFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.HotelName) });
-        prioritizedFields.KeywordFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.Description) });
+        prioritizedFields.ContentFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.FirstName) });
+        prioritizedFields.KeywordFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.Label) });
 
-        SemanticConfiguration semanticConfig = new SemanticConfiguration(_settings.CognitiveSearchSemanticConfigurationName, prioritizedFields);
+        SemanticConfiguration semanticConfig = new SemanticConfiguration(ServiceSettings.CognitiveSearchSemanticConfigurationName, prioritizedFields);
         definition.SemanticSettings = new SemanticSettings();
         definition.SemanticSettings.Configurations.Add(semanticConfig);
 
         // Create it using the index client
-        var indexClient = _clientService.GetIndexClient();
+        var indexClient = ClientService.GetIndexClient();
         indexClient.CreateOrUpdateIndex(definition);
     }
 
@@ -162,7 +163,7 @@ public class CustomSearchIndexService : ICustomSearchIndexService
     /// <param name="options">The search options to apply</param>
     public async Task<SearchQueryResponse<T>> SearchAsync<T>(string searchText, SearchOptions options) where T : class
     {
-        var searchClient = _clientService.GetSearchClient();
+        var searchClient = ClientService.GetSearchClient();
         var response = await searchClient.SearchAsync<T>(searchText, options);
 
         var result = new SearchQueryResponse<T>
@@ -183,7 +184,7 @@ public class CustomSearchIndexService : ICustomSearchIndexService
         IndexDocumentsBatch<SearchIndexDocument> batch = IndexDocumentsBatch.Create(
             IndexDocumentsAction.Upload(doc));
 
-        var searchClient = _clientService.GetSearchClient();
+        var searchClient = ClientService.GetSearchClient();
         IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch);
     }
 
@@ -196,7 +197,7 @@ public class CustomSearchIndexService : ICustomSearchIndexService
         IndexDocumentsBatch<SearchIndexDocument> batch = IndexDocumentsBatch.Create(
             docs.Select(s => IndexDocumentsAction.Upload(s)).ToArray());
 
-        var searchClient = _clientService.GetSearchClient();
+        var searchClient = ClientService.GetSearchClient();
         IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch);
     }
 

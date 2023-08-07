@@ -13,7 +13,9 @@ public static class ServiceCollectionExtensions
         // Warning 2!! The use of config.GetSection("values").Bind(serviceSettings) does not appear to be using values from secrets.json!
         var serviceSettings = new ServiceSettings
         {
+            CognitiveSearchDataSourceName = config["CognitiveSearchDataSourceName"],
             CognitiveSearchEndpoint = config["CognitiveSearchEndpoint"],
+            CognitiveSearchIndexerName = config["CognitiveSearchIndexerName"],
             CognitiveSearchIndexName = config["CognitiveSearchIndexName"],
             CognitiveSearchKey = config["CognitiveSearchKey"],
             CognitiveSearchMaxUpsertBatchSize = config.GetValue<int>("CognitiveSearchMaxUpsertBatchSize"),
@@ -22,10 +24,11 @@ public static class ServiceCollectionExtensions
 
         var repositorySettings = new RepositorySettings
         {
+            GremlinContainerName = config["GremlinContainerName"],
+            GremlinDatabaseConnectionString = config["GremlinDatabaseConnectionString"],
+            GremlinDatabaseName = config["GremlinDatabaseName"],
             GremlinHostName = config["GremlinHostName"],
             GremlinKey = config["GremlinKey"],
-            GremlinDatabaseName = config["GremlinDatabaseName"],
-            GremlinContainerName = config["GremlinContainerName"] 
         };
 
         sc.AddRepositories(repositorySettings);
