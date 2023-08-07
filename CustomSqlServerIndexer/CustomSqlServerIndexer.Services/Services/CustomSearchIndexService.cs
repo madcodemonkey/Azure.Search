@@ -111,6 +111,16 @@ public class CustomSearchIndexService : ICustomSearchIndexService
     }
 
     /// <summary>
+    /// Deletes the entire index and all it's documents!
+    /// </summary>
+    /// <returns></returns>
+    public async Task DeleteIndexAsync()
+    {
+        var indexClient = GetIndexClient();
+        await indexClient.DeleteIndexAsync(_settings.CognitiveSearchIndexName);
+    }
+
+    /// <summary>
     /// Create index or update the index.
     /// </summary>
     public void CreateOrUpdateIndex()

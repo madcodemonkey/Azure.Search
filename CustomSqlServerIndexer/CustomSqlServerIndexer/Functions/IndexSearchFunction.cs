@@ -38,6 +38,8 @@ public class IndexSearchFunction
             ? await _searchIndexService.SearchAsync<SearchDocument>(data.Query, new SearchOptions()
             {
                 IncludeTotalCount = data.IncludeCount,
+                Size = data.PageSize,
+                Skip = (data.PageNumber - 1) * data.PageSize,
                 QueryType = SearchQueryType.Simple,
                 SearchMode = data.IncludeAllWords ? SearchMode.All : SearchMode.Any
             })
