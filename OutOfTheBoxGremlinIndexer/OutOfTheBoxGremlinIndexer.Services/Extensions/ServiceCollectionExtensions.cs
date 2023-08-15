@@ -13,8 +13,9 @@ public static class ServiceCollectionExtensions
         sc.AddScoped<ICogClientWrapperService, CogClientWrapperService>();
         sc.AddScoped<ICogSearchDataSourceService, CogSearchDataSourceService>();
         sc.AddScoped<ICustomSearchIndexService, CustomSearchIndexService>();
-        sc.AddScoped<IGremlinService, GremlinService>();
-
+        sc.AddScoped<IGremlinCogSearchService, GremlinCogSearchService>();
+        sc.AddScoped<IGremlinDataService, GremlinDataService>();
+        
         return sc;
     }
 }

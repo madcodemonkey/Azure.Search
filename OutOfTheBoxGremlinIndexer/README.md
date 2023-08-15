@@ -5,6 +5,18 @@ This project is designed to do three things
 2. Help you make changes to the Gremlin database so that the out-of-the-box indexer picks them up and then you can query.
 3. Give you a very basic search endpoint (see IndexSearchFunction.cs and the IndexSearch HttpTrigger).  There is a provided Postman collection to help you do a POST to this endpoint.
 
+# Gremlin .NET Notes
+- For Cosmos DB Apache Gremlin, the currently the recommended version is 3.4.13 ([reference the compatible client libraries here](https://learn.microsoft.com/en-us/azure/cosmos-db/gremlin/support#compatible-client-libraries))
+- [Documenation on the tinkerpop web site](https://tinkerpop.apache.org/docs/3.2.7/reference/#gremlin-DotNet)
+- Only use primitive types for properties.  Do not use complex types in Cosmos DB Apache Gremlin 
+- [Documenatation recommends passing the traversal as a string](https://learn.microsoft.com/en-us/azure/cosmos-db/gremlin/support#unsupported-features); however we can use Grelmin.Net.Extensions for parameterized queries to lessen injection fears.
+   - Quote from the docs:  Gremlin Bytecode is a programming language agnostic specification for graph traversals. Azure Cosmos DB Graph doesn't support it yet. 
+     Use GremlinClient.SubmitAsync() and pass traversal as a text string.
+
+# Gremlin 
+- We see the pk value because we are using a flatgraph (as opposed to a partition graph)
+
+
 # Setup
 You'll need to do the following
 1. In the Azure portal, create instance of an Azure Cognitive Search resource (Create a basic or S1 sku.  Remember that S1 sku will deplete an MSDN subscription before the end of the month).

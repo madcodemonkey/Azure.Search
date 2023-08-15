@@ -29,7 +29,10 @@ public static class ServiceCollectionExtensions
             GremlinDatabaseName = config["GremlinDatabaseName"],
             GremlinHostName = config["GremlinHostName"],
             GremlinKey = config["GremlinKey"],
+            GremlinEnableSSL = config.GetValue<bool>("GremlinEnableSSL"),
+            GremlinHostPort = config.GetValue<int>("GremlinHostPort")
         };
+        
 
         sc.AddRepositories(repositorySettings);
         sc.AddServices(serviceSettings);

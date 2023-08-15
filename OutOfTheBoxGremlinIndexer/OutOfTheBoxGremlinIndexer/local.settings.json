@@ -2,10 +2,10 @@
   "IsEncrypted": false,
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "CognitiveSearchEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
-    "CognitiveSearchIndexName": "my-gremlin-index1",
     "CognitiveSearchDataSourceName": "my-gremlin-ds1",
+    "CognitiveSearchEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
     "CognitiveSearchIndexerName": "my-gremlin-indexer1",
+    "CognitiveSearchIndexName": "my-gremlin-index1",
     "CognitiveSearchKey": "---Your cognitive search key---",
     "CognitiveSearchMaxUpsertBatchSize": "5",
     "CognitiveSearchSemanticConfigurationName": "my-semantic-config",
@@ -13,7 +13,10 @@
     "GremlinContainerName": "sample-graph",
     "GremlinDatabaseConnectionString": "--a Gremlin connection...WARNING: the one from the portal is missing the database name (see comments in ServiceSettings.cs for more info)---",
     "GremlinDatabaseName": "sample-database",
+    "GremlinEnableSSL": "true",
     "GremlinHostName": "---your host name minus any https prefix (e.g., mystuff.gremlin.cosmos.azure.com) here--",
+    "GremlinHostPort": "443",
     "GremlinKey": "--your primary or secondary key here---"
   }
 }
+ 

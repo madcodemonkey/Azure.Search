@@ -1,6 +1,6 @@
 ﻿namespace CustomSqlServerIndexer.Services;
 
-public interface IGremlinService 
+public interface IGremlinCogSearchService 
 {
 
     /// <summary>

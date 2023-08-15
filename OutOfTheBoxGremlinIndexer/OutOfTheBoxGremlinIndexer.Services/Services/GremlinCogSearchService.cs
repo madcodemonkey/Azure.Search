@@ -1,9 +1,10 @@
 ﻿using Azure.Search.Documents.Indexes.Models;
 using CustomSqlServerIndexer.Models;
+using CustomSqlServerIndexer.Repositories;
 
 namespace CustomSqlServerIndexer.Services;
 
-public class GremlinService  : IGremlinService
+public class GremlinCogSearchService  : IGremlinCogSearchService
 {
     private readonly ServiceSettings _serviceSettings;
     private readonly RepositorySettings _repositorySettings;
@@ -14,7 +15,7 @@ public class GremlinService  : IGremlinService
     /// <summary>
     /// Constructor
     /// </summary>
-    public GremlinService(ServiceSettings serviceSettings, RepositorySettings repositorySettings,
+    public GremlinCogSearchService(ServiceSettings serviceSettings, RepositorySettings repositorySettings,
         ICogClientWrapperService clientService,
         ICogSearchDataSourceService dataSourceService,
         ICustomSearchIndexService searchIndexService)

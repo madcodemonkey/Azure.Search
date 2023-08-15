@@ -12,18 +12,18 @@ public class IndexManipulationFunction
     private readonly ILogger _logger;
     private readonly ICustomSearchIndexService _searchIndexService;
     private readonly ServiceSettings _settings;
-    private readonly IGremlinService _gremlinService;
+    private readonly IGremlinCogSearchService _gremlinCogSearchService;
 
     /// <summary>
     /// Constructor
     /// </summary>
     public IndexManipulationFunction(ILoggerFactory loggerFactory, 
         ServiceSettings settings,
-        IGremlinService gremlinService,
+        IGremlinCogSearchService gremlinCogSearchService,
         ICustomSearchIndexService searchIndexService)
     {
         _settings = settings;
-        _gremlinService = gremlinService;
+        _gremlinCogSearchService = gremlinCogSearchService;
         _searchIndexService = searchIndexService;
         _logger = loggerFactory.CreateLogger<IndexManipulationFunction>();
     }
@@ -33,7 +33,7 @@ public class IndexManipulationFunction
     {
         _logger.LogInformation($"C# HTTP trigger function called to create An index named {_settings.CognitiveSearchIndexName}.");
 
-        await _gremlinService.CreateAsync();
+        await _gremlinCogSearchService.CreateAsync();
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
