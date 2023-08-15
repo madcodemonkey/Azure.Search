@@ -14,8 +14,11 @@ public class SearchIndexDocument
     /// <summary>
     /// This is the text that was inside of the file.
     /// </summary>
-    /// <remarks>Maps to: content</remarks>
-    [SearchableField(IsFilterable = true, IsSortable = true, AnalyzerName = "standard.lucene")]
+    /// <remarks>
+    /// Maps to: content
+    /// Avoid putting IsFilterable or IsSortable on fields with large amounts of data.  You will get errors if you exceed certain limits using these flags!
+    /// </remarks>
+    [SearchableField(AnalyzerName = "standard.lucene")]
     public string Content { get; set; } = string.Empty;
 
     /// <summary>
@@ -36,7 +39,7 @@ public class SearchIndexDocument
     /// The file name (e.g., ""Example1-History.pdf").  This does not include the path inside the container.
     /// </summary>
     /// <remarks>Maps to:  metadata_storage_name</remarks>
-    [SearchableField(IsFilterable = true, IsFacetable = true)]
+    [SearchableField(IsFilterable = true, IsSortable = true,IsFacetable = true)]
     public string FileName { get; set; } = string.Empty;
 
 }
