@@ -6,8 +6,7 @@ namespace OutOfTheBoxBlobIndexer.Services;
 public interface ICogClientWrapperService
 {
     SearchIndexClient GetIndexClient();
+    SearchIndexerClient GetIndexerClient();
 
-    public SearchIndexerClient GetIndexerClient();
-
-    SearchClient GetSearchClient();
+    SearchClient GetSearchClient(string indexName);
 }

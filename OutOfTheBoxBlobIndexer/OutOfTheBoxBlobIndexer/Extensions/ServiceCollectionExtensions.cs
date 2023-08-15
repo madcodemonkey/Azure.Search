@@ -13,10 +13,8 @@ public static class ServiceCollectionExtensions
         var serviceSettings = new ServiceSettings
         {
             CognitiveSearchDataSourceName = config["CognitiveSearchDataSourceName"],
-            CognitiveSearchEndpoint = config["CognitiveSearchEndpoint"],
             CognitiveSearchIndexerName = config["CognitiveSearchIndexerName"],
             CognitiveSearchIndexName = config["CognitiveSearchIndexName"],
-            CognitiveSearchKey = config["CognitiveSearchKey"],
             CognitiveSearchMaxUpsertBatchSize = config.GetValue<int>("CognitiveSearchMaxUpsertBatchSize"),
             CognitiveSearchSemanticConfigurationName = config["CognitiveSearchSemanticConfigurationName"],
             CognitiveSearchSoftDeleteFieldName = config["CognitiveSearchSoftDeleteFieldName"],
@@ -25,10 +23,14 @@ public static class ServiceCollectionExtensions
             StorageConnectionString = config["StorageConnectionString"],
             StorageContainerName = config["StorageContainerName"],
         };
- 
 
+        var cogClientSettings = new CogClientSettings()
+        {
+            CognitiveSearchEndpoint = config["CognitiveSearchEndpoint"],
+            CognitiveSearchKey = config["CognitiveSearchKey"],
+        };
 
-        sc.AddServices(serviceSettings);
+        sc.AddServices(cogClientSettings, serviceSettings);
 
         return sc;
     }

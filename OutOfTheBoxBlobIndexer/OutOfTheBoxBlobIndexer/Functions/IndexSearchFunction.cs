@@ -12,17 +12,19 @@ namespace OutOfTheBoxBlobIndexer.Functions;
 
 public class IndexSearchFunction
 {
-    private readonly ICustomSearchIndexService _searchIndexService;
+    private readonly ServiceSettings _settings;
+    private readonly ICogSearchIndexService _searchIndexService;
     private readonly ILogger _logger;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public IndexSearchFunction(ILoggerFactory loggerFactory, 
-     
-        ICustomSearchIndexService searchIndexService)
+    public IndexSearchFunction(ILoggerFactory loggerFactory,
+        ServiceSettings settings,
+        ICogSearchIndexService searchIndexService)
     {
         _logger = loggerFactory.CreateLogger<IndexSearchFunction>();
+        _settings = settings;
         _searchIndexService = searchIndexService;
     }
 
@@ -35,7 +37,7 @@ public class IndexSearchFunction
         SearchRequest? data = JsonConvert.DeserializeObject<SearchRequest>(requestBody);
 
         var result = data != null
-            ? await _searchIndexService.SearchAsync<SearchDocument>(data.Query, new SearchOptions()
+            ? await _searchIndexService.SearchAsync<SearchDocument>(_settings.CognitiveSearchIndexName, data.Query, new SearchOptions()
             {
                 IncludeTotalCount = data.IncludeCount,
                 Size = data.PageSize,

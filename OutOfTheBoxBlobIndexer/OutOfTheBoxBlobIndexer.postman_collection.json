@@ -701,7 +701,7 @@
 			"name": "OutOfTheBoxBlobIndexer",
 			"item": [
 				{
-					"name": "Create Index",
+					"name": "Create Index, ds, and indexer",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -719,7 +719,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete Index",
+					"name": "Delete docs in the Index",
 					"request": {
 						"method": "GET",
 						"header": [],

@@ -8,34 +8,72 @@ namespace OutOfTheBoxBlobIndexer.Services.Services;
 public class OutOfBoxService : IOutOfBoxService
 {
     private readonly ICogClientWrapperService _clientService;
+    private readonly ICogSearchIndexService _indexService;
     private readonly ICogSearchDataSourceService _dataSourceService;
     private readonly ServiceSettings _serviceSettings;
     /// <summary>
     /// Constructor
     /// </summary>
-    public OutOfBoxService(ServiceSettings serviceSettings, 
+    public OutOfBoxService(ServiceSettings serviceSettings,
         ICogClientWrapperService clientService,
+        ICogSearchIndexService indexService,
         ICogSearchDataSourceService dataSourceService)
     {
         _serviceSettings = serviceSettings;
         _clientService = clientService;
+        _indexService = indexService;
         _dataSourceService = dataSourceService;
     }
 
     /// <summary>
-    /// Create the out-of-the-box Apache Gremlin indexER.
+    /// Create the index, data source and indexer for an out-of-the-box blob solution.
     /// </summary>
-    public async Task CreateAsync()
+    public async Task CreateAsync(CancellationToken cancellationToken = default)
     {
-        await CreateIndexAsync();
-        await CreateDataSourceAsync();
-        await CreateIndexerAsync();
+        await CreateIndexAsync(cancellationToken);
+        await CreateDataSourceAsync(cancellationToken);
+        await CreateIndexerAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Deletes the index, data source and indexer for the out-of-the-box blob solution.
+    /// </summary>
+    public async Task DeleteAsync(CancellationToken cancellationToken = default)
+    {
+        await _indexService.DeleteIndexAsync(_serviceSettings.CognitiveSearchIndexName);
+
+        var indexerClient = _clientService.GetIndexerClient();
+        await indexerClient.DeleteIndexerAsync(_serviceSettings.CognitiveSearchIndexerName, cancellationToken);
+
+        await _dataSourceService.DeleteAsync(_serviceSettings.CognitiveSearchDataSourceName);
+    }
+
+    /// <summary>
+    /// Runs the indexer
+    /// </summary>
+    /// <param name="cancellationToken">A cancellation token</param>
+    public async Task RunIndexerAsync(CancellationToken cancellationToken = default)
+    {
+        var clientIndexer = _clientService.GetIndexerClient();
+        await clientIndexer.RunIndexerAsync(_serviceSettings.CognitiveSearchIndexerName, cancellationToken);
+    }
+
+    private async Task CreateDataSourceAsync(CancellationToken cancellationToken = default)
+    {
+        //   if (await _dataSourceService.ExistsAsync(_serviceSettings.CognitiveSearchDataSourceName) == false)
+
+        await _dataSourceService.CreateForBlobAsync(_serviceSettings.CognitiveSearchDataSourceName,
+            _serviceSettings.StorageContainerName,
+            _serviceSettings.StorageConnectionString,
+            _serviceSettings.CognitiveSearchSoftDeleteFieldName,
+            _serviceSettings.CognitiveSearchSoftDeleteFieldValue,
+            cancellationToken);
     }
 
     /// <summary>
     /// Create index or update the index.
     /// </summary>
-    public async Task CreateIndexAsync()
+    private async Task CreateIndexAsync(CancellationToken cancellationToken = default)
     {
         FieldBuilder fieldBuilder = new FieldBuilder();
         var searchFields = fieldBuilder.Build(typeof(SearchIndexDocument));
@@ -43,7 +81,12 @@ public class OutOfBoxService : IOutOfBoxService
         var definition = new SearchIndex(_serviceSettings.CognitiveSearchIndexName, searchFields);
 
         // setup the suggestor
-        var suggester = new SearchSuggester(_serviceSettings.CognitiveSearchSuggestorName, new[] { nameof(SearchIndexDocument.FileName), nameof(SearchIndexDocument.ContentType) });
+        var suggester = new SearchSuggester(_serviceSettings.CognitiveSearchSuggestorName,
+            new[]
+        {
+            nameof(SearchIndexDocument.FileName),
+            nameof(SearchIndexDocument.ContentType)
+        });
         definition.Suggesters.Add(suggester);
 
 
@@ -65,32 +108,11 @@ public class OutOfBoxService : IOutOfBoxService
 
         // Create it using the index client
         var indexClient = _clientService.GetIndexClient();
-        await indexClient.CreateOrUpdateIndexAsync(definition);
-    }
- 
-    /// <summary>
-    /// Runs the indexer
-    /// </summary>
-    /// <param name="cancellationToken">A cancellation token</param>
-    public async Task RunIndexerAsync(CancellationToken cancellationToken = default)
-    {
-        var clientIndexer = _clientService.GetIndexerClient();
-        await clientIndexer.RunIndexerAsync(_serviceSettings.CognitiveSearchIndexerName, cancellationToken);
-    }
-
-    private async Task CreateDataSourceAsync()
-    {
-        //   if (await _dataSourceService.ExistsAsync(_serviceSettings.CognitiveSearchDataSourceName) == false)
-
-        await _dataSourceService.CreateForBlobAsync(_serviceSettings.CognitiveSearchDataSourceName,
-            _serviceSettings.StorageContainerName,
-            _serviceSettings.StorageConnectionString,
-            _serviceSettings.CognitiveSearchSoftDeleteFieldName, 
-            _serviceSettings.CognitiveSearchSoftDeleteFieldValue);
+        await indexClient.CreateOrUpdateIndexAsync(definition, cancellationToken: cancellationToken);
     }
 
     /// <summary>Creates the blob indexer</summary>
-    private async Task<bool> CreateIndexerAsync()
+    private async Task<bool> CreateIndexerAsync(CancellationToken cancellationToken = default)
     {
         // How often should the indexer run?
         var schedule = new IndexingSchedule(TimeSpan.FromDays(1))
@@ -139,7 +161,7 @@ public class OutOfBoxService : IOutOfBoxService
         // - Docs: https://learn.microsoft.com/en-us/azure/search/cognitive-search-output-field-mapping?tabs=rest
 
         var clientIndexer = _clientService.GetIndexerClient();
-        var data = await clientIndexer.CreateOrUpdateIndexerAsync(indexer);
+        var data = await clientIndexer.CreateOrUpdateIndexerAsync(indexer, cancellationToken: cancellationToken);
 
         return data != null;  // TODO: Is this a good check?
     }

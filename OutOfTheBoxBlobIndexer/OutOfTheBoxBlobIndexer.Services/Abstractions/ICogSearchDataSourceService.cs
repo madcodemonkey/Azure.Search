@@ -20,8 +20,9 @@ public interface ICogSearchDataSourceService
     /// <param name="connectionString">A connection string to attach to the Azure storage resource.</param>
     /// <param name="softDeleteColumnName">The column that indicates that the record should be removed from the Azure Search Index</param>
     /// <param name="softDeleteColumnValue">The value in the column that indicates that the record should be deleted.</param>
+    /// <param name="cancellationToken">A cancellation token</param>
     Task<bool> CreateForBlobAsync(string name, string containerName, string connectionString,
-        string softDeleteColumnName, string softDeleteColumnValue);
+        string softDeleteColumnName, string softDeleteColumnValue, CancellationToken cancellationToken = default);
 
     /// <summary>Creates a Cosmos DB Apache Gremlin data source that will be used by an indexer.</summary>
     /// <param name="name">The name of the data source</param>

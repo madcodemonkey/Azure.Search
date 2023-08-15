@@ -6,15 +6,13 @@ namespace OutOfTheBoxBlobIndexer.Services;
 
 public class CogSearchDataSourceService : ICogSearchDataSourceService
 {
-    private readonly ServiceSettings _settings;
     private readonly ICogClientWrapperService _clientService;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public CogSearchDataSourceService(ServiceSettings settings, ICogClientWrapperService clientService)
+    public CogSearchDataSourceService(ICogClientWrapperService clientService)
     {
-        _settings = settings;
         _clientService = clientService;
     }
     
@@ -55,7 +53,7 @@ public class CogSearchDataSourceService : ICogSearchDataSourceService
     /// <param name="softDeleteColumnName">The column that indicates that the record should be removed from the Azure Search Index</param>
     /// <param name="softDeleteColumnValue">The value in the column that indicates that the record should be deleted.</param>
     public async Task<bool> CreateForBlobAsync(string name, string containerName, string connectionString,
-        string softDeleteColumnName, string softDeleteColumnValue)
+        string softDeleteColumnName, string softDeleteColumnValue, CancellationToken cancellationToken = default)
     {
         var dataSource = new SearchIndexerDataSourceConnection(
             name, SearchIndexerDataSourceType.AzureBlob, connectionString,
@@ -71,7 +69,7 @@ public class CogSearchDataSourceService : ICogSearchDataSourceService
         // The data source does not need to be deleted if it was already created,
         // but the connection string may need to be updated if it was changed
         var indexerClient = _clientService.GetIndexerClient();
-        var results = await indexerClient.CreateOrUpdateDataSourceConnectionAsync(dataSource);
+        var results = await indexerClient.CreateOrUpdateDataSourceConnectionAsync(dataSource, cancellationToken: cancellationToken);
 
         return results != null;  // Is this a good check?
     }

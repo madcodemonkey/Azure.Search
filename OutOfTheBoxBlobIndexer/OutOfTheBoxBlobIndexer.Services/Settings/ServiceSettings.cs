@@ -8,11 +8,7 @@ public class ServiceSettings
     /// </summary>
     public string CognitiveSearchDataSourceName { get; set; } = string.Empty;
 
-    /// <summary>
-    /// The name of the overall Azure Search instance.
-    /// </summary>
-    public string CognitiveSearchEndpoint { get; set; } = string.Empty;
-
+ 
     /// <summary>
     /// The IndexER name
     /// </summary>
@@ -22,10 +18,7 @@ public class ServiceSettings
     /// The name of the index we are creating documents inside.
     /// </summary>
     public string CognitiveSearchIndexName { get; set; } = string.Empty;
-    /// <summary>
-    /// The key that gets us access to the cognitive search instance.
-    /// </summary>
-    public string CognitiveSearchKey { get; set; } = string.Empty;
+   
     /// <summary>
     /// When saving data to the Cognitive Search index, this is the maximum batch size.
     /// </summary>
@@ -39,25 +32,25 @@ public class ServiceSettings
     /// <summary>
     /// The name of the suggestor
     /// </summary>
-    public string CognitiveSearchSuggestorName { get; set; }
+    public string CognitiveSearchSuggestorName { get; set; } = string.Empty;
 
     /// <summary>
     /// This is a connection string to attach to the Azure Storage resource
     /// </summary>
-    public string StorageConnectionString { get; set; }
+    public string StorageConnectionString { get; set; } = string.Empty;
 
     /// <summary>
     /// Within the Azure Storage resource, this is the name of the container that has files in it that you want in the index.
     /// </summary>
-    public string StorageContainerName { get; set; }
+    public string StorageContainerName { get; set; } = string.Empty;
 
     /// <summary>
     /// The name of the field that controls soft deletion.  This is metadata field on the blob file.  If it is not present, it is assumed that it is NOT deleted.
     /// </summary>
-    public string CognitiveSearchSoftDeleteFieldName { get; set; }
+    public string CognitiveSearchSoftDeleteFieldName { get; set; } = string.Empty;
 
     /// <summary>
     /// The value of the field that controls soft deletion.  This is metadata field VALUE on the blob file.  If it is set to this string, it is assumed that it is NOT deleted.
     /// </summary>
-    public string CognitiveSearchSoftDeleteFieldValue { get; set; }
+    public string CognitiveSearchSoftDeleteFieldValue { get; set; } = string.Empty;
 }

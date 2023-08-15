@@ -23,21 +23,21 @@ public class SearchIndexDocument
     /// </summary>
     /// <remarks>Maps to:  metadata_content_type</remarks>
     [SearchableField(IsFilterable = true, IsFacetable = true)]
-    public string ContentType { get; set; }
+    public string ContentType { get; set; } = string.Empty;
 
     /// <summary>
     /// The file extension (e.g., ".pdf").  Yes, it includes the leading period.
     /// </summary>
     /// <remarks>Maps to:  metadata_storage_file_extension</remarks>
     [SearchableField(IsFilterable = true, IsFacetable = true)]
-    public string FileExtension { get; set; }
+    public string FileExtension { get; set; } = string.Empty;
 
     /// <summary>
     /// The file name (e.g., ""Example1-History.pdf").  This does not include the path inside the container.
     /// </summary>
     /// <remarks>Maps to:  metadata_storage_name</remarks>
     [SearchableField(IsFilterable = true, IsFacetable = true)]
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
 }
  

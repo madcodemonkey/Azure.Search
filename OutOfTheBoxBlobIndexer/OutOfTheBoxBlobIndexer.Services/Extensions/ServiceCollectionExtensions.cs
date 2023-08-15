@@ -5,13 +5,14 @@ namespace OutOfTheBoxBlobIndexer.Services;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddServices(this IServiceCollection sc, ServiceSettings settings)
+    public static IServiceCollection AddServices(this IServiceCollection sc, CogClientSettings cogClientSettings, ServiceSettings settings)
     {
-        sc.AddSingleton(settings); 
+        sc.AddSingleton(cogClientSettings);
+        sc.AddSingleton(settings);
 
         sc.AddScoped<ICogClientWrapperService, CogClientWrapperService>();
         sc.AddScoped<ICogSearchDataSourceService, CogSearchDataSourceService>();
-        sc.AddScoped<ICustomSearchIndexService, CustomSearchIndexService>();
+        sc.AddScoped<ICogSearchIndexService, CogSearchIndexService>();
         sc.AddScoped<IOutOfBoxService, OutOfBoxService>();
 
         return sc;
