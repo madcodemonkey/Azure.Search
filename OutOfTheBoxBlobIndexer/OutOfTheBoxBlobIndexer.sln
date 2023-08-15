@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutOfTheBoxBlobIndexer.Mode
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutOfTheBoxBlobIndexer.Services", "OutOfTheBoxBlobIndexer.Services\OutOfTheBoxBlobIndexer.Services.csproj", "{C7777306-8168-4348-A901-6E35903BAF43}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BC48EDFB-EC98-41B1-A024-385B097352D9}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
