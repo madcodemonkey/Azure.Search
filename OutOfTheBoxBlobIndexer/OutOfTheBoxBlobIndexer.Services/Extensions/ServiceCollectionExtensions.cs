@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
         sc.AddScoped<ICogClientWrapperService, CogClientWrapperService>();
         sc.AddScoped<ICogSearchDataSourceService, CogSearchDataSourceService>();
         sc.AddScoped<ICustomSearchIndexService, CustomSearchIndexService>();
-        sc.AddScoped<IOutOfBoxIndexService, OutOfBoxIndexService>();
+        sc.AddScoped<IOutOfBoxService, OutOfBoxService>();
 
         return sc;
     }

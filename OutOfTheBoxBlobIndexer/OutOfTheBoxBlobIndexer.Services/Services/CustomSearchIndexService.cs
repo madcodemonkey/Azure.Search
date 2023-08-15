@@ -1,7 +1,5 @@
 ﻿using Azure;
 using Azure.Search.Documents;
-using Azure.Search.Documents.Indexes;
-using Azure.Search.Documents.Indexes.Models;
 using Azure.Search.Documents.Models;
 using OutOfTheBoxBlobIndexer.Models;
 
@@ -109,7 +107,7 @@ public class CustomSearchIndexService : ICustomSearchIndexService
             throw;
         }
     }
-	
+
     /// <summary>
     /// Deletes the entire index and all it's documents!
     /// </summary>
@@ -120,42 +118,7 @@ public class CustomSearchIndexService : ICustomSearchIndexService
         await indexClient.DeleteIndexAsync(ServiceSettings.CognitiveSearchIndexName);
     }
 
-    /// <summary>
-    /// Create index or update the index.
-    /// </summary>
-    public void CreateOrUpdateIndex()
-    {
 
-        FieldBuilder fieldBuilder = new FieldBuilder();
-        var searchFields = fieldBuilder.Build(typeof(SearchIndexDocument));
-
-        var definition = new SearchIndex(ServiceSettings.CognitiveSearchIndexName, searchFields);
-
-        // setup the suggestor
-        var suggester = new SearchSuggester("sg", new[] { nameof(SearchIndexDocument.FirstName), nameof(SearchIndexDocument.Label) });
-        definition.Suggesters.Add(suggester);
-
-
-        // Setup Semantic Configuration
-        var prioritizedFields = new PrioritizedFields()
-        {
-            TitleField = new SemanticField()
-            {
-                FieldName = nameof(SearchIndexDocument.FirstName)
-            }
-        };
-
-        prioritizedFields.ContentFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.FirstName) });
-        prioritizedFields.KeywordFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.Label) });
-
-        SemanticConfiguration semanticConfig = new SemanticConfiguration(ServiceSettings.CognitiveSearchSemanticConfigurationName, prioritizedFields);
-        definition.SemanticSettings = new SemanticSettings();
-        definition.SemanticSettings.Configurations.Add(semanticConfig);
-
-        // Create it using the index client
-        var indexClient = ClientService.GetIndexClient();
-        indexClient.CreateOrUpdateIndex(definition);
-    }
 
     /// <summary>Searches for documents</summary>
     /// <typeparam name="T">The type of data being returned.</typeparam>

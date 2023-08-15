@@ -2,7 +2,7 @@
   "profiles": {
     "OutOfTheBoxBlobIndexer": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7056",
+      "commandLineArgs": "--port 7071",
       "launchBrowser": false
     }
   }

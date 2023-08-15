@@ -89,26 +89,6 @@ public class CogSearchDataSourceService : ICogSearchDataSourceService
     public async Task<bool> CreateForGremlinAsync(string name, string containerName, string connectionString,
         GremlinQueryTypes queryType,  string? softDeleteColumnName, string? softDeleteColumnValue)
     {
-        /*
-         *
-        {
-  "@odata.context": "https://yatescloudsearch.search.windows.net/$metadata#datasources/$entity",
-  "@odata.etag": "\"0x8DB95359F5784FA\"",
-  "name": "my-gremlin-ds",
-  "description": null,
-  "type": "cosmosdb",
-  "subtype": "Gremlin",   // <----------------------------  Can't find the sub-type.
-  "credentials": {
-    "connectionString": "AccountEndpoint=https://yatesgremlin.documents.azure.com;AccountKey=...;Database=sample-database;ApiKind=Gremlin;"
-  },
-  
-  "dataDeletionDetectionPolicy": null,
-  "encryptionKey": null,
-  "identity": null
-}
-         */
-
-
         var searchIndexerDataContainer = new SearchIndexerDataContainer(containerName)
         {
             Query = queryType == GremlinQueryTypes.Edges ? "g.E()" : "g.V()"

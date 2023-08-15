@@ -37,12 +37,27 @@ public class ServiceSettings
     public string CognitiveSearchSemanticConfigurationName { get; set; } = string.Empty;
 
     /// <summary>
-    /// Within the Azure Storage resource, this is the name of the container that has files in it that you want in the index.
+    /// The name of the suggestor
     /// </summary>
-    public string CognitiveSearchStorageContainerName { get; set; }
+    public string CognitiveSearchSuggestorName { get; set; }
 
     /// <summary>
     /// This is a connection string to attach to the Azure Storage resource
     /// </summary>
-    public string CognitiveSearchStorageConnectionString { get; set; }
+    public string StorageConnectionString { get; set; }
+
+    /// <summary>
+    /// Within the Azure Storage resource, this is the name of the container that has files in it that you want in the index.
+    /// </summary>
+    public string StorageContainerName { get; set; }
+
+    /// <summary>
+    /// The name of the field that controls soft deletion.  This is metadata field on the blob file.  If it is not present, it is assumed that it is NOT deleted.
+    /// </summary>
+    public string CognitiveSearchSoftDeleteFieldName { get; set; }
+
+    /// <summary>
+    /// The value of the field that controls soft deletion.  This is metadata field VALUE on the blob file.  If it is set to this string, it is assumed that it is NOT deleted.
+    /// </summary>
+    public string CognitiveSearchSoftDeleteFieldValue { get; set; }
 }

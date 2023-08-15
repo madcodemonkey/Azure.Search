@@ -19,7 +19,14 @@ public static class ServiceCollectionExtensions
             CognitiveSearchKey = config["CognitiveSearchKey"],
             CognitiveSearchMaxUpsertBatchSize = config.GetValue<int>("CognitiveSearchMaxUpsertBatchSize"),
             CognitiveSearchSemanticConfigurationName = config["CognitiveSearchSemanticConfigurationName"],
+            CognitiveSearchSoftDeleteFieldName = config["CognitiveSearchSoftDeleteFieldName"],
+            CognitiveSearchSoftDeleteFieldValue = config["CognitiveSearchSoftDeleteFieldValue"],
+            CognitiveSearchSuggestorName = config["CognitiveSearchSuggestorName"],
+            StorageConnectionString = config["StorageConnectionString"],
+            StorageContainerName = config["StorageContainerName"],
         };
+ 
+
 
         sc.AddServices(serviceSettings);
 

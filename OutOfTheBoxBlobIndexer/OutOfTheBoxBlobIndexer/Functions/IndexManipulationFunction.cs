@@ -13,17 +13,17 @@ public class IndexManipulationFunction
     private readonly ILogger _logger;
     private readonly ICustomSearchIndexService _searchIndexService;
     private readonly ServiceSettings _settings;
-    private readonly IOutOfBoxIndexService _outOfBoxIndexService;
+    private readonly IOutOfBoxService _outOfBoxService;
 
     /// <summary>
     /// Constructor
     /// </summary>
     public IndexManipulationFunction(ILoggerFactory loggerFactory, 
-        ServiceSettings settings, IOutOfBoxIndexService outOfBoxIndexService,
+        ServiceSettings settings, IOutOfBoxService outOfBoxService,
         ICustomSearchIndexService searchIndexService)
     {
         _settings = settings;
-        _outOfBoxIndexService = outOfBoxIndexService;
+        _outOfBoxService = outOfBoxService;
         _searchIndexService = searchIndexService;
         _logger = loggerFactory.CreateLogger<IndexManipulationFunction>();
     }
@@ -33,7 +33,7 @@ public class IndexManipulationFunction
     {
         _logger.LogInformation($"C# HTTP trigger function called to create An index named {_settings.CognitiveSearchIndexName}.");
 
-        await _outOfBoxIndexService.CreateAsync();
+        await _outOfBoxService.CreateAsync();
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
