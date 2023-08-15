@@ -1,5 +1,4 @@
-﻿using Azure;
-using Azure.Search.Documents.Indexes;
+﻿using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using OutOfTheBoxBlobIndexer.Models;
 
