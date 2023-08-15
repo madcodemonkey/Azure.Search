@@ -10,6 +10,7 @@ public class CogClientWrapperService : ICogClientWrapperService
     private SearchIndexClient? _indexClient;
     private SearchIndexerClient? _indexerClient;
     private SearchClient? _searchClient;
+
     /// <summary>
     /// Constructor
     /// </summary>

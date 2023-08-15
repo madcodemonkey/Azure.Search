@@ -11,8 +11,9 @@ public interface ICogSearchDataSourceService
     /// <param name="highWaterMarkColumnName">The high watermark field used to detect changes</param>
     /// <param name="softDeleteColumnName">The column that indicates that the record should be removed from the Azure Search Index</param>
     /// <param name="softDeleteColumnValue">The value in the column that indicates that the record should be deleted.</param>
+    /// <param name="cancellationToken">A cancellation token</param>
     Task<bool> CreateForAzureSqlAsync(string name, string tableOrViewName, string connectionString,
-        string highWaterMarkColumnName, string softDeleteColumnName, string softDeleteColumnValue);
+        string highWaterMarkColumnName, string softDeleteColumnName, string softDeleteColumnValue, CancellationToken cancellationToken = default);
 
     /// <summary>Creates a blob storage data source that will be used an out-of-the-box indexer.</summary>
     /// <param name="name">The name of the data source</param>
@@ -31,20 +32,24 @@ public interface ICogSearchDataSourceService
     /// <param name="queryType">The type of query to perform (vertices or edges)</param>
     /// <param name="softDeleteColumnName">The column that indicates that the record should be removed from the Azure Search Index</param>
     /// <param name="softDeleteColumnValue">The value in the column that indicates that the record should be deleted.</param>
+    /// <param name="cancellationToken">A cancellation token</param>
     /// <remarks>
     /// See docs: https://learn.microsoft.com/en-us/azure/search/search-howto-index-cosmosdb-gremlin#define-the-data-source
     /// </remarks>
     Task<bool> CreateForGremlinAsync(string name, string containerName, string connectionString,
-        GremlinQueryTypes queryType, string? softDeleteColumnName, string? softDeleteColumnValue);
+        GremlinQueryTypes queryType, string? softDeleteColumnName, string? softDeleteColumnValue, CancellationToken cancellationToken = default);
 
     /// <summary>Delete a data sources</summary>
     /// <param name="dataSourceConnectionName">The name of the data source</param>
-    Task<bool> DeleteAsync(string dataSourceConnectionName);
+    /// <param name="cancellationToken">A cancellation token</param>
+    Task<bool> DeleteAsync(string dataSourceConnectionName, CancellationToken cancellationToken = default);
 
     /// <summary>Gets a list of data sources</summary>
     /// <param name="dataSourceConnectionName">The name of the data source</param>
-    Task<bool> ExistsAsync(string dataSourceConnectionName);
+    /// <param name="cancellationToken">A cancellation token</param>
+    Task<bool> ExistsAsync(string dataSourceConnectionName, CancellationToken cancellationToken = default);
 
     /// <summary>Gets a list of data sources</summary>
-    Task<List<string>> GetListAsync();
+    /// <param name="cancellationToken">A cancellation token</param>
+    Task<List<string>> GetListAsync(CancellationToken cancellationToken = default);
 }

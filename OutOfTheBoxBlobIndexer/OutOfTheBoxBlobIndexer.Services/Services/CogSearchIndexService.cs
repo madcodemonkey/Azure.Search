@@ -25,8 +25,9 @@ public class CogSearchIndexService : ICogSearchIndexService
     /// </summary>
     /// <param name="indexName">The name of the index.</param>
     /// <param name="keyField">The name of the key field that uniquely identifies documents in the index.</param>
+    /// <param name="cancellationToken">A cancellation token</param>
     /// <returns>The number of documents deleted</returns>
-    public async Task<long> DeleteAllDocumentsAsync(string indexName, string keyField)
+    public async Task<long> DeleteAllDocumentsAsync(string indexName, string keyField, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -46,7 +47,7 @@ public class CogSearchIndexService : ICogSearchIndexService
                     Select = { keyField }
                 };
 
-                var azSearchResults = await this.SearchAsync<SearchDocument>(indexName, "*", options);
+                var azSearchResults = await this.SearchAsync<SearchDocument>(indexName, "*", options, cancellationToken);
 
                 totalCountCurrent = azSearchResults.TotalCount ?? 0;
 
@@ -64,7 +65,7 @@ public class CogSearchIndexService : ICogSearchIndexService
                         keys.Add(doc.Document.GetString(keyField));
                     }
 
-                    await searchClient.DeleteDocumentsAsync(keyField, keys);
+                    await searchClient.DeleteDocumentsAsync(keyField, keys, cancellationToken: cancellationToken);
 
                     totalDeleted += azSearchResults.Docs.Count;
                 }
@@ -89,8 +90,9 @@ public class CogSearchIndexService : ICogSearchIndexService
     /// <param name="indexName">The name of the index.</param>
     /// <param name="keyField">The name of the key field that uniquely identifies documents in the index.</param>
     /// <param name="keys">The keys of the documents to delete.</param>
+    /// <param name="cancellationToken">A cancellation token</param>
     /// <returns>The number of documents deleted</returns>
-    public async Task<long> DeleteDocumentsAsync(string indexName, string keyField, List<string> keys)
+    public async Task<long> DeleteDocumentsAsync(string indexName, string keyField, List<string> keys, CancellationToken cancellationToken = default)
     {
         if (keys.Count == 0)
             return 0;
@@ -98,7 +100,7 @@ public class CogSearchIndexService : ICogSearchIndexService
         try
         {
             var searchClient = ClientService.GetSearchClient(indexName);
-            await searchClient.DeleteDocumentsAsync(keyField, keys);
+            await searchClient.DeleteDocumentsAsync(keyField, keys, cancellationToken: cancellationToken);
 
             return keys.Count;
         }
@@ -113,11 +115,13 @@ public class CogSearchIndexService : ICogSearchIndexService
     /// <summary>
     /// Deletes the entire index and all it's documents!
     /// </summary>
+    /// <param name="indexName">The name of the index.</param>
+    /// <param name="cancellationToken">A cancellation token</param>
     /// <returns></returns>
-    public async Task DeleteIndexAsync(string indexName)
+    public async Task DeleteIndexAsync(string indexName, CancellationToken cancellationToken = default)
     {
         var indexClient = ClientService.GetIndexClient();
-        await indexClient.DeleteIndexAsync(indexName);
+        await indexClient.DeleteIndexAsync(indexName, cancellationToken);
     }
 
     /// <summary>Searches for documents</summary>
@@ -125,10 +129,11 @@ public class CogSearchIndexService : ICogSearchIndexService
     /// <param name="indexName">The name of the index.</param>
     /// <param name="searchText">The text to find</param>
     /// <param name="options">The search options to apply</param>
-    public async Task<SearchQueryResponse<T>> SearchAsync<T>(string indexName, string searchText, SearchOptions options) where T : class
+    /// <param name="cancellationToken">A cancellation token</param>
+    public async Task<SearchQueryResponse<T>> SearchAsync<T>(string indexName, string searchText, SearchOptions options, CancellationToken cancellationToken = default) where T : class
     {
         var searchClient = ClientService.GetSearchClient(indexName);
-        var response = await searchClient.SearchAsync<T>(searchText, options);
+        var response = await searchClient.SearchAsync<T>(searchText, options, cancellationToken);
 
         var result = new SearchQueryResponse<T>
         {
@@ -144,13 +149,14 @@ public class CogSearchIndexService : ICogSearchIndexService
     /// </summary>
     /// <param name="indexName">The name of the index.</param>
     /// <param name="doc">One document to upload</param>
-    public async Task UploadDocumentsAsync(string indexName, SearchIndexDocument doc)
+    /// <param name="cancellationToken">A cancellation token</param>
+    public async Task UploadDocumentsAsync(string indexName, SearchIndexDocument doc, CancellationToken cancellationToken = default)
     {
         IndexDocumentsBatch<SearchIndexDocument> batch = IndexDocumentsBatch.Create(
             IndexDocumentsAction.Upload(doc));
 
         var searchClient = ClientService.GetSearchClient(indexName);
-        IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch);
+        IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch, cancellationToken: cancellationToken);
     }
 
     /// <summary>
@@ -158,13 +164,14 @@ public class CogSearchIndexService : ICogSearchIndexService
     /// </summary>
     /// <param name="indexName">The name of the index.</param>
     /// <param name="docs">A list of docs to upload</param>
-    public async Task UploadDocumentsAsync(string indexName, List<SearchIndexDocument> docs)
+    /// <param name="cancellationToken">A cancellation token</param>
+    public async Task UploadDocumentsAsync(string indexName, List<SearchIndexDocument> docs, CancellationToken cancellationToken = default)
     {
         IndexDocumentsBatch<SearchIndexDocument> batch = IndexDocumentsBatch.Create(
             docs.Select(s => IndexDocumentsAction.Upload(s)).ToArray());
 
         var searchClient = ClientService.GetSearchClient(indexName);
-        IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch);
+        IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch, cancellationToken: cancellationToken);
     }
 
 }
