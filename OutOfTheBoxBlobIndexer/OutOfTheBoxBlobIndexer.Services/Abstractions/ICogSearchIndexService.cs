@@ -28,9 +28,10 @@ public interface ICogSearchIndexService
     /// Deletes the entire index and all it's documents!
     /// </summary>
     /// <param name="indexName">The name of the index.</param>
-    /// <param name="cancellationToken">A cancellation token</param>
+    /// <param name="checkIfExistsFirst">Indicates if you want the code to check to make sure the indexer exists before attempting to delete it.  If you try
+    /// to delete an indexer that doesn't exist, it will generate an exception.</param>  /// <param name="cancellationToken">A cancellation token</param>
     /// <returns></returns>
-    Task DeleteIndexAsync(string indexName, CancellationToken cancellationToken = default);
+    Task DeleteIndexAsync(string indexName, bool checkIfExistsFirst, CancellationToken cancellationToken = default);
 
     /// <summary>Searches for documents</summary>
     /// <typeparam name="T">The type of data being returned.</typeparam>
@@ -56,4 +57,10 @@ public interface ICogSearchIndexService
     /// <param name="cancellationToken">A cancellation token</param>
     Task UploadDocumentsAsync(string indexName, List<SearchIndexDocument> docs, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Indicates if an index exists or not
+    /// </summary>
+    /// <param name="indexName">The name of the index</param>
+    /// <param name="cancellationToken">A cancellation token</param>
+    Task<bool> IndexExistsAsync(string indexName, CancellationToken cancellationToken);
 }

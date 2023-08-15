@@ -6,14 +6,14 @@ namespace OutOfTheBoxBlobIndexer.Services;
 
 public class CogSearchDataSourceService : ICogSearchDataSourceService
 {
-    private readonly ICogClientWrapperService _clientService;
+    protected ICogClientWrapperService ClientService { get; }
 
     /// <summary>
     /// Constructor
     /// </summary>
     public CogSearchDataSourceService(ICogClientWrapperService clientService)
     {
-        _clientService = clientService;
+        ClientService = clientService;
     }
 
     /// <summary>Creates a Azure SQL data source that will be used by an indexer.</summary>
@@ -41,7 +41,7 @@ public class CogSearchDataSourceService : ICogSearchDataSourceService
 
         // The data source does not need to be deleted if it was already created,
         // but the connection string may need to be updated if it was changed
-        var indexerClient = _clientService.GetIndexerClient();
+        var indexerClient = ClientService.GetIndexerClient();
         var results = await indexerClient.CreateOrUpdateDataSourceConnectionAsync(dataSource, cancellationToken: cancellationToken);
 
         return results != null;  // Is this a good check?
@@ -70,7 +70,7 @@ public class CogSearchDataSourceService : ICogSearchDataSourceService
 
         // The data source does not need to be deleted if it was already created,
         // but the connection string may need to be updated if it was changed
-        var indexerClient = _clientService.GetIndexerClient();
+        var indexerClient = ClientService.GetIndexerClient();
         var results = await indexerClient.CreateOrUpdateDataSourceConnectionAsync(dataSource, cancellationToken: cancellationToken);
 
         return results != null;  // Is this a good check?
@@ -115,7 +115,7 @@ public class CogSearchDataSourceService : ICogSearchDataSourceService
 
         // The data source does not need to be deleted if it was already created,
         // but the connection string may need to be updated if it was changed
-        var indexerClient = _clientService.GetIndexerClient();
+        var indexerClient = ClientService.GetIndexerClient();
         var results = await indexerClient.CreateOrUpdateDataSourceConnectionAsync(dataSource, cancellationToken: cancellationToken);
 
         return results != null;  // Is this a good check?
@@ -124,12 +124,19 @@ public class CogSearchDataSourceService : ICogSearchDataSourceService
 
     /// <summary>Delete a data sources</summary>
     /// <param name="dataSourceConnectionName">The name of the data source</param>
+    /// <param name="checkIfExistsFirst">Indicates if you want the code to check to make sure the indexer exists before attempting to delete it.  If you try
+    /// to delete an indexer that doesn't exist, it will generate an exception.</param> 
     /// <param name="cancellationToken">A cancellation token</param>
-    public async Task<bool> DeleteAsync(string dataSourceConnectionName, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteAsync(string dataSourceConnectionName, bool checkIfExistsFirst, CancellationToken cancellationToken = default)
     {
-        var indexerClient = _clientService.GetIndexerClient();
+        if (checkIfExistsFirst && await ExistsAsync(dataSourceConnectionName, cancellationToken) == false)
+        {
+            return false;
+        }
 
-        Response<SearchIndexerDataSourceConnection>? dataSource = await indexerClient.GetDataSourceConnectionAsync(dataSourceConnectionName);
+        var indexerClient = ClientService.GetIndexerClient();
+
+        Response<SearchIndexerDataSourceConnection>? dataSource = await indexerClient.GetDataSourceConnectionAsync(dataSourceConnectionName, cancellationToken);
 
         if (dataSource != null)
         {
@@ -145,18 +152,24 @@ public class CogSearchDataSourceService : ICogSearchDataSourceService
     /// <param name="cancellationToken">A cancellation token</param>
     public async Task<bool> ExistsAsync(string dataSourceConnectionName, CancellationToken cancellationToken = default)
     {
-        var indexerClient = _clientService.GetIndexerClient();
+        var indexerClient = ClientService.GetIndexerClient();
+        
+        Response<IReadOnlyList<string>>? response = await indexerClient.GetDataSourceConnectionNamesAsync(cancellationToken);
 
-        Response<SearchIndexerDataSourceConnection>? dataSource = await indexerClient.GetDataSourceConnectionAsync(dataSourceConnectionName, cancellationToken);
+        foreach (var item in response.Value)
+        {
+            if (string.IsNullOrWhiteSpace(item)) continue;
+            if (dataSourceConnectionName == item) return true;
+        }
 
-        return dataSource != null;
+        return false;
     }
 
     /// <summary>Gets a list of data sources</summary>
     /// <param name="cancellationToken">A cancellation token</param>
     public async Task<List<string>> GetListAsync(CancellationToken cancellationToken = default)
     {
-        var indexerClient = _clientService.GetIndexerClient();
+        var indexerClient = ClientService.GetIndexerClient();
 
         Response<IReadOnlyList<string>> response = await indexerClient.GetDataSourceConnectionNamesAsync(cancellationToken);
 

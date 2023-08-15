@@ -7,16 +7,14 @@ namespace OutOfTheBoxBlobIndexer.Services;
 
 public class CogSearchIndexService : ICogSearchIndexService
 {
-    protected ServiceSettings ServiceSettings { get; }
     protected ICogClientWrapperService ClientService { get; }
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public CogSearchIndexService(ServiceSettings serviceSettings, ICogClientWrapperService clientService)
+    public CogSearchIndexService(ICogClientWrapperService clientService)
     {
-        ServiceSettings = serviceSettings;
-        ClientService = clientService;
+         ClientService = clientService;
     }
 
 
@@ -116,10 +114,15 @@ public class CogSearchIndexService : ICogSearchIndexService
     /// Deletes the entire index and all it's documents!
     /// </summary>
     /// <param name="indexName">The name of the index.</param>
-    /// <param name="cancellationToken">A cancellation token</param>
-    /// <returns></returns>
-    public async Task DeleteIndexAsync(string indexName, CancellationToken cancellationToken = default)
+    /// <param name="checkIfExistsFirst">Indicates if you want the code to check to make sure the indexer exists before attempting to delete it.  If you try
+    /// to delete an indexer that doesn't exist, it will generate an exception.</param>  /// <param name="cancellationToken">A cancellation token</param>
+    public async Task DeleteIndexAsync(string indexName, bool checkIfExistsFirst, CancellationToken cancellationToken = default)
     {
+        if (checkIfExistsFirst && await IndexExistsAsync(indexName, cancellationToken) == false)
+        {
+            return;
+        }
+
         var indexClient = ClientService.GetIndexClient();
         await indexClient.DeleteIndexAsync(indexName, cancellationToken);
     }
@@ -174,4 +177,22 @@ public class CogSearchIndexService : ICogSearchIndexService
         IndexDocumentsResult result = await searchClient.IndexDocumentsAsync(batch, cancellationToken: cancellationToken);
     }
 
+
+    /// <summary>
+    /// Indicates if an index exists or not
+    /// </summary>
+    /// <param name="indexName">The name of the index</param>
+    /// <param name="cancellationToken">A cancellation token</param>
+    public async Task<bool> IndexExistsAsync(string indexName, CancellationToken cancellationToken)
+    {
+        var indexClient = ClientService.GetIndexClient();
+        
+        await foreach (var item in indexClient.GetIndexNamesAsync(cancellationToken))
+        {
+            if (string.IsNullOrWhiteSpace(item)) continue;
+            if (indexName == item) return true;
+        }
+
+        return false;
+    }
 }

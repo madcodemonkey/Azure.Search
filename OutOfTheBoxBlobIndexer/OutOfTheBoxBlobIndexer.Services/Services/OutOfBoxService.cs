@@ -1,4 +1,5 @@
-﻿using Azure.Search.Documents.Indexes;
+﻿using Azure;
+using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using OutOfTheBoxBlobIndexer.Models;
 
@@ -9,6 +10,7 @@ public class OutOfBoxService : IOutOfBoxService
 {
     private readonly ICogClientWrapperService _clientService;
     private readonly ICogSearchIndexService _indexService;
+    private readonly ICogSearchIndexerService _indexerService;
     private readonly ICogSearchDataSourceService _dataSourceService;
     private readonly ServiceSettings _serviceSettings;
     /// <summary>
@@ -17,11 +19,13 @@ public class OutOfBoxService : IOutOfBoxService
     public OutOfBoxService(ServiceSettings serviceSettings,
         ICogClientWrapperService clientService,
         ICogSearchIndexService indexService,
+        ICogSearchIndexerService indexerService,
         ICogSearchDataSourceService dataSourceService)
     {
         _serviceSettings = serviceSettings;
         _clientService = clientService;
         _indexService = indexService;
+        _indexerService = indexerService;
         _dataSourceService = dataSourceService;
     }
 
@@ -40,12 +44,9 @@ public class OutOfBoxService : IOutOfBoxService
     /// </summary>
     public async Task DeleteAsync(CancellationToken cancellationToken = default)
     {
-        await _indexService.DeleteIndexAsync(_serviceSettings.CognitiveSearchIndexName);
-
-        var indexerClient = _clientService.GetIndexerClient();
-        await indexerClient.DeleteIndexerAsync(_serviceSettings.CognitiveSearchIndexerName, cancellationToken);
-
-        await _dataSourceService.DeleteAsync(_serviceSettings.CognitiveSearchDataSourceName);
+        await _indexService.DeleteIndexAsync(_serviceSettings.CognitiveSearchIndexName, checkIfExistsFirst: true, cancellationToken: cancellationToken);
+        await _indexerService.DeleteIndexerAsync(_serviceSettings.CognitiveSearchIndexerName, checkIfExistsFirst: true, cancellationToken: cancellationToken);
+        await _dataSourceService.DeleteAsync(_serviceSettings.CognitiveSearchDataSourceName, checkIfExistsFirst:true, cancellationToken);
     }
 
     /// <summary>
