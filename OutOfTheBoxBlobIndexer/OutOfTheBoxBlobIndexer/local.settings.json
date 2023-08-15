@@ -1,0 +1,16 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "CognitiveSearchDataSourceName": "my-gremlin-ds1",
+    "CognitiveSearchEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
+    "CognitiveSearchIndexerName": "my-gremlin-indexer1",
+    "CognitiveSearchIndexName": "my-gremlin-index1",
+    "CognitiveSearchKey": "---Your cognitive search key---",
+    "CognitiveSearchStorageContainerName": "myblobcontainer",
+    "CognitiveSearchStorageConnectionString": "---Your storage resource connection string here---",
+    "CognitiveSearchMaxUpsertBatchSize": "5",
+    "CognitiveSearchSemanticConfigurationName": "my-semantic-config",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
+  }
+}
