@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00 - Solution Items", "00 -
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - Index", "01 - Index", "{8828642B-D7B5-48AB-836D-1EB2B7DE1396}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - Function App", "01 - Function App", "{8828642B-D7B5-48AB-836D-1EB2B7DE1396}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 - Common", "02 - Common", "{12EE54FF-8701-40EF-812D-34E8876463D0}"
 EndProject
