@@ -1,6 +1,6 @@
 ﻿using Azure.Search.Documents.Indexes;
 
-namespace OutOfTheBoxBlobIndexer.Models;
+namespace CogSimple.Services;
 
 public class SearchEntity
 {

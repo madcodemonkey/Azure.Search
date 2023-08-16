@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using CustomSqlServerIndexer.Models;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace CustomSqlServerIndexer.Repositories;
 

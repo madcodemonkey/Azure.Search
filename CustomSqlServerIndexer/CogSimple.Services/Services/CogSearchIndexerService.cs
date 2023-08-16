@@ -1,6 +1,6 @@
 ﻿using Azure;
 
-namespace OutOfTheBoxBlobIndexer.Services;
+namespace CogSimple.Services;
 
 public class CogSearchIndexerService : ICogSearchIndexerService
 {

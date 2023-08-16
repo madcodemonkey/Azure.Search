@@ -66,7 +66,7 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
 
                 if ((listOfKeysToDelete.Count + listOfChangedItems.Count) >= _serviceSettings.CognitiveSearchMaxUpsertBatchSize)
                 {
-                    numberOfItemsChanged += await SaveBatchAsync(listOfKeysToDelete, listOfChangedItems);
+                    numberOfItemsChanged += await SaveBatchAsync(listOfKeysToDelete, listOfChangedItems, cancellationToken);
 
                     // Since the hotels are sorted in the oldest to newest change order, we can update
                     // this high watermark as we process files.  
@@ -83,7 +83,7 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
             }
         }
 
-        numberOfItemsChanged += await SaveBatchAsync(listOfKeysToDelete, listOfChangedItems);
+        numberOfItemsChanged += await SaveBatchAsync(listOfKeysToDelete, listOfChangedItems, cancellationToken);
 
         // Since the hotels are sorted in the oldest to newest change order, we can update
         // this high watermark as we process each file.  
@@ -92,16 +92,18 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
         return numberOfItemsChanged;
     }
 
-    private async Task<int> SaveBatchAsync(List<string> listOfKeysToDelete, List<SearchIndexDocument> listOfChangedItems)
+    private async Task<int> SaveBatchAsync(List<string> listOfKeysToDelete,
+        List<SearchIndexDocument> listOfChangedItems, CancellationToken cancellationToken)
     {
         if (listOfKeysToDelete.Any())
         {
-            await _cognitiveIndexService.DeleteDocumentsAsync(nameof(SearchIndexDocument.HotelId), listOfKeysToDelete);
+            await _cognitiveIndexService.DeleteDocumentsAsync(nameof(SearchIndexDocument.HotelId),
+                listOfKeysToDelete, cancellationToken);
         }
 
         if (listOfChangedItems.Any())
         {
-            await _cognitiveIndexService.UploadDocumentsAsync(listOfChangedItems);
+            await _cognitiveIndexService.UploadDocumentsAsync(listOfChangedItems, cancellationToken);
         }
 
         int changedItems = listOfKeysToDelete.Count + listOfChangedItems.Count;

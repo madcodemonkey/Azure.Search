@@ -26,12 +26,12 @@ public interface IRepositoryBase<TEntity> where TEntity : class
     Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate);
 
     /// <summary>Returns the first item or null (nothing included).</summary>
-    Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 
     /// <summary>Returns the first item or null  (includes specified relationships).</summary>
     /// <param name="predicate">A where clause predicate</param>
     /// <param name="includes">Relationships to include</param>
-    Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object?>>[] includes);
+    Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object?>>[] includes);
 
     /// <summary>Updates one entity in the database.</summary>
     /// <param name="entity">Entity to update</param>

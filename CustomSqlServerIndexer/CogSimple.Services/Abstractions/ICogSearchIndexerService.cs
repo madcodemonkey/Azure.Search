@@ -1,4 +1,4 @@
-﻿namespace OutOfTheBoxBlobIndexer.Services;
+﻿namespace CogSimple.Services;
 
 public interface ICogSearchIndexerService
 {

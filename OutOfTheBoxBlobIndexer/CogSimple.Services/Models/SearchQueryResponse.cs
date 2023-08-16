@@ -1,6 +1,6 @@
 ﻿using Azure.Search.Documents.Models;
 
-namespace CustomSqlServerIndexer.Models;
+namespace CogSimple.Services;
 
 public class SearchQueryResponse<T> where T : class
 {

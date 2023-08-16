@@ -1,7 +1,7 @@
 # SQL Server out-of-the-box index and indexer example
 ---
 # Summary
-Currently on the backend web site is built for this project.  In the future, I need to build a client front end to access it.  
+Currently only the backend web site is built for this project.  In the future, I need to build a client front end to access it.  
 Meanwhile, you can use the postman collection in the web project to hit the backend endpoints.
 
 There are is both a "well defined endpoint" for querying the hotel information and a "generic endpoint" that could be used to query any index.
@@ -24,5 +24,5 @@ You'll need to do the following:
    - Note: You'll find these under "Well Defined Endpoint/Hotel Creation" and each call is number from 01 - 06.  Just run them in order.
 1. After the indexer finishes it's job, which should be fairly quick, you can use the queries defined in the postman collection under "Well Defined Endpoint/Hotel Queries" to query for data in the Azure Cognitive Search index.
    - Note: When creating the indexER if you get a failure due to IP address not being allowed, you forgot to update the network settings above (specially the "Allow Azure services and resources to access this server" setting)
-1. There are also a queries under the "Generic Endpoint/Hotel Queries" folder in the postman collection.  Theses also allow you to query for data in the Cognitive Search index, but are meant to show off a more generic approach to querying indexes where this endpoint can be used to query any index that exists in your  Cognitive Search resource. 
+1. There are also queries under the "Generic Endpoint/Hotel Queries" folder in the postman collection.  Theses also allow you to query for data in the Cognitive Search index, but are meant to show off a more generic approach to querying indexes where this endpoint can be used to query any index that exists in your  Cognitive Search resource. 
 

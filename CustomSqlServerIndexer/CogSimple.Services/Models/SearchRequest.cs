@@ -1,6 +1,6 @@
 ﻿using Azure.Search.Documents.Models;
 
-namespace OutOfTheBoxBlobIndexer.Models;
+namespace CogSimple.Services;
 
 public class SearchRequest
 {

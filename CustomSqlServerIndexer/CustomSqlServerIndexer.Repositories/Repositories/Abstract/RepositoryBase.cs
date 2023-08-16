@@ -68,12 +68,12 @@ public abstract class RepositoryBase<TEntity, TDatabaseContext> : IRepositoryBas
     public virtual async Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate) => await DbSet.Where(predicate).ToListAsync();
 
     /// <summary>Returns the first item or null (nothing included).</summary>
-    public virtual async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await DbSet.FirstOrDefaultAsync(predicate);
+    public virtual async Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await DbSet.FirstOrDefaultAsync(predicate);
 
     /// <summary>Returns the first item or null  (includes specified relationships).</summary>
     /// <param name="predicate">A where clause predicate</param>
     /// <param name="includes">Relationships to include</param>
-    public virtual async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object?>>[] includes)
+    public virtual async Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object?>>[] includes)
     {
         if (predicate == null)
             throw new ArgumentNullException(nameof(predicate), "You must specify a predicate!");

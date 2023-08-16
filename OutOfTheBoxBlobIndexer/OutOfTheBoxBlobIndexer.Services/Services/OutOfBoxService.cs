@@ -1,9 +1,10 @@
 ﻿using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
-using OutOfTheBoxBlobIndexer.Models;
+using CogSimple.Models;
+using CogSimple.Services;
 
 
-namespace OutOfTheBoxBlobIndexer.Services.Services;
+namespace OutOfTheBoxBlobIndexer.Services;
 
 public class OutOfBoxService : IOutOfBoxService
 {

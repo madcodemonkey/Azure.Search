@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using OutOfTheBoxBlobIndexer.Services.Services;
+﻿using CogSimple.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OutOfTheBoxBlobIndexer.Services;
 
@@ -7,14 +7,9 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddServices(this IServiceCollection sc, CogClientSettings cogClientSettings, ServiceSettings settings)
     {
-        sc.AddSingleton(cogClientSettings);
+        sc.AddCogSimpleServices(cogClientSettings);
         sc.AddSingleton(settings);
 
-        sc.AddScoped<ICogClientWrapperService, CogClientWrapperService>();
-        sc.AddScoped<ICogSearchDataSourceService, CogSearchDataSourceService>();
-        sc.AddScoped<ICogSearchIndexService, CogSearchIndexService>();
-        sc.AddScoped<ICogSearchIndexerService, CogSearchIndexerService>();
-       
         sc.AddScoped<IOutOfBoxService, OutOfBoxService>();
 
         return sc;

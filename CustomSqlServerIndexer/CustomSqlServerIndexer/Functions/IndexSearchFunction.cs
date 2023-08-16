@@ -1,6 +1,8 @@
 using System.Net;
+using System.Threading;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
+using CogSimple.Services;
 using CustomSqlServerIndexer.Models;
 using CustomSqlServerIndexer.Services;
 using Microsoft.Azure.Functions.Worker;
@@ -27,7 +29,8 @@ public class IndexSearchFunction
     }
 
     [Function("IndexSearch")]
-    public async Task<HttpResponseData> IndexSearch([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+    public async Task<HttpResponseData> IndexSearchAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
+       CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -42,12 +45,12 @@ public class IndexSearchFunction
                 Skip = (data.PageNumber - 1) * data.PageSize,
                 QueryType = SearchQueryType.Simple,
                 SearchMode = data.IncludeAllWords ? SearchMode.All : SearchMode.Any
-            })
+            }, cancellationToken)
             : new SearchQueryResponse<SearchDocument>();
 
         
         var response = req.CreateResponse(HttpStatusCode.OK); 
-        await response.WriteAsJsonAsync(result);
+        await response.WriteAsJsonAsync(result, cancellationToken);
         return response;
     }
 }

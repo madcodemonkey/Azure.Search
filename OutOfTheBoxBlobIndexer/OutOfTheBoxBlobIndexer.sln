@@ -3,16 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutOfTheBoxBlobIndexer", "OutOfTheBoxBlobIndexer\OutOfTheBoxBlobIndexer.csproj", "{DDD4FECA-B1AA-425D-8500-8B796E5F0098}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OutOfTheBoxBlobIndexer", "OutOfTheBoxBlobIndexer\OutOfTheBoxBlobIndexer.csproj", "{DDD4FECA-B1AA-425D-8500-8B796E5F0098}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutOfTheBoxBlobIndexer.Models", "OutOfTheBoxBlobIndexer.Models\OutOfTheBoxBlobIndexer.Models.csproj", "{2AF7D829-20F3-46B3-9537-83040AB8E0E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OutOfTheBoxBlobIndexer.Models", "OutOfTheBoxBlobIndexer.Models\OutOfTheBoxBlobIndexer.Models.csproj", "{2AF7D829-20F3-46B3-9537-83040AB8E0E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutOfTheBoxBlobIndexer.Services", "OutOfTheBoxBlobIndexer.Services\OutOfTheBoxBlobIndexer.Services.csproj", "{C7777306-8168-4348-A901-6E35903BAF43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OutOfTheBoxBlobIndexer.Services", "OutOfTheBoxBlobIndexer.Services\OutOfTheBoxBlobIndexer.Services.csproj", "{C7777306-8168-4348-A901-6E35903BAF43}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BC48EDFB-EC98-41B1-A024-385B097352D9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00-Solution Items", "00-Solution Items", "{BC48EDFB-EC98-41B1-A024-385B097352D9}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CogSimple.Services", "CogSimple.Services\CogSimple.Services.csproj", "{991F8E98-B447-4B05-BE28-56AC07644F16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01-Function App", "01-Function App", "{8764B30A-0A42-433B-9B4E-FAAB905E5507}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-Libraries", "02-Libraries", "{91DACF57-71F0-43E8-995B-1829A5C70E28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +38,19 @@ Global
 		{C7777306-8168-4348-A901-6E35903BAF43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7777306-8168-4348-A901-6E35903BAF43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7777306-8168-4348-A901-6E35903BAF43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{991F8E98-B447-4B05-BE28-56AC07644F16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{991F8E98-B447-4B05-BE28-56AC07644F16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{991F8E98-B447-4B05-BE28-56AC07644F16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{991F8E98-B447-4B05-BE28-56AC07644F16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DDD4FECA-B1AA-425D-8500-8B796E5F0098} = {8764B30A-0A42-433B-9B4E-FAAB905E5507}
+		{2AF7D829-20F3-46B3-9537-83040AB8E0E1} = {91DACF57-71F0-43E8-995B-1829A5C70E28}
+		{C7777306-8168-4348-A901-6E35903BAF43} = {91DACF57-71F0-43E8-995B-1829A5C70E28}
+		{991F8E98-B447-4B05-BE28-56AC07644F16} = {91DACF57-71F0-43E8-995B-1829A5C70E28}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D83ED03B-86E3-44BA-A41F-71F8A9ED1909}

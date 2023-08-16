@@ -3,7 +3,6 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using OutOfTheBoxBlobIndexer.Services;
-using OutOfTheBoxBlobIndexer.Services.Services;
 
 namespace OutOfTheBoxBlobIndexer.Functions
 {

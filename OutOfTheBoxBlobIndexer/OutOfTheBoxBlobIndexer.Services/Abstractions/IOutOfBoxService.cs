@@ -1,4 +1,4 @@
-﻿namespace OutOfTheBoxBlobIndexer.Services.Services;
+﻿namespace OutOfTheBoxBlobIndexer.Services;
 
 public interface IOutOfBoxService
 {

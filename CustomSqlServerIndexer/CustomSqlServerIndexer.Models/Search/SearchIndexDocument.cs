@@ -1,6 +1,5 @@
 ﻿using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
-using System.Text.Json.Serialization;
 
 namespace CustomSqlServerIndexer.Models;
 

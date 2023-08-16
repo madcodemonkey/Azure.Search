@@ -28,5 +28,5 @@ public abstract class RepositoryPrimaryKeyBase<TEntity, TDatabaseContext, TPrima
 
     /// <summary>Retrieves one entity from the database.</summary>
     /// <param name="id">The primary key</param>
-    public virtual async Task<TEntity> GetAsync(TPrimaryKey id) => await DbSet.FindAsync(id);
+    public virtual async Task<TEntity?> GetAsync(TPrimaryKey id) => await DbSet.FindAsync(id);
 }

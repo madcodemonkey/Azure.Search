@@ -1,8 +1,7 @@
 ﻿using Azure;
 using Azure.Search.Documents.Indexes.Models;
-using OutOfTheBoxBlobIndexer.Models;
 
-namespace OutOfTheBoxBlobIndexer.Services;
+namespace CogSimple.Services;
 
 public class CogSearchDataSourceService : ICogSearchDataSourceService
 {

@@ -1,9 +1,8 @@
 ﻿using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
-using OutOfTheBoxBlobIndexer.Models;
 
-namespace OutOfTheBoxBlobIndexer.Services;
+namespace CogSimple.Services;
 
 public class CogSearchIndexService : ICogSearchIndexService
 {
@@ -153,9 +152,9 @@ public class CogSearchIndexService : ICogSearchIndexService
     /// <param name="indexName">The name of the index.</param>
     /// <param name="doc">One document to upload</param>
     /// <param name="cancellationToken">A cancellation token</param>
-    public async Task UploadDocumentsAsync(string indexName, SearchIndexDocument doc, CancellationToken cancellationToken = default)
+    public async Task UploadDocumentsAsync<T>(string indexName, T doc, CancellationToken cancellationToken = default) where T : class
     {
-        IndexDocumentsBatch<SearchIndexDocument> batch = IndexDocumentsBatch.Create(
+        IndexDocumentsBatch<T> batch = IndexDocumentsBatch.Create(
             IndexDocumentsAction.Upload(doc));
 
         var searchClient = ClientService.GetSearchClient(indexName);
@@ -168,9 +167,9 @@ public class CogSearchIndexService : ICogSearchIndexService
     /// <param name="indexName">The name of the index.</param>
     /// <param name="docs">A list of docs to upload</param>
     /// <param name="cancellationToken">A cancellation token</param>
-    public async Task UploadDocumentsAsync(string indexName, List<SearchIndexDocument> docs, CancellationToken cancellationToken = default)
+    public async Task UploadDocumentsAsync<T>(string indexName, List<T> docs, CancellationToken cancellationToken = default) where T : class
     {
-        IndexDocumentsBatch<SearchIndexDocument> batch = IndexDocumentsBatch.Create(
+        IndexDocumentsBatch<T> batch = IndexDocumentsBatch.Create(
             docs.Select(s => IndexDocumentsAction.Upload(s)).ToArray());
 
         var searchClient = ClientService.GetSearchClient(indexName);

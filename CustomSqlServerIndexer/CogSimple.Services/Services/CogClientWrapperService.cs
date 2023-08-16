@@ -2,7 +2,7 @@
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 
-namespace OutOfTheBoxBlobIndexer.Services;
+namespace CogSimple.Services;
 
 public class CogClientWrapperService : ICogClientWrapperService
 {

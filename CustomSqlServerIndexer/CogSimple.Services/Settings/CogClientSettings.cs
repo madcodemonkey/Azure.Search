@@ -1,4 +1,4 @@
-﻿namespace OutOfTheBoxBlobIndexer.Services;
+﻿namespace CogSimple.Services;
 
 public class CogClientSettings
 {

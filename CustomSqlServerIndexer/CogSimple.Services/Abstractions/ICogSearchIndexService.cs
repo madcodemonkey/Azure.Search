@@ -1,7 +1,6 @@
 ﻿using Azure.Search.Documents;
-using OutOfTheBoxBlobIndexer.Models;
 
-namespace OutOfTheBoxBlobIndexer.Services;
+namespace CogSimple.Services;
 
 public interface ICogSearchIndexService
 {
@@ -47,7 +46,7 @@ public interface ICogSearchIndexService
     /// <param name="indexName">The name of the index.</param>
     /// <param name="doc">One document to upload</param>
     /// <param name="cancellationToken">A cancellation token</param>
-    Task UploadDocumentsAsync(string indexName, SearchIndexDocument doc, CancellationToken cancellationToken = default);
+    Task UploadDocumentsAsync<T>(string indexName, T doc, CancellationToken cancellationToken = default) where T : class;
 
     /// <summary>
     /// Upload multiple documents in a single Upload request.
@@ -55,7 +54,7 @@ public interface ICogSearchIndexService
     /// <param name="indexName">The name of the index.</param>
     /// <param name="docs">A list of docs to upload</param>
     /// <param name="cancellationToken">A cancellation token</param>
-    Task UploadDocumentsAsync(string indexName, List<SearchIndexDocument> docs, CancellationToken cancellationToken = default);
+    Task UploadDocumentsAsync<T>(string indexName, List<T> docs, CancellationToken cancellationToken = default) where T: class ;
 
     /// <summary>
     /// Indicates if an index exists or not

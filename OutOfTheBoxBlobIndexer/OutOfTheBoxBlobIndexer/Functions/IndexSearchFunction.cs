@@ -1,11 +1,11 @@
 using System.Net;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
+using CogSimple.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using OutOfTheBoxBlobIndexer.Models;
 using OutOfTheBoxBlobIndexer.Services;
 
 namespace OutOfTheBoxBlobIndexer.Functions;

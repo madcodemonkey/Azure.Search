@@ -2,9 +2,7 @@ using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using OutOfTheBoxBlobIndexer.Models;
 using OutOfTheBoxBlobIndexer.Services;
-using OutOfTheBoxBlobIndexer.Services.Services;
 
 namespace OutOfTheBoxBlobIndexer.Functions;
 
