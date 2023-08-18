@@ -79,8 +79,8 @@ public class SeedTableHotel
             Rating = rand.Next(1, 5),
             Roles = AddRoles(rand, isSecret),
             SmokingAllowed = cost < 100, // Cheap hotels let you smoke
-            Location = longitude != null && latitude != null ?
-                new NetTopologySuite.Geometries.Point(longitude.Value, latitude.Value) { SRID = 4326 } : null
+            //Location = longitude != null && latitude != null ?
+            //    new NetTopologySuite.Geometries.Point(longitude.Value, latitude.Value) { SRID = 4326 } : null
         };
     }
 

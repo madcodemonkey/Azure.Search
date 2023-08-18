@@ -16,23 +16,23 @@ public partial class HotelDocument
 
     [SearchableField(IsFilterable = true, IsFacetable = true, IsSortable = true)]
     [JsonPropertyName("category")]
-    public string Category { get; set; }
+    public string Category { get; set; } = string.Empty;
 
     [SearchableField]
     [JsonPropertyName("description")]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.FrLucene)]
     [JsonPropertyName("description_fr")]
-    public string DescriptionFr { get; set; }
+    public string DescriptionFr { get; set; } = string.Empty;
 
     [SearchableField(IsKey = true, IsFilterable = true)]
     [JsonPropertyName("hotelId")]
-    public string HotelId { get; set; }
+    public string HotelId { get; set; } = string.Empty;
 
     [SearchableField(IsFilterable = true, IsSortable = true)]
     [JsonPropertyName("hotelName")]
-    public string HotelName { get; set; }
+    public string HotelName { get; set; } = string.Empty;
 
     [SimpleField(IsFilterable = true, IsFacetable = true)]
     [JsonPropertyName("isDeleted")]
@@ -59,7 +59,7 @@ public partial class HotelDocument
 
     [SearchableField(IsFilterable = true)]
     [JsonPropertyName("roles")]
-    public string[] Roles { get; set; }
+    public string[] Roles { get; set; } = Array.Empty<string>();
 
     [SimpleField(IsFilterable = true, IsFacetable = true)]
     [JsonPropertyName("smokingAllowed")]
@@ -67,7 +67,7 @@ public partial class HotelDocument
 
     [SearchableField(IsFilterable = true, IsFacetable = true)]
     [JsonPropertyName("tags")]
-    public string[] Tags { get; set; }
+    public string[] Tags { get; set; } = Array.Empty<string>();
 
     public override string ToString()
     {

@@ -20,8 +20,7 @@ public class Hotel
     public int? Rating { get; set; }
     public string Roles { get; set; } = null!;
 
-    [Timestamp]
-    public byte[] RowVersion { get; set; }
+    [Timestamp] public byte[] RowVersion { get; set; } = default!;
 
     public bool? SmokingAllowed { get; set; }
 }

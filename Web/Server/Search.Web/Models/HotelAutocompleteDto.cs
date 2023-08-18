@@ -2,6 +2,6 @@
 
 public class HotelAutocompleteDto
 {
-    public string QueryPlusText { get; set; }
-    public string Text { get; set; }
+    public string QueryPlusText { get; set; } = string.Empty;
+    public string Text { get; set; } = string.Empty;
 }

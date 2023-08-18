@@ -2,6 +2,6 @@
 
 public class SearchDocumentFieldMap
 {
-    public string Source { get; set; }
-    public string Destination { get; set; }
+    public string Source { get; set; } = string.Empty;
+    public string Destination { get; set; } = string.Empty;
 }

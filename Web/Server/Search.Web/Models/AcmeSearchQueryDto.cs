@@ -39,7 +39,7 @@ public class AcmeSearchQueryDto
     public int PageNumber { get; set; }
 
     /// <summary>The simple or Lucene style query</summary>
-    public string Query { get; set; }
+    public string Query { get; set; } = string.Empty;
 
     /// <summary> A value that specifies the syntax of the search query. The default is simple Use full; if your query uses the Lucene query syntax. </summary>
     /// <remarks>You need a beta version of the search NuGet package to get semantic search as an option!</remarks>
