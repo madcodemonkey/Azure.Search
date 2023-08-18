@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using Azure.Search.Documents.Models;
+﻿using Azure.Search.Documents.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Search.CogServices;
+using Search.Services;
 
 namespace Search.Controllers;
 
@@ -11,6 +11,7 @@ namespace Search.Controllers;
 public class SearchController : SearchControllerBase
 {
     private readonly IAcmeAutoCompleteService _autoCompleteService;
+    private readonly IIndexConfigurationService _indexConfigurationService;
     private readonly IValidator<AcmeAutoCompleteQuery> _autoCompleteValidator;
     private readonly IAcmeSearchService _searchService;
     private readonly IValidator<AcmeSearchQuery> _searchValidator;
@@ -19,13 +20,13 @@ public class SearchController : SearchControllerBase
 
     /// <summary>Constructor</summary>
     public SearchController(
-        IMapper mapper,
         IValidator<AcmeSearchQuery> searchValidator,
         IValidator<AcmeSuggestQuery> suggestValidator,
         IValidator<AcmeAutoCompleteQuery> autoCompleteValidator,
         IAcmeSearchService searchService,
         IAcmeSuggestService suggestService,
-        IAcmeAutoCompleteService autoCompleteService)
+        IAcmeAutoCompleteService autoCompleteService,
+        IIndexConfigurationService indexConfigurationService)
     {
         _searchValidator = searchValidator;
         _suggestValidator = suggestValidator;
@@ -33,52 +34,63 @@ public class SearchController : SearchControllerBase
         _searchService = searchService;
         _suggestService = suggestService;
         _autoCompleteService = autoCompleteService;
+        _indexConfigurationService = indexConfigurationService;
     }
 
     [HttpPost("AutoComplete")]
-    public async Task<IActionResult> AutoComplete(AcmeAutoCompleteQuery query)
+    public async Task<IActionResult> AutoComplete(AcmeAutoCompleteQuery query, CancellationToken cancellationToken)
     {
-        var validationResult = await _autoCompleteValidator.ValidateAsync(query);
+        var validationResult = await _autoCompleteValidator.ValidateAsync(query, cancellationToken);
 
         if (validationResult.IsValid == false)
         {
             return new BadRequestObjectResult(validationResult.ToString());
         }
-
-        var result = await _autoCompleteService.AutoCompleteAsync(query, "roles", GetRoles());
+        
+        var result = await _autoCompleteService.AutoCompleteAsync(query, 
+            await GetSecurityTrimmingFieldAsync(query.IndexName, cancellationToken), GetRoles());
 
         return Ok(result);
     }
-
+    
     [HttpPost("Documents")]
-    public async Task<IActionResult> Search(AcmeSearchQuery query)
+    public async Task<IActionResult> Search(AcmeSearchQuery query, CancellationToken cancellationToken)
     {
-        var validationResult = await _searchValidator.ValidateAsync(query);
+        var validationResult = await _searchValidator.ValidateAsync(query, cancellationToken);
 
         if (validationResult.IsValid == false)
         {
             return new BadRequestObjectResult(validationResult.ToString());
         }
 
+        var securityTrimmingField = await GetSecurityTrimmingFieldAsync(query.IndexName, cancellationToken);
+
         AcmeSearchQueryResult<SearchResult<SearchDocument>> searchResult = query.QueryType == SearchQueryType.Semantic ?
-            await _searchService.SemanticSearchAsync(query, query.SemanticConfigurationName ?? string.Empty, "roles", GetRoles()) :
-            await _searchService.SearchAsync(query, "roles", GetRoles());
+            await _searchService.SemanticSearchAsync(query, query.SemanticConfigurationName ?? string.Empty, securityTrimmingField, GetRoles()) :
+            await _searchService.SearchAsync(query, securityTrimmingField, GetRoles());
 
         return new OkObjectResult(searchResult);
     }
 
     [HttpPost("Suggest")]
-    public async Task<IActionResult> Suggest(AcmeSuggestQuery query)
+    public async Task<IActionResult> Suggest(AcmeSuggestQuery query, CancellationToken cancellationToken)
     {
-        var validationResult = await _suggestValidator.ValidateAsync(query);
+        var validationResult = await _suggestValidator.ValidateAsync(query, cancellationToken);
 
         if (validationResult.IsValid == false)
         {
             return new BadRequestObjectResult(validationResult.ToString());
         }
 
-        SuggestResults<SearchDocument> suggestResult = await _suggestService.SuggestAsync(query, "roles", GetRoles());
+        SuggestResults<SearchDocument> suggestResult = await _suggestService.SuggestAsync(query,
+            await GetSecurityTrimmingFieldAsync(query.IndexName, cancellationToken), GetRoles());
 
         return new OkObjectResult(suggestResult);
+    }
+
+    private async Task<string?> GetSecurityTrimmingFieldAsync(string indexName, CancellationToken cancellationToken)
+    {
+        var indexConfig = await _indexConfigurationService.GetOrCreateAsync(indexName, cancellationToken);
+        return indexConfig.SecurityTrimmingField;
     }
 }

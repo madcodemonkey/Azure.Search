@@ -18,7 +18,7 @@ namespace Search.Repositories.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.10")
+                .HasAnnotation("ProductVersion", "6.0.21")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -82,6 +82,22 @@ namespace Search.Repositories.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Hotel", (string)null);
+                });
+
+            modelBuilder.Entity("Search.Model.IndexConfiguration", b =>
+                {
+                    b.Property<string>("IndexName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SecurityTrimmingField")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("UsesCamelCaseFieldNames")
+                        .HasColumnType("bit");
+
+                    b.HasKey("IndexName");
+
+                    b.ToTable("IndexConfiguration", (string)null);
                 });
 #pragma warning restore 612, 618
         }

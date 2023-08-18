@@ -13,14 +13,14 @@ using Search.Repositories;
 namespace Search.Repositories.Migrations
 {
     [DbContext(typeof(AcmeContext))]
-    [Migration("20221123013953_Initial")]
+    [Migration("20230818220618_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.10")
+                .HasAnnotation("ProductVersion", "6.0.21")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -84,6 +84,22 @@ namespace Search.Repositories.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Hotel", (string)null);
+                });
+
+            modelBuilder.Entity("Search.Model.IndexConfiguration", b =>
+                {
+                    b.Property<string>("IndexName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SecurityTrimmingField")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("UsesCamelCaseFieldNames")
+                        .HasColumnType("bit");
+
+                    b.HasKey("IndexName");
+
+                    b.ToTable("IndexConfiguration", (string)null);
                 });
 #pragma warning restore 612, 618
         }

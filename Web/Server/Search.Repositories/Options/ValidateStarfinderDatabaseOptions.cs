@@ -6,7 +6,7 @@ public class ValidateAcmeDatabaseOptions : IValidateOptions<AcmeDatabaseOptions>
 {
     public ValidateOptionsResult Validate(string name, AcmeDatabaseOptions options)
     {
-        string result = null;
+        string? result = null;
 
         if (string.IsNullOrWhiteSpace(options.ConnectionString))
         {

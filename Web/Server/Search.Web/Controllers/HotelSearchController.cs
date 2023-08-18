@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Azure.Search.Documents.Models;
+﻿using Azure.Search.Documents.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Search.CogServices;
@@ -13,8 +12,8 @@ namespace Search.Controllers;
 public class HotelSearchController : SearchControllerBase
 {
     private readonly IAcmeAutoCompleteService _autoCompleteService;
+    private readonly IIndexConfigurationService _indexConfigurationService;
     private readonly IValidator<AcmeAutoCompleteQueryDto> _autoCompleteValidator;
-    private readonly IMapper _mapper;
     private readonly IAcmeSearchService _searchService;
     private readonly SearchServiceSettings _searchServiceSettings;
     private readonly IValidator<AcmeSearchQueryDto> _searchValidator;
@@ -24,28 +23,28 @@ public class HotelSearchController : SearchControllerBase
     /// <summary>Constructor</summary>
     public HotelSearchController(
         SearchServiceSettings searchServiceSettings,
-        IMapper mapper,
         IValidator<AcmeSearchQueryDto> searchValidator,
         IValidator<AcmeSuggestQueryDto> suggestValidator,
         IValidator<AcmeAutoCompleteQueryDto> autoCompleteValidator,
         IAcmeSearchService searchService,
         IAcmeSuggestService suggestService,
-        IAcmeAutoCompleteService autoCompleteService)
+        IAcmeAutoCompleteService autoCompleteService,
+        IIndexConfigurationService indexConfigurationService)
     {
         _searchServiceSettings = searchServiceSettings;
-        _mapper = mapper;
         _searchValidator = searchValidator;
         _suggestValidator = suggestValidator;
         _autoCompleteValidator = autoCompleteValidator;
         _searchService = searchService;
         _suggestService = suggestService;
         _autoCompleteService = autoCompleteService;
+        _indexConfigurationService = indexConfigurationService;
     }
 
     [HttpPost("AutoComplete")]
-    public async Task<IActionResult> AutoComplete(AcmeAutoCompleteQueryDto queryDto)
+    public async Task<IActionResult> AutoComplete(AcmeAutoCompleteQueryDto queryDto, CancellationToken cancellationToken)
     {
-        var validationResult = await _autoCompleteValidator.ValidateAsync(queryDto);
+        var validationResult = await _autoCompleteValidator.ValidateAsync(queryDto, cancellationToken);
 
         if (validationResult.IsValid == false)
         {
@@ -66,15 +65,16 @@ public class HotelSearchController : SearchControllerBase
             UseFuzzyMatching = queryDto.UseFuzzyMatching
         };
 
-        var result = await _autoCompleteService.AutoCompleteAsync(request, "roles", GetRoles());
+        var result = await _autoCompleteService.AutoCompleteAsync(request,
+            await GetSecurityTrimmingFieldAsync(_searchServiceSettings.Hotel.IndexName, cancellationToken), GetRoles());
 
         return Ok(result);
     }
 
     [HttpPost("Search")]
-    public async Task<IActionResult> Search(AcmeSearchQueryDto queryDto)
+    public async Task<IActionResult> Search(AcmeSearchQueryDto queryDto, CancellationToken cancellationToken)
     {
-        var validationResult = await _searchValidator.ValidateAsync(queryDto);
+        var validationResult = await _searchValidator.ValidateAsync(queryDto, cancellationToken);
 
         if (validationResult.IsValid == false)
         {
@@ -100,15 +100,16 @@ public class HotelSearchController : SearchControllerBase
             QueryType = queryDto.QueryType,
         };
 
-        AcmeSearchQueryResult<SearchResult<SearchDocument>> searchResult = await _searchService.SearchAsync(request, "roles", GetRoles());
+        AcmeSearchQueryResult<SearchResult<SearchDocument>> searchResult = await _searchService.SearchAsync(request,
+            await GetSecurityTrimmingFieldAsync(_searchServiceSettings.Hotel.IndexName, cancellationToken), GetRoles());
 
         return new OkObjectResult(searchResult);
     }
 
     [HttpPost("Suggest")]
-    public async Task<IActionResult> Suggest(AcmeSuggestQueryDto queryDto)
+    public async Task<IActionResult> Suggest(AcmeSuggestQueryDto queryDto, CancellationToken cancellationToken)
     {
-        var validationResult = await _suggestValidator.ValidateAsync(queryDto);
+        var validationResult = await _suggestValidator.ValidateAsync(queryDto, cancellationToken);
 
         if (validationResult.IsValid == false)
         {
@@ -131,8 +132,15 @@ public class HotelSearchController : SearchControllerBase
             UseFuzzyMatching = queryDto.UseFuzzyMatching ?? false,
         };
 
-        SuggestResults<SearchDocument> suggestResult = await _suggestService.SuggestAsync(request, "roles", GetRoles());
+        SuggestResults<SearchDocument> suggestResult = await _suggestService.SuggestAsync(request,
+            await GetSecurityTrimmingFieldAsync(_searchServiceSettings.Hotel.IndexName, cancellationToken), GetRoles());
 
         return new OkObjectResult(suggestResult);
+    }
+
+    private async Task<string?> GetSecurityTrimmingFieldAsync(string indexName, CancellationToken cancellationToken)
+    {
+        var indexConfig = await _indexConfigurationService.GetOrCreateAsync(indexName, cancellationToken);
+        return indexConfig.SecurityTrimmingField;
     }
 }

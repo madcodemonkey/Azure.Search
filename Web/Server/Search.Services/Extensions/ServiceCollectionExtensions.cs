@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Search.CogServices;
 using Search.Repositories;
 
@@ -11,11 +12,13 @@ public static class ServiceCollectionExtensions
         sc.AddSingleton(settings);
         sc.AddSingleton(databaseOptions);
 
-        sc.AddTransient<IAcmeOptionsService, AppOptionsService>(); // overriding an item in Search.CogServices!
+        sc.AddSingleton<IMemoryCache, MemoryCache>();
 
-        sc.AddTransient<IHotelDataSourceService, HotelDataSourceService>();
-        sc.AddTransient<IHotelIndexerService, HotelIndexerService>();
-        sc.AddTransient<IHotelIndexService, HotelIndexService>();
-        sc.AddTransient<IHotelSynonymService, HotelSynonymService>();
+        sc.AddScoped<IAcmeOptionsService, AppOptionsService>(); // overriding an item in Search.CogServices!
+        sc.AddScoped<IHotelDataSourceService, HotelDataSourceService>();
+        sc.AddScoped<IHotelIndexerService, HotelIndexerService>();
+        sc.AddScoped<IHotelIndexService, HotelIndexService>();
+        sc.AddScoped<IHotelSynonymService, HotelSynonymService>();
+        sc.AddScoped<IIndexConfigurationService, IndexConfigurationService>();
     }
 }

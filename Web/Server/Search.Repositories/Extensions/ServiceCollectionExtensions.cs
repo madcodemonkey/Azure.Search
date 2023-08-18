@@ -23,7 +23,8 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddScoped<IHotelRepository, HotelRepository>();
-            
+        services.AddScoped<IIndexConfigurationRepository, IndexConfigurationRepository>();
+        
         return services;
     }
 }

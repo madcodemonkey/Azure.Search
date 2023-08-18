@@ -14,7 +14,7 @@ public class Hotel
     public int Id { get; set; }
     public bool IsDeleted { get; set; } = false;
     public DateTimeOffset? LastRenovationDate { get; set; }
-   // public Point? Location { get; set; }
+    public Point? Location { get; set; }
     public bool? ParkingIncluded { get; set; }
 
     public int? Rating { get; set; }

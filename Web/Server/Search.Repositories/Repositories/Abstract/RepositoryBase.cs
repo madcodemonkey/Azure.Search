@@ -23,12 +23,13 @@ public abstract class RepositoryBase<TEntity, TDatabaseContext> : IRepositoryBas
     /// <summary>Inserts one entity into the database.</summary>
     /// <param name="entity">The entity to add</param>
     /// <param name="saveChanges">Indicates if we should save immediately or not</param>
-    public virtual async Task<TEntity> AddAsync(TEntity entity, bool saveChanges = true)
+    /// <param name="cancellationToken">Cancellation token</param>
+    public virtual async Task<TEntity> AddAsync(TEntity entity, bool saveChanges = true, CancellationToken cancellationToken = default)
     {
-        await DbSet.AddAsync(entity);
+        await DbSet.AddAsync(entity, cancellationToken);
         if (saveChanges)
         {
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync(cancellationToken);
         }
         return entity;
     }
@@ -36,19 +37,21 @@ public abstract class RepositoryBase<TEntity, TDatabaseContext> : IRepositoryBas
     /// <summary>Deletes one entity from the database.</summary>
     /// <param name="entity">Entity to delete</param>
     /// <param name="saveChanges">Indicates if we should save immediately or not</param>
-    public virtual async Task DeleteAsync(TEntity entity, bool saveChanges = true)
+    /// <param name="cancellationToken">Cancellation token</param>
+    public virtual async Task DeleteAsync(TEntity entity, bool saveChanges = true, CancellationToken cancellationToken = default)
     {
         DbSet.Remove(entity);
         if (saveChanges)
         {
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync(cancellationToken);
         }
     }
 
     /// <summary>Deletes a list of entity from the database.</summary>
     /// <param name="items">Items to delete</param>
     /// <param name="saveChanges">Indicates if we should save immediately or not</param>
-    public virtual async Task DeleteAsync(List<TEntity> items, bool saveChanges = true)
+    /// <param name="cancellationToken">Cancellation token</param>
+    public virtual async Task DeleteAsync(List<TEntity> items, bool saveChanges = true, CancellationToken cancellationToken = default)
     {
         foreach (var entity in items)
         {
@@ -57,23 +60,24 @@ public abstract class RepositoryBase<TEntity, TDatabaseContext> : IRepositoryBas
 
         if (saveChanges)
         {
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync(cancellationToken);
         }
     }
 
     /// <summary>Retrieves all entities from the database.</summary>
-    public virtual async Task<List<TEntity>> GetAsync() => await DbSet.ToListAsync();
+    public virtual async Task<List<TEntity>> GetAsync(CancellationToken cancellationToken = default) => await DbSet.ToListAsync(cancellationToken);
 
     /// <summary>Retrieves all entities from the database.</summary>
-    public virtual async Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate) => await DbSet.Where(predicate).ToListAsync();
+    public virtual async Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default) => await DbSet.Where(predicate).ToListAsync(cancellationToken);
 
     /// <summary>Returns the first item or null (nothing included).</summary>
-    public virtual async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await DbSet.FirstOrDefaultAsync(predicate);
+    public virtual async Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default) => await DbSet.FirstOrDefaultAsync(predicate, cancellationToken);
 
     /// <summary>Returns the first item or null  (includes specified relationships).</summary>
     /// <param name="predicate">A where clause predicate</param>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <param name="includes">Relationships to include</param>
-    public virtual async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object?>>[] includes)
+    public virtual async Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default, params Expression<Func<TEntity, object?>>[] includes)
     {
         if (predicate == null)
             throw new ArgumentNullException(nameof(predicate), "You must specify a predicate!");
@@ -86,13 +90,14 @@ public abstract class RepositoryBase<TEntity, TDatabaseContext> : IRepositoryBas
                 query = query.Include(include);
         }
 
-        return await query.FirstOrDefaultAsync();
+        return await query.FirstOrDefaultAsync(cancellationToken);
     }
 
     /// <summary>Retrieves all entities with the specified includes.</summary>
     /// <param name="predicate">A where clause predicate</param>
     /// <param name="includes">Foreign key relationships that you would like to include</param>
-    public virtual async Task<List<TEntity>> GetWithIncludesAsync(Expression<Func<TEntity, bool>> predicate,
+    /// <param name="cancellationToken">Cancellation token</param>
+    public virtual async Task<List<TEntity>> GetWithIncludesAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default,
         params Expression<Func<TEntity, object?>>[] includes)
     {
         if (predicate == null)
@@ -108,20 +113,21 @@ public abstract class RepositoryBase<TEntity, TDatabaseContext> : IRepositoryBas
             }
         }
 
-        return await query.ToListAsync();
+        return await query.ToListAsync(cancellationToken);
     }
 
     /// <summary>Updates one entity in the database.</summary>
     /// <param name="entity">Entity to update</param>
     /// <param name="saveChanges">Indicates if we should save immediately or not</param>
-    public virtual async Task UpdateAsync(TEntity entity, bool saveChanges = true)
+    /// <param name="cancellationToken">Cancellation token</param>
+    public virtual async Task UpdateAsync(TEntity entity, bool saveChanges = true, CancellationToken cancellationToken = default)
     {
         DbSet.Attach(entity);
         Context.Entry(entity).State = EntityState.Modified;
 
         if (saveChanges)
         {
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -5,9 +5,9 @@ public interface IRepositoryPrimaryKeyBase<TEntity, TPrimaryKey> : IRepositoryBa
     /// <summary>Deletes one entity from the database.</summary>
     /// <param name="id">The primary key</param>
     /// <param name="saveChanges">Indicates if we should save immediately or not</param>
-    Task DeleteAsync(TPrimaryKey id, bool saveChanges = true);
+    Task DeleteAsync(TPrimaryKey id, bool saveChanges = true, CancellationToken cancellationToken = default);
 
     /// <summary>Retrieves one entity from the database.</summary>
     /// <param name="id">The primary key</param>
-    Task<TEntity> GetAsync(TPrimaryKey id);
+    Task<TEntity> GetAsync(TPrimaryKey id, CancellationToken cancellationToken = default);
 }

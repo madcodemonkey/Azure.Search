@@ -10,6 +10,7 @@ public class AcmeContext : DbContext
     }
 
     public DbSet<Hotel> Hotels { get; set; } = null!;
+    public DbSet<IndexConfiguration> IndexConfigurations { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

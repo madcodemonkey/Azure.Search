@@ -17,9 +17,10 @@ public abstract class RepositoryPrimaryKeyBase<TEntity, TDatabaseContext, TPrima
     /// <summary>Deletes one entity from the database.</summary>
     /// <param name="id">The primary key</param>
     /// <param name="saveChanges">Indicates if we should save immediately or not</param>
-    public virtual async Task DeleteAsync(TPrimaryKey id, bool saveChanges = true)
+    /// <param name="cancellationToken">A cancellation token</param>
+    public virtual async Task DeleteAsync(TPrimaryKey id, bool saveChanges = true, CancellationToken cancellationToken = default)
     {
-        var objectToDelete = await DbSet.FindAsync(id);
+        var objectToDelete = await DbSet.FindAsync(id, cancellationToken);
         if (objectToDelete != null)
         {
             await DeleteAsync(objectToDelete, saveChanges);
@@ -28,5 +29,6 @@ public abstract class RepositoryPrimaryKeyBase<TEntity, TDatabaseContext, TPrima
 
     /// <summary>Retrieves one entity from the database.</summary>
     /// <param name="id">The primary key</param>
-    public virtual async Task<TEntity> GetAsync(TPrimaryKey id) => await DbSet.FindAsync(id);
+    /// <param name="cancellationToken">A cancellation token</param>
+    public virtual async Task<TEntity> GetAsync(TPrimaryKey id, CancellationToken cancellationToken = default) => await DbSet.FindAsync(id);
 }
