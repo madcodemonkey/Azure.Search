@@ -19,8 +19,8 @@
     "GremlinHostPort": "443",
     "GremlinKey": "--your primary or secondary key here---",
     "GremlinQueryType": "Vertices", // Vertices or Edges 
-    "GremlinSoftDeleteColumnName": "",
-    "GremlinSoftDeleteColumnValue": ""
+    "GremlinSoftDeleteColumnName": "isDeleted",
+    "GremlinSoftDeleteColumnValue": "true"
   }
 }
  

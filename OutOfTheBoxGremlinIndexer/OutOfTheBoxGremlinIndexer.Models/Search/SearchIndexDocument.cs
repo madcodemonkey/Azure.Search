@@ -10,8 +10,10 @@ public class SearchIndexDocument
     [SimpleField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
     public int? Age { get; set; }
 
-    [SearchableField(IsFilterable = true,  IsSortable = true)]
+    [SearchableField(IsFilterable = true, IsSortable = true)]
     public string FirstName { get; set; } = string.Empty;
+    [SearchableField(IsFilterable = true, IsSortable = true)]
+    public string LastName { get; set; } = string.Empty;
 
     [SearchableField(IsFilterable = true, IsFacetable = true, IsSortable = true)]
     public string Label { get; set; } = string.Empty;

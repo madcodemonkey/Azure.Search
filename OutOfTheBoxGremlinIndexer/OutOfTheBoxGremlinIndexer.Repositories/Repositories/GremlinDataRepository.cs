@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Text;
+﻿using System.Text;
 using CustomSqlServerIndexer.Models;
 using Gremlin.Net.Driver;
 using Gremlin.Net.Driver.Exceptions;
-using Gremlin.Net.Driver.Messages;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace CustomSqlServerIndexer.Repositories;
 
@@ -75,8 +72,8 @@ public class GremlinDataRepository : IGremlinDataRepository
     public async Task<bool> PersonExistsAsync(string id)
     {
         // g.V().has('id', 'tho3mas').count()
-        var result = await SubmitRequestAsync($"g.V().fold().has('id','{id}').count()");
-        //var result = await SubmitRequestAsync($"g.V('{id}').count()");
+        //var result = await SubmitRequestAsync($"g.V().fold().has('id','{id}').count()");
+        var result = await SubmitRequestAsync($"g.V('{id}').count()");
         return result.Count > 0;
     }
 
