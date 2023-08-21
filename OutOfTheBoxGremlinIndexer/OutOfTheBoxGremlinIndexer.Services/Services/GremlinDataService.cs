@@ -64,14 +64,19 @@ public class GremlinDataService : IGremlinDataService
         return true;
     }
 
+    public async Task<bool> DeletePersonAsync(string id, CancellationToken cancellationToken)
+    {
+        return await _dataRepository.DeletePersonAsync(id);
+    }
+
     public async Task DeleteAllAsync(CancellationToken cancellationToken)
     {
         await _dataRepository.DeleteAllAsync();
     }
 
-    public async Task<List<Person>> GetPeopleAsync(CancellationToken cancellationToken)
+    public async Task<List<Person>> GetPeopleAsync(bool showSoftDeleted = false, CancellationToken cancellationToken = default)
     {
-        return await _dataRepository.GetPeopleAsync();
+        return await _dataRepository.GetPeopleAsync(showSoftDeleted);
     }
 
     public async Task<bool> CreateKnowsRelationship(string id1, string id2)

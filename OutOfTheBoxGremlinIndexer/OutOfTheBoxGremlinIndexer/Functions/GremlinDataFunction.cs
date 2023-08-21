@@ -53,11 +53,11 @@ public class GremlinDataFunction
 
     [Function("Gremlin-Person-List")]
     public async Task<HttpResponseData> ListPeopleAsync([HttpTrigger(AuthorizationLevel.Function, "get")]
-        HttpRequestData req, CancellationToken cancellationToken)
+        HttpRequestData req, bool showSoftDeleted,  CancellationToken cancellationToken)
     {
         _logger.LogInformation("Requesting list of people.");
        
-        var result = await _dataService.GetPeopleAsync(cancellationToken);
+        var result = await _dataService.GetPeopleAsync(showSoftDeleted, cancellationToken);
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         await response.WriteAsJsonAsync(result, cancellationToken);
@@ -69,7 +69,7 @@ public class GremlinDataFunction
     public async Task<HttpResponseData> CreatePersonAsync([HttpTrigger(AuthorizationLevel.Function, "post")]
         HttpRequestData req, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Requesting list of people.");
+        _logger.LogInformation("Requesting tp create a person.");
 
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         Person? newPerson = JsonConvert.DeserializeObject<Person>(requestBody);
@@ -81,11 +81,29 @@ public class GremlinDataFunction
         return response;
     }
 
+    [Function("Gremlin-Person-Delete")]
+    public async Task<HttpResponseData> DeletePersonAsync([HttpTrigger(AuthorizationLevel.Function, "delete")]
+        HttpRequestData req, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Requesting to delete a person.");
+
+        string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+        DeletePersonDto? dto = JsonConvert.DeserializeObject<DeletePersonDto>(requestBody);
+        if (dto == null)
+            return req.CreateResponse(HttpStatusCode.BadRequest);
+
+        var result = await _dataService.DeletePersonAsync(dto.Id, cancellationToken);
+
+        var response = req.CreateResponse(HttpStatusCode.OK);
+        await response.WriteAsJsonAsync(result, cancellationToken);
+        return response;
+    }
+
     [Function("Gremlin-Person-Knows")]
     public async Task<HttpResponseData> CreateKnowsRelationshipAsync([HttpTrigger(AuthorizationLevel.Function, "post")]
         HttpRequestData req, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Requesting list of people.");
+        _logger.LogInformation("Requesting to create a 'knows' relationship between two people.");
 
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         var knows = JsonConvert.DeserializeObject<KnowsRelationshipDto>(requestBody);
