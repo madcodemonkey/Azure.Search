@@ -36,8 +36,6 @@ public class GremlinDataRepository : IGremlinDataRepository
 
     public async Task<List<Person>> GetPeopleAsync()
     {
-        var d2d = await PersonExistsAsync("thoma2s");
-        var dd = await PersonExistsAsync("thomas");
         var result = new List<Person>();
 
         ResultSet<dynamic> rawData = await SubmitRequestAsync("g.V()");
@@ -71,9 +69,13 @@ public class GremlinDataRepository : IGremlinDataRepository
 
     public async Task<bool> PersonExistsAsync(string id)
     {
-        // g.V().has('id', 'tho3mas').count()
-        //var result = await SubmitRequestAsync($"g.V().fold().has('id','{id}').count()");
-        var result = await SubmitRequestAsync($"g.V('{id}').count()");
+        // Warning! I attempted to use count, but none of these worked!
+        // var result = await SubmitRequestAsync($"g.V('{id}').count()");
+        // var result = await SubmitRequestAsync($"g.V().has('person','id','{id}').count()");
+        
+        // This is working!
+        var result = await SubmitRequestAsync($"g.V().has('person','id','{id}')");
+
         return result.Count > 0;
     }
 

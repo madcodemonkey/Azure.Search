@@ -50,6 +50,20 @@ public class GremlinDataService : IGremlinDataService
 
     }
 
+    public async Task<bool> CreatePersonAsync(Person newPerson, CancellationToken cancellationToken)
+    {
+        if (await _dataRepository.PersonExistsAsync(newPerson.Id))
+            return false;
+
+        await _dataRepository.CreatePersonAsync(newPerson.Id, 
+            newPerson.FirstName ?? string.Empty, 
+            newPerson.LastName ?? string.Empty, 
+            newPerson.Age ?? 0, 
+            newPerson.IsDeleted);
+
+        return true;
+    }
+
     public async Task DeleteAllAsync(CancellationToken cancellationToken)
     {
         await _dataRepository.DeleteAllAsync();
@@ -58,5 +72,16 @@ public class GremlinDataService : IGremlinDataService
     public async Task<List<Person>> GetPeopleAsync(CancellationToken cancellationToken)
     {
         return await _dataRepository.GetPeopleAsync();
+    }
+
+    public async Task<bool> CreateKnowsRelationship(string id1, string id2)
+    {
+        if (await _dataRepository.PersonExistsAsync(id1) && await _dataRepository.PersonExistsAsync(id2))
+        {
+            await _dataRepository.CreateKnowsRelationshipAsync(id1, id2);
+            return true;
+        }
+
+        return false;
     }
 }

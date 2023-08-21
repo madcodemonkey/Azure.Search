@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace CustomSqlServerIndexer.Models;
+﻿namespace CustomSqlServerIndexer.Models;
 
 public class Person
 {

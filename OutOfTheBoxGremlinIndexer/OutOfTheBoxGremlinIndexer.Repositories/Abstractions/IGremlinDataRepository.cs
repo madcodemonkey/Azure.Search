@@ -11,5 +11,5 @@ public interface IGremlinDataRepository
 
     Task<List<Person>> GetPeopleAsync();
 
-
+    Task<bool> PersonExistsAsync(string id);
 }

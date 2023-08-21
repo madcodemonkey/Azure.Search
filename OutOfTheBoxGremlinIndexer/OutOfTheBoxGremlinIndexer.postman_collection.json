@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "d4c5ebde-2117-48cb-a642-ffb27f0e6b49",
-		"name": "Github",
+		"name": "Github-Azure-Search",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "2277005"
 	},
@@ -28,13 +28,31 @@
 					"response": []
 				},
 				{
+					"name": "Delete Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/IndexDeleter",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"IndexDeleter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Cognitive Search-simple",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"query\": \"*\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"raw": "{\r\n    \"query\": \"*\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 10,\r\n    \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -61,7 +79,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"query\": \"which notel has a view of the space needle?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"raw": "{\r\n    \"query\": \"which notel has a view of the space needle?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 10,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -505,6 +523,340 @@
 							"path": [
 								"api",
 								"IndexDocumentDeleter"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OutOfTheBoxGremlinIndexer",
+			"item": [
+				{
+					"name": "Create Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Index-Creator",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Index-Creator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Index-Deleter",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Index-Deleter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "IndexER run",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Indexer-Run",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Indexer-Run"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cognitive Search-simple",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"*\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 10,\r\n    \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/IndexSearch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"IndexSearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cognitive Search-semantic",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"which notel has a view of the space needle?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 10,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/IndexSearch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"IndexSearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Gremlin - Create all",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"which notel has a view of the space needle?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 10,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Gremlin-Data-Create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Gremlin-Data-Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Gremlin - Delete all",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"which notel has a view of the space needle?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 10,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Gremlin-Data-Delete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Gremlin-Data-Delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Gremlin - People List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Gremlin-Person-List",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Gremlin-Person-List"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Gremlin - Person Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"thomas3\",\r\n    \"FirstName\": \"Thomas\",\r\n    \"LastName\": \"Lowes\",\r\n    \"Age\": 34,\r\n    \"IsDeleted\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Gremlin-Person-Create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Gremlin-Person-Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Gremlin - Person Knows",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id1\": \"thomas2\",\r\n    \"id2\": \"robin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Gremlin-Person-Knows",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Gremlin-Person-Knows"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OutOfTheBoxBlobIndexer",
+			"item": [
+				{
+					"name": "Create Index, ds, and indexer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/IndexCreator",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"IndexCreator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete docs in the Index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/IndexDeleter",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"IndexDeleter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cognitive Search-simple",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"*\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 10,\r\n    \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/IndexSearch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"IndexSearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cognitive Search-semantic",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"which notel has a view of the space needle?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 10,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/IndexSearch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"IndexSearch"
 							]
 						}
 					},
