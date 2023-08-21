@@ -2,18 +2,19 @@
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 
-namespace CustomSqlServerIndexer.Services;
+namespace CogSimple.Services;
 
 public class CogClientWrapperService : ICogClientWrapperService
 {
-    private readonly ServiceSettings _settings;
+    private readonly CogClientSettings _settings;
     private SearchIndexClient? _indexClient;
     private SearchIndexerClient? _indexerClient;
     private SearchClient? _searchClient;
+
     /// <summary>
     /// Constructor
     /// </summary>
-    public CogClientWrapperService(ServiceSettings settings)
+    public CogClientWrapperService(CogClientSettings settings)
     {
         _settings = settings;
     }
@@ -43,13 +44,13 @@ public class CogClientWrapperService : ICogClientWrapperService
 
         return _indexerClient;
     }
-    public SearchClient GetSearchClient()
+    public SearchClient GetSearchClient(string indexName)
     {
         if (_searchClient == null)
         {
             var serviceEndpoint = GetServiceEndpoint();
             var credential = new AzureKeyCredential(_settings.CognitiveSearchKey);
-            _searchClient = new SearchClient(serviceEndpoint, _settings.CognitiveSearchIndexName, credential);
+            _searchClient = new SearchClient(serviceEndpoint, indexName, credential);
         }
 
         return _searchClient;

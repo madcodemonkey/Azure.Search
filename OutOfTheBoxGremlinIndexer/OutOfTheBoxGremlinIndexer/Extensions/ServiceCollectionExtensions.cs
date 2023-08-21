@@ -1,4 +1,5 @@
-﻿using CustomSqlServerIndexer.Repositories;
+﻿using CogSimple.Services;
+using CustomSqlServerIndexer.Repositories;
 using CustomSqlServerIndexer.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,12 +15,17 @@ public static class ServiceCollectionExtensions
         var serviceSettings = new ServiceSettings
         {
             CognitiveSearchDataSourceName = config["CognitiveSearchDataSourceName"],
-            CognitiveSearchEndpoint = config["CognitiveSearchEndpoint"],
             CognitiveSearchIndexerName = config["CognitiveSearchIndexerName"],
             CognitiveSearchIndexName = config["CognitiveSearchIndexName"],
-            CognitiveSearchKey = config["CognitiveSearchKey"],
             CognitiveSearchMaxUpsertBatchSize = config.GetValue<int>("CognitiveSearchMaxUpsertBatchSize"),
             CognitiveSearchSemanticConfigurationName = config["CognitiveSearchSemanticConfigurationName"],
+            CognitiveSearchSuggestorName = config["CognitiveSearchSuggestorName"]
+        };
+
+        var cogClientSettings = new CogClientSettings()
+        {
+            CognitiveSearchEndpoint = config["CognitiveSearchEndpoint"],
+            CognitiveSearchKey = config["CognitiveSearchKey"],
         };
 
         var repositorySettings = new RepositorySettings
@@ -27,15 +33,18 @@ public static class ServiceCollectionExtensions
             GremlinContainerName = config["GremlinContainerName"],
             GremlinDatabaseConnectionString = config["GremlinDatabaseConnectionString"],
             GremlinDatabaseName = config["GremlinDatabaseName"],
-            GremlinHostName = config["GremlinHostName"],
-            GremlinKey = config["GremlinKey"],
             GremlinEnableSSL = config.GetValue<bool>("GremlinEnableSSL"),
-            GremlinHostPort = config.GetValue<int>("GremlinHostPort")
+            GremlinHostName = config["GremlinHostName"],
+            GremlinHostPort = config.GetValue<int>("GremlinHostPort"),
+            GremlinKey = config["GremlinKey"],
+            GremlinQueryType = config["GremlinQueryType"],
+            GremlinSoftDeleteColumnName = config["GremlinSoftDeleteColumnName"],
+            GremlinSoftDeleteColumnValue = config["GremlinSoftDeleteColumnValue"],
         };
         
 
         sc.AddRepositories(repositorySettings);
-        sc.AddServices(serviceSettings);
+        sc.AddServices(serviceSettings, cogClientSettings);
 
         return sc;
     }

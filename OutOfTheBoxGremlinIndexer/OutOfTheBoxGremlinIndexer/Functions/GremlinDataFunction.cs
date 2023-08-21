@@ -1,12 +1,8 @@
 using System.Net;
-using Azure.Search.Documents.Models;
-using Azure.Search.Documents;
-using CustomSqlServerIndexer.Models;
 using CustomSqlServerIndexer.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace OutOfTheBoxGremlinIndexer.Functions;
 
@@ -22,45 +18,47 @@ public class GremlinDataFunction
     }
 
     [Function("Gremlin-Create-All-Data")]
-    public async Task<HttpResponseData> CreateAllDataAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+    public async Task<HttpResponseData> CreateAllDataAsync([HttpTrigger(AuthorizationLevel.Function, "post")] 
+        HttpRequestData req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Request to create all data (this will first delete all data)");
 
 
-        await _dataService.CreateAllAsync();
+        await _dataService.CreateAllAsync(cancellationToken);
 
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-        await response.WriteStringAsync("All data created!");
+        await response.WriteStringAsync("All data created!", cancellationToken);
         return response;
     }
 
     [Function("Gremlin-Delete-All-Data")]
-    public async Task<HttpResponseData> DeleteAllDataAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+    public async Task<HttpResponseData> DeleteAllDataAsync([HttpTrigger(AuthorizationLevel.Function, "post")] 
+        HttpRequestData req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Request to create all data (this will first delete all data)");
 
 
-        await _dataService.DeleteAllAsync();
+        await _dataService.DeleteAllAsync(cancellationToken);
 
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-        await response.WriteStringAsync("All data deleted!");
+        await response.WriteStringAsync("All data deleted!", cancellationToken);
         return response;
     }
 
-    [Function("List-people")]
+    [Function("Gremlin-List-people")]
     public async Task<HttpResponseData> ListPeopleAsync([HttpTrigger(AuthorizationLevel.Function, "get")]
-        HttpRequestData req)
+        HttpRequestData req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Requesting list of people.");
        
-        var result = await _dataService.GetPeopleAsync();
+        var result = await _dataService.GetPeopleAsync(cancellationToken);
 
         var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(result);
+        await response.WriteAsJsonAsync(result, cancellationToken);
         return response;
     }
 }

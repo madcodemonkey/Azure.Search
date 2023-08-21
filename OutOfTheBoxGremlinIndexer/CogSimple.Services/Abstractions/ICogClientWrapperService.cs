@@ -1,13 +1,12 @@
 ﻿using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 
-namespace CustomSqlServerIndexer.Services;
+namespace CogSimple.Services;
 
 public interface ICogClientWrapperService
 {
     SearchIndexClient GetIndexClient();
+    SearchIndexerClient GetIndexerClient();
 
-    public SearchIndexerClient GetIndexerClient();
-
-    SearchClient GetSearchClient();
+    SearchClient GetSearchClient(string indexName);
 }

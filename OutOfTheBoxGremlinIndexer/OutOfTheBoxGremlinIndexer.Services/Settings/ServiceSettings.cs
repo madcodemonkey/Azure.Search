@@ -7,12 +7,7 @@ public class ServiceSettings
     /// The name of the data source 
     /// </summary>
     public string CognitiveSearchDataSourceName { get; set; } = string.Empty;
-
-    /// <summary>
-    /// The name of the overall Azure Search instance.
-    /// </summary>
-    public string CognitiveSearchEndpoint { get; set; } = string.Empty;
-
+    
     /// <summary>
     /// The IndexER name
     /// </summary>
@@ -22,10 +17,8 @@ public class ServiceSettings
     /// The name of the index we are creating documents inside.
     /// </summary>
     public string CognitiveSearchIndexName { get; set; } = string.Empty;
-    /// <summary>
-    /// The key that gets us access to the cognitive search instance.
-    /// </summary>
-    public string CognitiveSearchKey { get; set; } = string.Empty;
+   
+
     /// <summary>
     /// When saving data to the Cognitive Search index, this is the maximum batch size.
     /// </summary>
@@ -35,4 +28,9 @@ public class ServiceSettings
     /// The name of the semantic configuration to setup within the index.
     /// </summary>
     public string CognitiveSearchSemanticConfigurationName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The name of the suggestor
+    /// </summary>
+    public string CognitiveSearchSuggestorName { get; set; }
 }

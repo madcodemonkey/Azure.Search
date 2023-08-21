@@ -12,7 +12,7 @@ public class GremlinDataService : IGremlinDataService
         _dataRepository = dataRepository;
     }
 
-    public async Task CreateAllAsync()
+    public async Task CreateAllAsync(CancellationToken cancellationToken)
     {
         var rand = new Random(DateTime.Now.Millisecond);
 
@@ -50,12 +50,12 @@ public class GremlinDataService : IGremlinDataService
 
     }
 
-    public async Task DeleteAllAsync()
+    public async Task DeleteAllAsync(CancellationToken cancellationToken)
     {
         await _dataRepository.DeleteAllAsync();
     }
 
-    public async Task<List<Person>> GetPeopleAsync()
+    public async Task<List<Person>> GetPeopleAsync(CancellationToken cancellationToken)
     {
         return await _dataRepository.GetPeopleAsync();
     }
