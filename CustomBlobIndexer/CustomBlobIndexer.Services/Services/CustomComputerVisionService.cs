@@ -2,6 +2,7 @@
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace CustomBlobIndexer.Services;
 
@@ -15,17 +16,18 @@ namespace CustomBlobIndexer.Services;
 public class CustomComputerVisionService : ICustomComputerVisionService
 {
     private readonly ILogger<CustomComputerVisionService> _logger;
-    private readonly ServiceSettings _settings;
+    private readonly CognitiveServiceSettings _cognitiveServiceSettings;
     private IComputerVisionClient? _client;
     private const int NumberOfCharsInAnOperationId = 36;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public CustomComputerVisionService(ILogger<CustomComputerVisionService> logger, ServiceSettings settings)
+    public CustomComputerVisionService(ILogger<CustomComputerVisionService> logger,
+        IOptions<CognitiveServiceSettings> cognitiveServiceSettings)
     {
         _logger = logger;
-        _settings = settings;
+        _cognitiveServiceSettings = cognitiveServiceSettings.Value;
     }
 
     /// <summary>
@@ -91,9 +93,9 @@ public class CustomComputerVisionService : ICustomComputerVisionService
     private IComputerVisionClient GetClient()
     {
         return _client ??= new ComputerVisionClient(
-                new ApiKeyServiceClientCredentials(_settings.CognitiveServiceKey))
+                new ApiKeyServiceClientCredentials(_cognitiveServiceSettings.Key))
         {
-            Endpoint = _settings.CognitiveServiceEndpoint
+            Endpoint = _cognitiveServiceSettings.Endpoint
         };
     }
 }

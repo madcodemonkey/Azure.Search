@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CogSimple.Services;
+using Microsoft.Extensions.Logging;
 using CustomBlobIndexer.Models;
+using Microsoft.Extensions.Options;
 
 namespace CustomBlobIndexer.Services;
 
@@ -8,33 +10,34 @@ namespace CustomBlobIndexer.Services;
 /// </summary>
 public class FileProcessService : IFileProcessService
 {
-    private readonly ServiceSettings _settings;
-    private readonly ILogger<FileProcessService> _logger;
+    private readonly ApplicationSettings _appSettings;
+    private readonly BlobSettings _blobSettings;
     private readonly IBlobSasBuilderService _sasBuilderService;
+    private readonly ICogSearchIndexService _cogSearchIndexService;
     private readonly ICustomComputerVisionService _computerVisionService;
     private readonly ICustomTextAnalyticsService _textAnalyticsService;
-    private readonly ICustomSearchIndexService _searchIndexService;
-     
+    private readonly ILogger<FileProcessService> _logger;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public FileProcessService(ServiceSettings settings, 
+    public FileProcessService(IOptions<BlobSettings> blobSettings, IOptions<ApplicationSettings> appSettings,
         ILogger<FileProcessService> logger,
         IBlobSasBuilderService sasBuilderService,
         ICustomComputerVisionService computerVisionService,
-        ICustomTextAnalyticsService textAnalyticsService,
-        ICustomSearchIndexService searchIndexService)
+        ICogSearchIndexService cogSearchIndexService,
+        ICustomTextAnalyticsService textAnalyticsService)
     {
-        _settings = settings;
+        _appSettings = appSettings.Value;
+        _blobSettings = blobSettings.Value;
         _logger = logger;
         _sasBuilderService = sasBuilderService;
         _computerVisionService = computerVisionService;
+        _cogSearchIndexService = cogSearchIndexService;
         _textAnalyticsService = textAnalyticsService;
-        _searchIndexService = searchIndexService;
     }
 
-    public async Task ProcessFileAsync(string name, Uri uri)
+    public async Task ProcessFileAsync(string name, Uri uri, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Process file named: {name} located a uri: {uri}");
 
@@ -43,7 +46,7 @@ public class FileProcessService : IFileProcessService
         _logger.LogInformation(sasUrl);
 
         string content = await _computerVisionService.ReadFileAsync(sasUrl);
-        var sourcePath = uri.GetPathAfterText(_settings.BlobContainerName);
+        var sourcePath = uri.GetPathAfterText(_blobSettings.ContainerName);
   
         var d = new SearchIndexDocument
         {
@@ -51,37 +54,38 @@ public class FileProcessService : IFileProcessService
             ChunkOrderNumber = 1, // Since we are not chunking, there is only one number
             Content = content,
             SourcePath = sourcePath,
-            Summary = await _textAnalyticsService.ExtractSummarySentenceAsync(content),
+            Summary = _appSettings.CognitiveSearchSkillSummarizeText ?
+                await _textAnalyticsService.ExtractSummarySentenceAsync(content) : string.Empty,
             Title = Path.GetFileName(name)
         };
-        
-        if (_settings.CognitiveSearchSkillDetectKeyPhrases)
-        {
-            d.KeyPhrases = await _textAnalyticsService.DetectedKeyPhrases(content);
-        }
 
-        if (_settings.CognitiveSearchSkillDetectLanguage)
-        {
-            d.Languages = await _textAnalyticsService.DetectLanguageInput(content);
-        }
+        d.KeyPhrases = _appSettings.CognitiveSearchSkillDetectKeyPhrases ?
+            await _textAnalyticsService.DetectedKeyPhrases(content) :
+            new List<string>();
 
-        if (_settings.CognitiveSearchSkillDetectEntities)
-        {
-            d.Entities = await _textAnalyticsService.DetectedEntitiesAsync(content);
-        }
+        d.Languages = _appSettings.CognitiveSearchSkillDetectLanguage ?
+            await _textAnalyticsService.DetectLanguageInput(content) :
+            new List<SearchLanguage>();
 
-        if (_settings.CognitiveSearchSkillDetectSentiment)
+
+        d.Entities = _appSettings.CognitiveSearchSkillDetectEntities ?
+            await _textAnalyticsService.DetectedEntitiesAsync(content) :
+            new List<SearchEntity>();
+
+ 
+
+        if (_appSettings.CognitiveSearchSkillDetectSentiment)
         {
             //d.Sentiments = await _textAnalyticsService.DetectedSentiment(content);
         }
 
-        if (_settings.CognitiveSearchSkillRedactText)
+        if (_appSettings.CognitiveSearchSkillRedactText)
         {
             d.RedactedText = await _textAnalyticsService.RedactedText(content);
         }
 
 
-        _searchIndexService.UploadDocuments(d);
+        await _cogSearchIndexService.UploadDocumentsAsync(_appSettings.CognitiveSearchIndexName, d, cancellationToken);
     }
 
     private string Base64EncodeString(string plainText)

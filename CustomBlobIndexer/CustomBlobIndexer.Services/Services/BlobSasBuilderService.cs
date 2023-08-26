@@ -1,5 +1,6 @@
 ﻿using Azure.Storage;
 using Azure.Storage.Sas;
+using Microsoft.Extensions.Options;
 
 namespace CustomBlobIndexer.Services;
 
@@ -12,14 +13,14 @@ namespace CustomBlobIndexer.Services;
 /// </remarks>
 public class BlobSasBuilderService : IBlobSasBuilderService
 {
-    private readonly ServiceSettings _settings;
+    private readonly BlobSettings _settings;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public BlobSasBuilderService(ServiceSettings settings)
+    public BlobSasBuilderService(IOptions<BlobSettings> settings)
     {
-        _settings = settings;
+        _settings = settings.Value;
     }
 
     /// <summary>
@@ -52,14 +53,14 @@ public class BlobSasBuilderService : IBlobSasBuilderService
         // https://stackoverflow.com/questions/71638718/unable-to-get-blob-sas-url-using-azure-function-blob-trigger
         BlobSasBuilder blobSasBuilder = new BlobSasBuilder
         {
-            BlobContainerName = _settings.BlobContainerName,
+            BlobContainerName = _settings.ContainerName,
             BlobName = blobName,
             ExpiresOn = expiration.Value
         };
 
         blobSasBuilder.SetPermissions(permissions);
 
-        var sasToken = blobSasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential(_settings.BlobAccountName, _settings.BlobAccessKey)).ToString();
+        var sasToken = blobSasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential(_settings.AccountName, _settings.AccessKey)).ToString();
         
         return sasToken;
     }

@@ -20,10 +20,10 @@ public class BlobTriggerFunction
 
 
     [Function("BlobTriggerFunction")]
-    public async Task Run([BlobTrigger("my-files/{name}", Connection = "BlobStorageConnectionString")] 
-        byte[] myBlob, string name, Uri uri)
+    public async Task Run([BlobTrigger("my-files/{name}", Connection = "Blob:StorageConnectionString")] 
+        byte[] myBlob, string name, Uri uri, CancellationToken cancellationToken)
     {
-        await _fileProcessService.ProcessFileAsync(name, uri);
+        await _fileProcessService.ProcessFileAsync(name, uri, cancellationToken);
 
     }
 }

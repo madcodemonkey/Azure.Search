@@ -3,6 +3,7 @@ using Azure.AI.TextAnalytics;
 using CustomBlobIndexer.Models;
 using Microsoft.Extensions.Logging;
 using System.Text;
+using Microsoft.Extensions.Options;
 
 namespace CustomBlobIndexer.Services;
 
@@ -12,15 +13,15 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
 {
     private static TextAnalyticsClient? _client;
     private readonly ILogger<CustomTextAnalyticsService> _logger;
-    private readonly ServiceSettings _settings;
+    private readonly CognitiveServiceSettings _settings;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public CustomTextAnalyticsService(ILogger<CustomTextAnalyticsService> logger, ServiceSettings settings)
+    public CustomTextAnalyticsService(ILogger<CustomTextAnalyticsService> logger, IOptions<CognitiveServiceSettings> settings)
     {
         _logger = logger;
-        _settings = settings;
+        _settings = settings.Value;
     }
 
     /// <summary>
@@ -189,7 +190,7 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
     /// <returns>A single sentence</returns>
     public async Task<string> ExtractSummarySentenceAsync(string content)
     {
-        if (string.IsNullOrWhiteSpace(content))
+        if (string.IsNullOrWhiteSpace(content) || content.Length < 50)
             return content;
 
         // TODO: When sending in short text (e.g., '1964\r\nS-E-CAR-E-T') I saw an unhelpful exception.  Hidden characters?  Too short?  
@@ -344,7 +345,7 @@ public class CustomTextAnalyticsService : ICustomTextAnalyticsService
 
     private TextAnalyticsClient GetClient()
     {
-        return _client ??= new TextAnalyticsClient(new Uri(_settings.CognitiveServiceEndpoint),
-            new AzureKeyCredential(_settings.CognitiveServiceKey));
+        return _client ??= new TextAnalyticsClient(new Uri(_settings.Endpoint),
+            new AzureKeyCredential(_settings.Key));
     }
 }

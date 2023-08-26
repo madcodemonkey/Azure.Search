@@ -3,20 +3,26 @@ using Azure.AI.OpenAI;
 using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
+using CogSimple.Services;
 using CustomBlobIndexer.Models;
+using Microsoft.Extensions.Options;
 
 namespace CustomBlobIndexer.Services;
 
 public class OpenAISearchService : OpenAIClientService, IOpenAISearchService
 {
-    private readonly ICustomSearchIndexService _searchIndexService;
+    private readonly ApplicationSettings _appSettings;
+    private readonly ICogSearchIndexService _cogSearchIndexService;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public OpenAISearchService(ServiceSettings settings, ICustomSearchIndexService searchIndexService) : base(settings)
+    public OpenAISearchService(IOptions<OpenAiSettings> openAiSettings,
+        IOptions<ApplicationSettings> appSettings,
+        ICogSearchIndexService cogSearchIndexService) : base(openAiSettings)
     {
-        _searchIndexService = searchIndexService;
+        _appSettings = appSettings.Value;
+        _cogSearchIndexService = cogSearchIndexService;
     }
 
     /// <summary>
@@ -24,7 +30,8 @@ public class OpenAISearchService : OpenAIClientService, IOpenAISearchService
     /// results to query Open AI.
     /// </summary>
     /// <param name="request">The request</param>
-    public async Task<OpenAIResponse> QueryAsync(OpenAIRequest request)
+    /// <param name="cancellationToken"></param>
+    public async Task<OpenAIResponse> QueryAsync(OpenAIRequest request, CancellationToken cancellationToken = default)
     {
         var cognitiveSearchOptions = new SearchOptions
         {
@@ -32,11 +39,12 @@ public class OpenAISearchService : OpenAIClientService, IOpenAISearchService
             QueryLanguage = QueryLanguage.EnUs,
             QueryType = SearchQueryType.Semantic,
             Select = { request.SearchFieldName }, // Avoid retrieving fields we are not going to use!
-            SemanticConfigurationName = Settings.CognitiveSearchSemanticConfigurationName
+            SemanticConfigurationName = _appSettings.CognitiveSearchSemanticConfigurationName
         };
 
-        var response = await _searchIndexService.SearchAsync<SearchDocument>(request.Query, cognitiveSearchOptions);
-
+        var response = await _cogSearchIndexService.SearchAsync<SearchDocument>(_appSettings.CognitiveSearchIndexName,
+            request.Query, cognitiveSearchOptions, cancellationToken);
+        
         if (response.TotalCount == 0)
         {
             return new OpenAIResponse { Answer = "I don't know the answer to that question because Cognitive Search didn't provide any documents!" };
@@ -54,14 +62,14 @@ public class OpenAISearchService : OpenAIClientService, IOpenAISearchService
         var client = GetClient();
 
         Response<Completions> completionsResponse =
-            await client.GetCompletionsAsync(Settings.OpenAIDeploymentOrModelName,
+            await client.GetCompletionsAsync(OpenAiSettings.DeploymentOrModelName,
                 new CompletionsOptions()
                 {
                     Temperature = (float)0.7,
                     MaxTokens = 800,
                     Prompts = { sbPrompt.ToString() },
                     NucleusSamplingFactor = (float)0.95,
-                });
+                }, cancellationToken);
         
         // Console.WriteLine($"Open API responded with {completionsResponse.Value.Choices.Count} choices");
 

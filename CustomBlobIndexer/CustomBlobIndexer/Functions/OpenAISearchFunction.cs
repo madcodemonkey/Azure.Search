@@ -1,6 +1,4 @@
 using System.Net;
-using Azure.Search.Documents;
-using Azure.Search.Documents.Models;
 using CustomBlobIndexer.Models;
 using CustomBlobIndexer.Services;
 using Microsoft.Azure.Functions.Worker;
@@ -27,7 +25,7 @@ public class OpenAISearchFunction
     }
 
     [Function("OpenAISearch")]
-    public async Task<HttpResponseData> OpenAISearch([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+    public async Task<HttpResponseData> OpenAISearch([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -44,7 +42,7 @@ public class OpenAISearchFunction
             if (string.IsNullOrWhiteSpace(data.SearchFieldName))
                 data.SearchFieldName = nameof(SearchIndexDocument.Content);
 
-            openAIResponse = await _openAISearchService.QueryAsync(data);
+            openAIResponse = await _openAISearchService.QueryAsync(data, cancellationToken);
         }
         else
         {
@@ -53,7 +51,7 @@ public class OpenAISearchFunction
         
         
         var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(openAIResponse);
+        await response.WriteAsJsonAsync(openAIResponse, cancellationToken);
         return response;
     }
 }

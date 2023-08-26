@@ -9,5 +9,6 @@ public interface IOpenAISearchService
     /// results to query Open AI.
     /// </summary>
     /// <param name="request">The request</param>
-    Task<OpenAIResponse> QueryAsync(OpenAIRequest request);
+    /// <param name="cancellationToken"></param>
+    Task<OpenAIResponse> QueryAsync(OpenAIRequest request, CancellationToken cancellationToken);
 }

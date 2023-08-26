@@ -1,29 +1,30 @@
 {
   "IsEncrypted": false,
   "Values": {
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "BlobAccessKey": "---your blob access key here---",
-    "BlobAccountName": "---the name of your storage account---",
-    // If you change the BlobContainerName, be sure to update it in BlobTriggerFunction.cs as well!
-    "BlobContainerName": "my-files",
-    "BlobStorageConnectionString": "---your blob connection string here---",
-    "ChunkIntoMultipleDocuments": "false",
-    "ChunkMaximumNumberOfCharacters": "1000",
-    "CognitiveSearchIndexName": "my-index",
-    "CognitiveSearchKey": "---Your cognitive search key---",
-    "CognitiveSearchName": "---the name of your cognitive search instance (e.g., davecogservices)---",
-    "CognitiveSearchSemanticConfigurationName": "my-semantic-config",
-    "CognitiveSearchSkillDetectEntities": "true",
-    "CognitiveSearchSkillDetectKeyPhrases": "true",
-    "CognitiveSearchSkillDetectLanguage": "true",
+    "AppSetting:ChunkIntoMultipleDocuments": "true",
+    "AppSetting:ChunkMaximumNumberOfCharacters": "1000",
+    "AppSetting:CognitiveSearchIndexName": "my-index",
+    "AppSetting:CognitiveSearchSemanticConfigurationName": "my-semantic-config",
+    "AppSetting:CognitiveSearchSkillDetectEntities": "false",
+    "AppSetting:CognitiveSearchSkillDetectKeyPhrases": "false",
+    "AppSetting:CognitiveSearchSkillDetectLanguage": "false",
+    "AppSetting:CognitiveSearchSkillSummarizeText": "false",
     // Sentiment has not been implmented fully!
-    "CognitiveSearchSkillDetectSentiment": "false",
-    "CognitiveSearchSkillRedactText": "true",
-    "CognitiveServiceEndpoint": "---your endpoint https://{name}.search.windows.net here---",
-    "CognitiveServiceKey": "---your key here---",
+    "AppSetting:CognitiveSearchSkillDetectSentiment": "false",
+    "AppSetting:CognitiveSearchSkillRedactText": "false",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "Blob:AccessKey": "---your blob access key here---",
+    "Blob:AccountName": "---the name of your storage account---",
+    // If you change the BlobContainerName, be sure to update it in BlobTriggerFunction.cs as well!
+    "Blob:ContainerName": "my-files",
+    "Blob:StorageConnectionString": "---your blob connection string here---",
+    "CognitiveSearch:Endpoint": "---Your cognitive search key---",
+    "CognitiveSearch:Key": "---Your cognitive search key---",
+    "CognitiveService:Endpoint": "---your endpoint https://{name}.cognitiveservices.azure.com/ here---",
+    "CognitiveService:Key": "---your key here---",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "OpenAIDeploymentOrModelName": "---The name of your deployment here---",
-    "OpenAIEndpoint": "---Your API endpoint here from the Azure Portal (see Keys and Endpoint in the Resource Management section)---",
-    "OpenAIKey": "---Your key here from the Azure Portal (see Keys and Endpoint in the Resource Management section)---"
+    "OpenAI:DeploymentOrModelName": "---The name of your deployment here---",
+    "OpenAI:Endpoint": "---Your API endpoint here from the Azure Portal (see Keys and Endpoint in the Resource Management section)---",
+    "OpenAI:Key": "---Your key here from the Azure Portal (see Keys and Endpoint in the Resource Management section)---"
   }
 }
