@@ -24,7 +24,8 @@ public class HotelRepository : RepositoryPrimaryKeyBase<Hotel, CustomSqlServerCo
 
         string limitString = retrievalLimit == Int32.MaxValue ? string.Empty : $"Top({retrievalLimit})";
 
-        if (highWaterMarkRowVersion == Array.Empty<byte>())
+        // Note: Do not check for Array.Empty<byte>, it will NOT catch an array that was initialized with zero length (e.g., var myArray = new byte[0])
+        if (highWaterMarkRowVersion.Length == 0)
         {
             result = await Context.Hotels
                 .FromSqlRaw($"SELECT {limitString} * FROM {nameof(Hotel)} ORDER BY {nameof(Hotel.RowVersion)} ASC")
