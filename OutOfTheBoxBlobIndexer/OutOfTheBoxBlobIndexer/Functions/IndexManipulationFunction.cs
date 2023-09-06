@@ -2,6 +2,8 @@ using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using OutOfTheBoxBlobIndexer.Models;
 using OutOfTheBoxBlobIndexer.Services;
 
 namespace OutOfTheBoxBlobIndexer.Functions;
@@ -10,16 +12,16 @@ public class IndexManipulationFunction
 {
     private readonly ILogger _logger;
   
-    private readonly ServiceSettings _settings;
+    private readonly OutOfTheBoxSettings _settings;
     private readonly IOutOfBoxService _outOfBoxService;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public IndexManipulationFunction(ILoggerFactory loggerFactory, 
-        ServiceSettings settings, IOutOfBoxService outOfBoxService)
+    public IndexManipulationFunction(ILoggerFactory loggerFactory,
+        IOptions<OutOfTheBoxSettings> settings, IOutOfBoxService outOfBoxService)
     {
-        _settings = settings;
+        _settings = settings.Value;
         _outOfBoxService = outOfBoxService;
         
         _logger = loggerFactory.CreateLogger<IndexManipulationFunction>();

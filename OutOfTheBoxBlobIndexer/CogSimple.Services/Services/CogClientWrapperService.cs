@@ -1,12 +1,13 @@
 ﻿using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
+using Microsoft.Extensions.Options;
 
 namespace CogSimple.Services;
 
 public class CogClientWrapperService : ICogClientWrapperService
 {
-    private readonly CogClientSettings _settings;
+    private readonly CognitiveSettings _settings;
     private SearchIndexClient? _indexClient;
     private SearchIndexerClient? _indexerClient;
     private SearchClient? _searchClient;
@@ -14,9 +15,9 @@ public class CogClientWrapperService : ICogClientWrapperService
     /// <summary>
     /// Constructor
     /// </summary>
-    public CogClientWrapperService(CogClientSettings settings)
+    public CogClientWrapperService(IOptions<CognitiveSettings> settings)
     {
-        _settings = settings;
+        _settings = settings.Value;
     }
 
 
@@ -25,7 +26,7 @@ public class CogClientWrapperService : ICogClientWrapperService
         if (_indexClient == null)
         {
             var serviceEndpoint = GetServiceEndpoint();
-            var credential = new AzureKeyCredential(_settings.CognitiveSearchKey);
+            var credential = new AzureKeyCredential(_settings.SearchKey);
             _indexClient = new SearchIndexClient(serviceEndpoint, credential);
         }
 
@@ -37,7 +38,7 @@ public class CogClientWrapperService : ICogClientWrapperService
         if (_indexerClient == null)
         {
             var serviceEndpoint = GetServiceEndpoint();
-            var credential = new AzureKeyCredential(_settings.CognitiveSearchKey);
+            var credential = new AzureKeyCredential(_settings.SearchKey);
 
             _indexerClient = new SearchIndexerClient(serviceEndpoint, credential);
         }
@@ -49,7 +50,7 @@ public class CogClientWrapperService : ICogClientWrapperService
         if (_searchClient == null)
         {
             var serviceEndpoint = GetServiceEndpoint();
-            var credential = new AzureKeyCredential(_settings.CognitiveSearchKey);
+            var credential = new AzureKeyCredential(_settings.SearchKey);
             _searchClient = new SearchClient(serviceEndpoint, indexName, credential);
         }
 
@@ -58,7 +59,7 @@ public class CogClientWrapperService : ICogClientWrapperService
 
     private Uri GetServiceEndpoint()
     {
-        Uri serviceEndpoint = new Uri(_settings.CognitiveSearchEndpoint);
+        Uri serviceEndpoint = new Uri(_settings.SearchEndpoint);
         return serviceEndpoint;
     }
 }

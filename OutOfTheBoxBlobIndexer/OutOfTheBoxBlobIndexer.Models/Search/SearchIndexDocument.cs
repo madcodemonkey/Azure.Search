@@ -1,6 +1,6 @@
 ﻿using Azure.Search.Documents.Indexes;
 
-namespace CogSimple.Models;
+namespace OutOfTheBoxBlobIndexer.Models;
 
 public class SearchIndexDocument
 {
@@ -42,5 +42,9 @@ public class SearchIndexDocument
     [SearchableField(IsFilterable = true, IsSortable = true,IsFacetable = true)]
     public string FileName { get; set; } = string.Empty;
 
+    /// <summary>
+    /// The language used in the document.
+    /// </summary>
+    [SearchableField(AnalyzerName = "standard.lucene")]
+    public string Language { get; set; } = string.Empty;
 }
- 

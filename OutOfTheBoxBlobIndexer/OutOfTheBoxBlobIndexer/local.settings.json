@@ -2,18 +2,21 @@
   "IsEncrypted": false,
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "CognitiveSearchDataSourceName": "blob-out-of-the-box-ds",
-    "CognitiveSearchEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
-    "CognitiveSearchIndexerName": "blob-out-of-the-box-indexer",
-    "CognitiveSearchIndexName": "blob-out-of-the-box-idx",
-    "CognitiveSearchKey": "---Your cognitive search key---",
-    "CognitiveSearchMaxUpsertBatchSize": "5",
-    "CognitiveSearchSemanticConfigurationName": "my-semantic-config",
-    "CognitiveSearchSoftDeleteFieldName": "isDeleted",
-    "CognitiveSearchSoftDeleteFieldValue": "true",
-    "CognitiveSearchSuggestorName": "sg-test",
+    "Cognitive:SearchEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
+    "Cognitive:SearchKey": "---Your cognitive search key---",
+    "Cognitive:ServicesEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
+    "Cognitive:ServicesKey": "---Your cognitive search key---",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "StorageConnectionString": "---Your storage resource connection string here---",
-    "StorageContainerName": "myblobcontainer"
+    "OutOfTheBox:CognitiveSearchDataSourceName": "blob-out-of-the-box-ds",
+    "OutOfTheBox:CognitiveSearchIndexerName": "blob-out-of-the-box-indexer",
+    "OutOfTheBox:CognitiveSearchIndexName": "blob-out-of-the-box-idx",
+    "OutOfTheBox:CognitiveSearchMaxUpsertBatchSize": "5",
+    "OutOfTheBox:CognitiveSearchSemanticConfigurationName": "my-semantic-config",
+    "OutOfTheBox:CognitiveSearchSkillSetName": "blob-out-of-the-box-ss",
+    "OutOfTheBox:CognitiveSearchSoftDeleteFieldName": "isDeleted",
+    "OutOfTheBox:CognitiveSearchSoftDeleteFieldValue": "true",
+    "OutOfTheBox:CognitiveSearchSuggestorName": "sg-test",
+    "OutOfTheBox:StorageConnectionString": "---Your storage resource connection string here---",
+    "OutOfTheBox:StorageContainerName": "myblobcontainer"
   }
 }

@@ -2,19 +2,21 @@ using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using OutOfTheBoxBlobIndexer.Models;
 using OutOfTheBoxBlobIndexer.Services;
 
 namespace OutOfTheBoxBlobIndexer.Functions
 {
     public class IndexerManipulationFunction
     {
-        private readonly ServiceSettings _settings;
+        private readonly OutOfTheBoxSettings _settings;
         private readonly IOutOfBoxService _outOfBoxService;
         private readonly ILogger _logger;
 
-        public IndexerManipulationFunction(ILoggerFactory loggerFactory, ServiceSettings settings, IOutOfBoxService outOfBoxService)
+        public IndexerManipulationFunction(ILoggerFactory loggerFactory, IOptions<OutOfTheBoxSettings> settings, IOutOfBoxService outOfBoxService)
         {
-            _settings = settings;
+            _settings = settings.Value;
             _outOfBoxService = outOfBoxService;
             _logger = loggerFactory.CreateLogger<IndexerManipulationFunction>();
         }

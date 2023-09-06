@@ -1,14 +1,12 @@
-﻿namespace OutOfTheBoxBlobIndexer.Services;
- 
-public class ServiceSettings
-{
+﻿namespace OutOfTheBoxBlobIndexer.Models;
 
+public class OutOfTheBoxSettings
+{
     /// <summary>
-    /// The name of the data source 
+    /// The name of the data source
     /// </summary>
     public string CognitiveSearchDataSourceName { get; set; } = string.Empty;
 
- 
     /// <summary>
     /// The IndexER name
     /// </summary>
@@ -18,7 +16,7 @@ public class ServiceSettings
     /// The name of the index we are creating documents inside.
     /// </summary>
     public string CognitiveSearchIndexName { get; set; } = string.Empty;
-   
+
     /// <summary>
     /// When saving data to the Cognitive Search index, this is the maximum batch size.
     /// </summary>
@@ -53,4 +51,11 @@ public class ServiceSettings
     /// The value of the field that controls soft deletion.  This is metadata field VALUE on the blob file.  If it is set to this string, it is assumed that it is NOT deleted.
     /// </summary>
     public string CognitiveSearchSoftDeleteFieldValue { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The name of the skill set (this is used by the indexer).
+    /// </summary>
+    public string CognitiveSearchSkillSetName { get; set; }
+
+    public const string SectionName = "OutOfTheBox";
 }
