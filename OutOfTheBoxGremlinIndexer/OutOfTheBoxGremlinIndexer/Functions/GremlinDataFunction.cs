@@ -1,10 +1,10 @@
 using System.Net;
-using CustomSqlServerIndexer.Models;
-using CustomSqlServerIndexer.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using OutOfTheBoxGremlinIndexer.Models;
+using OutOfTheBoxGremlinIndexer.Services;
 
 namespace OutOfTheBoxGremlinIndexer.Functions;
 

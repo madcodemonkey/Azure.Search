@@ -1,7 +1,7 @@
-﻿using CustomSqlServerIndexer.Models;
-using Gremlin.Net.Driver;
+﻿using Gremlin.Net.Driver;
+using OutOfTheBoxGremlinIndexer.Models;
 
-namespace CustomSqlServerIndexer.Repositories;
+namespace OutOfTheBoxGremlinIndexer.Repositories;
 
 public interface IGremlinDataRepository
 {

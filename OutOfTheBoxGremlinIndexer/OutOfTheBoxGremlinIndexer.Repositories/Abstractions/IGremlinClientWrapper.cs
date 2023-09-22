@@ -1,7 +1,7 @@
 ﻿using Gremlin.Net.Driver;
 using Gremlin.Net.Process.Traversal;
 
-namespace CustomSqlServerIndexer.Repositories;
+namespace OutOfTheBoxGremlinIndexer.Repositories;
 
 public interface IGremlinClientWrapper : IDisposable
 {

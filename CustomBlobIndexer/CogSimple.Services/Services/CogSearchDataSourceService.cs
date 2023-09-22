@@ -123,8 +123,8 @@ public class CogSearchDataSourceService : ICogSearchDataSourceService
 
     /// <summary>Delete a data sources</summary>
     /// <param name="dataSourceConnectionName">The name of the data source</param>
-    /// <param name="checkIfExistsFirst">Indicates if you want the code to check to make sure the indexer exists before attempting to delete it.  If you try
-    /// to delete an indexer that doesn't exist, it will generate an exception.</param> 
+    /// <param name="checkIfExistsFirst">Indicates if you want the code to check to make sure the data source exists before attempting to delete it.  If you try
+    /// to delete an data source that doesn't exist, it will generate an exception.</param> 
     /// <param name="cancellationToken">A cancellation token</param>
     public async Task<bool> DeleteAsync(string dataSourceConnectionName, bool checkIfExistsFirst, CancellationToken cancellationToken = default)
     {
@@ -134,19 +134,12 @@ public class CogSearchDataSourceService : ICogSearchDataSourceService
         }
 
         var indexerClient = ClientService.GetIndexerClient();
-
-        Response<SearchIndexerDataSourceConnection>? dataSource = await indexerClient.GetDataSourceConnectionAsync(dataSourceConnectionName, cancellationToken);
-
-        if (dataSource != null)
-        {
-            await indexerClient.DeleteDataSourceConnectionAsync(dataSource, cancellationToken: cancellationToken);
-            return true;
-        }
-
-        return false;
+        
+        await indexerClient.DeleteDataSourceConnectionAsync(dataSourceConnectionName, cancellationToken);
+        return true;
     }
 
-    /// <summary>Gets a list of data sources</summary>
+    /// <summary>Checks to see if a data source exists</summary>
     /// <param name="dataSourceConnectionName">The name of the data source</param>
     /// <param name="cancellationToken">A cancellation token</param>
     public async Task<bool> ExistsAsync(string dataSourceConnectionName, CancellationToken cancellationToken = default)

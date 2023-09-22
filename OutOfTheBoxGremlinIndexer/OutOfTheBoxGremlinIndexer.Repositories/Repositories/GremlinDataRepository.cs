@@ -1,10 +1,10 @@
 ﻿using System.Text;
-using CustomSqlServerIndexer.Models;
 using Gremlin.Net.Driver;
 using Gremlin.Net.Driver.Exceptions;
 using Microsoft.Extensions.Logging;
+using OutOfTheBoxGremlinIndexer.Models;
 
-namespace CustomSqlServerIndexer.Repositories;
+namespace OutOfTheBoxGremlinIndexer.Repositories;
 
 public class GremlinDataRepository : IGremlinDataRepository
 {

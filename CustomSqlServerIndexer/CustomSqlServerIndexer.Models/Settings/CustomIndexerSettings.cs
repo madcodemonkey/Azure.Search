@@ -1,7 +1,9 @@
-﻿namespace CustomSqlServerIndexer.Services;
+﻿namespace CustomSqlServerIndexer.Models;
  
-public class ServiceSettings
+public class CustomIndexerSettings
 {
+    public const string SectionName = "CustomIndexer";
+
     /// <summary>
     /// The name of the index we are creating documents inside.
     /// </summary>

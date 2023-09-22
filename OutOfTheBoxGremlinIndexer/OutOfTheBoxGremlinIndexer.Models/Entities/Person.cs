@@ -1,4 +1,4 @@
-﻿namespace CustomSqlServerIndexer.Models;
+﻿namespace OutOfTheBoxGremlinIndexer.Models;
 
 public class Person
 {

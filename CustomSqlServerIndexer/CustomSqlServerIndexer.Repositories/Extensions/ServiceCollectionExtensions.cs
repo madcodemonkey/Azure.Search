@@ -1,15 +1,17 @@
-﻿using CustomSqlServerIndexer.Services;
+﻿using CogSimple.Services;
+using CustomSqlServerIndexer.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CustomSqlServerIndexer.Repositories;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddRepositories(this IServiceCollection services, RepositorySettings settings)
+    public static IServiceCollection AddRepositories(this IServiceCollection services, IConfiguration config)
     {
-        services.AddSingleton(settings);
-     
+        var settings = services.ConfigureSectionSettings<RepositorySettings>(config, RepositorySettings.SectionName);
+
         services.AddDbContext<CustomSqlServerContext>((serviceProvider, dbContextOptions) =>
         {
             dbContextOptions.UseSqlServer(settings.ConnectionString, sqlServerContextOptions =>

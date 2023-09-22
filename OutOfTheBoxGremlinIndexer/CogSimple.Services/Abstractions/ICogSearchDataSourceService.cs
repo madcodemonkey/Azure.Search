@@ -39,11 +39,11 @@ public interface ICogSearchDataSourceService
 
     /// <summary>Delete a data sources</summary>
     /// <param name="dataSourceConnectionName">The name of the data source</param>
-    /// <param name="checkIfExistsFirst">Indicates if you want the code to check to make sure the indexer exists before attempting to delete it.  If you try
-    /// to delete an indexer that doesn't exist, it will generate an exception.</param>   /// <param name="cancellationToken">A cancellation token</param>
+    /// <param name="checkIfExistsFirst">Indicates if you want the code to check to make sure the data source exists before attempting to delete it.  If you try
+    /// to delete an data source that doesn't exist, it will generate an exception.</param>   /// <param name="cancellationToken">A cancellation token</param>
     Task<bool> DeleteAsync(string dataSourceConnectionName, bool checkIfExistsFirst, CancellationToken cancellationToken = default);
 
-    /// <summary>Gets a list of data sources</summary>
+    /// <summary>Checks to see if a data source exists</summary>
     /// <param name="dataSourceConnectionName">The name of the data source</param>
     /// <param name="cancellationToken">A cancellation token</param>
     Task<bool> ExistsAsync(string dataSourceConnectionName, CancellationToken cancellationToken = default);

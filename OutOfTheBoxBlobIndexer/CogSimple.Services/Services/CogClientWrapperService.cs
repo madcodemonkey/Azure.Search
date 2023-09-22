@@ -10,7 +10,7 @@ public class CogClientWrapperService : ICogClientWrapperService
     private readonly CognitiveSettings _settings;
     private SearchIndexClient? _indexClient;
     private SearchIndexerClient? _indexerClient;
-    private SearchClient? _searchClient;
+    private readonly Dictionary<string, SearchClient> _clients = new();
 
     /// <summary>
     /// Constructor
@@ -47,14 +47,15 @@ public class CogClientWrapperService : ICogClientWrapperService
     }
     public SearchClient GetSearchClient(string indexName)
     {
-        if (_searchClient == null)
+        if (!_clients.ContainsKey(indexName))
         {
             var serviceEndpoint = GetServiceEndpoint();
             var credential = new AzureKeyCredential(_settings.SearchKey);
-            _searchClient = new SearchClient(serviceEndpoint, indexName, credential);
+            var searchClient = new SearchClient(serviceEndpoint, indexName, credential);
+            _clients.Add(indexName, searchClient);
         }
 
-        return _searchClient;
+        return _clients[indexName];
     }
 
     private Uri GetServiceEndpoint()

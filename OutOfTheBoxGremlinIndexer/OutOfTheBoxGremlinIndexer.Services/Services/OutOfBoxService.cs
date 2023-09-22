@@ -1,10 +1,9 @@
 ﻿using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using CogSimple.Services;
-using CustomSqlServerIndexer.Models;
-using CustomSqlServerIndexer.Repositories;
-using CustomSqlServerIndexer.Services;
-
+using Microsoft.Extensions.Options;
+using OutOfTheBoxGremlinIndexer.Models;
+using OutOfTheBoxGremlinIndexer.Repositories;
 
 namespace OutOfTheBoxGremlinIndexer.Services;
 
@@ -14,20 +13,21 @@ public class OutOfBoxService : IOutOfBoxService
     private readonly ICogSearchIndexService _indexService;
     private readonly ICogSearchIndexerService _indexerService;
     private readonly ICogSearchDataSourceService _dataSourceService;
-    private readonly ServiceSettings _serviceSettings;
+    private readonly OutOfTheBoxSettings _outOfTheBoxSettings;
     private readonly RepositorySettings _repositorySettings;
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public OutOfBoxService(ServiceSettings serviceSettings, RepositorySettings repositorySettings,
+    public OutOfBoxService(IOptions<OutOfTheBoxSettings> outOfTheBoxSettings, 
+        IOptions<RepositorySettings> repositorySettings,
         ICogClientWrapperService clientService,
         ICogSearchIndexService indexService,
         ICogSearchIndexerService indexerService,
         ICogSearchDataSourceService dataSourceService)
     {
-        _serviceSettings = serviceSettings;
-        _repositorySettings = repositorySettings;
+        _outOfTheBoxSettings = outOfTheBoxSettings.Value;
+        _repositorySettings = repositorySettings.Value;
         _clientService = clientService;
         _indexService = indexService;
         _indexerService = indexerService;
@@ -49,9 +49,9 @@ public class OutOfBoxService : IOutOfBoxService
     /// </summary>
     public async Task DeleteAsync(CancellationToken cancellationToken = default)
     {
-        await _indexService.DeleteIndexAsync(_serviceSettings.CognitiveSearchIndexName, checkIfExistsFirst: true, cancellationToken: cancellationToken);
-        await _indexerService.DeleteIndexerAsync(_serviceSettings.CognitiveSearchIndexerName, checkIfExistsFirst: true, cancellationToken: cancellationToken);
-        await _dataSourceService.DeleteAsync(_serviceSettings.CognitiveSearchDataSourceName, checkIfExistsFirst:true, cancellationToken);
+        await _indexService.DeleteIndexAsync(_outOfTheBoxSettings.CognitiveSearchIndexName, checkIfExistsFirst: true, cancellationToken: cancellationToken);
+        await _indexerService.DeleteIndexerAsync(_outOfTheBoxSettings.CognitiveSearchIndexerName, checkIfExistsFirst: true, cancellationToken: cancellationToken);
+        await _dataSourceService.DeleteAsync(_outOfTheBoxSettings.CognitiveSearchDataSourceName, checkIfExistsFirst:true, cancellationToken);
     }
 
     /// <summary>
@@ -61,7 +61,7 @@ public class OutOfBoxService : IOutOfBoxService
     public async Task RunIndexerAsync(CancellationToken cancellationToken = default)
     {
         var clientIndexer = _clientService.GetIndexerClient();
-        await clientIndexer.RunIndexerAsync(_serviceSettings.CognitiveSearchIndexerName, cancellationToken);
+        await clientIndexer.RunIndexerAsync(_outOfTheBoxSettings.CognitiveSearchIndexerName, cancellationToken);
     }
     
     /// <summary>Creates a Cosmos DB Apache Gremlin data source that will be used by an indexer.</summary>
@@ -70,7 +70,7 @@ public class OutOfBoxService : IOutOfBoxService
     /// </remarks>
     private async Task<bool> CreateDataSourceAsync(CancellationToken cancellationToken = default)
     {
-        //   if (await _dataSourceService.ExistsAsync(_serviceSettings.CognitiveSearchDataSourceName) == false)
+        //   if (await _dataSourceService.ExistsAsync(_outOfTheBoxSettings.CognitiveSearchDataSourceName) == false)
 
         /*
          *
@@ -100,7 +100,7 @@ public class OutOfBoxService : IOutOfBoxService
         };
         
         
-        var dataSource = new SearchIndexerDataSourceConnection(_serviceSettings.CognitiveSearchDataSourceName,
+        var dataSource = new SearchIndexerDataSourceConnection(_outOfTheBoxSettings.CognitiveSearchDataSourceName,
             SearchIndexerDataSourceType.CosmosDb,
             _repositorySettings.GremlinDatabaseConnectionString,
             searchIndexerDataContainer)
@@ -139,10 +139,10 @@ public class OutOfBoxService : IOutOfBoxService
         FieldBuilder fieldBuilder = new FieldBuilder();
         var searchFields = fieldBuilder.Build(typeof(SearchIndexDocument));
 
-        var definition = new SearchIndex(_serviceSettings.CognitiveSearchIndexName, searchFields);
+        var definition = new SearchIndex(_outOfTheBoxSettings.CognitiveSearchIndexName, searchFields);
 
         // setup the suggestor
-        var suggester = new SearchSuggester(_serviceSettings.CognitiveSearchSuggestorName,
+        var suggester = new SearchSuggester(_outOfTheBoxSettings.CognitiveSearchSuggestorName,
             new[] { nameof(SearchIndexDocument.FirstName), nameof(SearchIndexDocument.Label) });
         definition.Suggesters.Add(suggester);
 
@@ -159,7 +159,7 @@ public class OutOfBoxService : IOutOfBoxService
         prioritizedFields.ContentFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.FirstName) });
         prioritizedFields.KeywordFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.Label) });
 
-        SemanticConfiguration semanticConfig = new SemanticConfiguration(_serviceSettings.CognitiveSearchSemanticConfigurationName, prioritizedFields);
+        SemanticConfiguration semanticConfig = new SemanticConfiguration(_outOfTheBoxSettings.CognitiveSearchSemanticConfigurationName, prioritizedFields);
         definition.SemanticSettings = new SemanticSettings();
         definition.SemanticSettings.Configurations.Add(semanticConfig);
 
@@ -188,7 +188,7 @@ public class OutOfBoxService : IOutOfBoxService
         // Common optional properties include a schedule, parameters, and field mappings
         // The field mappings below are redundant due to how the HotelDocument class is defined, but 
         // we included them anyway to show the syntax 
-        var indexer = new SearchIndexer(_serviceSettings.CognitiveSearchIndexerName, _serviceSettings.CognitiveSearchDataSourceName, _serviceSettings.CognitiveSearchIndexName)
+        var indexer = new SearchIndexer(_outOfTheBoxSettings.CognitiveSearchIndexerName, _outOfTheBoxSettings.CognitiveSearchDataSourceName, _outOfTheBoxSettings.CognitiveSearchIndexName)
         {
             Description = "Gremlin data indexer",
             Schedule = schedule,

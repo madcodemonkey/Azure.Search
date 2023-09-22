@@ -2,25 +2,25 @@
   "IsEncrypted": false,
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "CognitiveSearchDataSourceName": "my-gremlin-ds",
-    "CognitiveSearchEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
-    "CognitiveSearchIndexerName": "my-gremlin-indexer1",
-    "CognitiveSearchIndexName": "my-gremlin-index1",
-    "CognitiveSearchKey": "---Your cognitive search key---",
-    "CognitiveSearchMaxUpsertBatchSize": "5",
-    "CognitiveSearchSemanticConfigurationName": "my-semantic-config",
-    "CognitiveSearchSuggestorName": "sg-gremlin",
+    "Cognitive:SearchEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
+    "Cognitive:SearchKey": "---Your cognitive search key---",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "GremlinContainerName": "sample-graph",
-    "GremlinDatabaseConnectionString": "--a Gremlin connection...WARNING: the one from the portal is missing the database name so you need to add it (see comments in RepositorySettings.cs or readme.md for more info)---",
-    "GremlinDatabaseName": "sample-database",
-    "GremlinEnableSSL": "true",
-    "GremlinHostName": "---your host name minus any https prefix (e.g., mystuff.gremlin.cosmos.azure.com) here--",
-    "GremlinHostPort": "443",
-    "GremlinKey": "--your primary or secondary key here---",
-    "GremlinQueryType": "Vertices", // Vertices or Edges 
-    "GremlinSoftDeleteColumnName": "isDeleted",
-    "GremlinSoftDeleteColumnValue": "true"
+    "OutOfTheBox:CognitiveSearchDataSourceName": "my-gremlin-ds",
+    "OutOfTheBox:CognitiveSearchIndexerName": "my-gremlin-indexer1",
+    "OutOfTheBox:CognitiveSearchIndexName": "my-gremlin-index1",
+    "OutOfTheBox:CognitiveSearchMaxUpsertBatchSize": "5",
+    "OutOfTheBox:CognitiveSearchSemanticConfigurationName": "my-semantic-config",
+    "OutOfTheBox:CognitiveSearchSuggestorName": "sg-gremlin",
+    "Repository:GremlinContainerName": "sample-graph",
+    "Repository:GremlinDatabaseConnectionString": "--a Gremlin connection...WARNING: the one from the portal is missing the database name so you need to add it (see comments in RepositorySettings.cs or readme.md for more info)---",
+    "Repository:GremlinDatabaseName": "sample-database",
+    "Repository:GremlinEnableSSL": "true",
+    "Repository:GremlinHostName": "---your host name minus any https prefix (e.g., mystuff.gremlin.cosmos.azure.com) here--",
+    "Repository:GremlinHostPort": "443",
+    "Repository:GremlinKey": "--your primary or secondary key here---",
+    "Repository:GremlinQueryType": "Vertices", // Vertices or Edges 
+    "Repository:GremlinSoftDeleteColumnName": "isDeleted",
+    "Repository:GremlinSoftDeleteColumnValue": "true"
   }
 }
  

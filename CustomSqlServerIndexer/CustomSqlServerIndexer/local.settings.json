@@ -2,13 +2,13 @@
   "IsEncrypted": false,
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "CognitiveSearchEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
-    "CognitiveSearchIndexName": "my-index",
-    "CognitiveSearchKey": "---Your cognitive search key---",
-    "CognitiveSearchMaxUpsertBatchSize": "5",
-    "CognitiveSearchSemanticConfigurationName": "my-semantic-config",
-    "DatabaseConnectionString": "---your database connection string here--",
-    "DatabaseRunMigrationsOnStartup": "true",
+    "Cognitive:SearchEndpoint": "---the URL of your cognitive search endpoint (e.g., https://[name-you-choose].search.windows.net)---",
+    "CustomIndexer:CognitiveSearchIndexName": "my-index",
+    "Cognitive:SearchKey": "---Your cognitive search key---",
+    "CustomIndexer:CognitiveSearchMaxUpsertBatchSize": "5",
+    "CustomIndexer:CognitiveSearchSemanticConfigurationName": "my-semantic-config",
+    "Repository:DatabaseConnectionString": "---your database connection string here--",
+    "Repository:DatabaseRunMigrationsOnStartup": "true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
   }
 }

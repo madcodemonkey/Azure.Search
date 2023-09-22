@@ -1,7 +1,8 @@
-﻿namespace CustomSqlServerIndexer.Services;
- 
-public class ServiceSettings
+﻿namespace OutOfTheBoxGremlinIndexer.Models;
+
+public class OutOfTheBoxSettings
 {
+    public const string SectionName = "OutOfTheBox";
 
     /// <summary>
     /// The name of the data source 

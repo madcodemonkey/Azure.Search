@@ -47,6 +47,8 @@ public static class ServiceCollectionExtensions
 
         if (checkProperties)
         {
+            var missingSettings = new List<string>();
+
             foreach (PropertyInfo propertyInfo in typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (optionalPropertyNames.Any(w => w == propertyInfo.Name))
@@ -69,13 +71,20 @@ public static class ServiceCollectionExtensions
 
                 if (isMissing)
                 {
-                    // If you did add the setting and you are still hitting this error, do the following
-                    // 1. Double check your spelling.
-                    // 2. Clean the solution and re-run. Sometimes the local.settings.json doesn't get copied to the bin
-                    //    directory despite the fact that you have "copy if newer" or "copy always" set. 
-                    throw new Exception($"Please add the {sectionAndPropertyName} setting to your " +
-                                        $"local.settings.json files, secrets file or if deployed to Azure put it in your configuration settings!");
+                    missingSettings.Add(sectionAndPropertyName);
                 }
+            }
+
+            if (missingSettings.Count > 0)
+            {
+                var missingStuff = string.Join(',', missingSettings);
+
+                // If you did add the setting and you are still hitting this error, do the following
+                // 1. Double check your spelling.
+                // 2. Clean the solution and re-run. Sometimes the local.settings.json doesn't get copied to the bin
+                //    directory despite the fact that you have "copy if newer" or "copy always" set. 
+                throw new Exception($"Please add the missing settings ({missingStuff}) to your local.settings.json files, " +
+                                    $"secrets file or if deployed to Azure put it in your configuration settings!");
             }
         }
 

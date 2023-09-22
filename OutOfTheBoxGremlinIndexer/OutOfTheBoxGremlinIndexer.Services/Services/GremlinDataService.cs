@@ -1,7 +1,8 @@
-﻿using CustomSqlServerIndexer.Models;
-using CustomSqlServerIndexer.Repositories;
+﻿ 
+using OutOfTheBoxGremlinIndexer.Models;
+using OutOfTheBoxGremlinIndexer.Repositories;
 
-namespace CustomSqlServerIndexer.Services;
+namespace OutOfTheBoxGremlinIndexer.Services;
 
 public class GremlinDataService : IGremlinDataService
 {

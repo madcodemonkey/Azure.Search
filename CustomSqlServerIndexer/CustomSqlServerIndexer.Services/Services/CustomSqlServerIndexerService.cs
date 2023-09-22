@@ -1,13 +1,14 @@
 ﻿using CustomSqlServerIndexer.Models;
 using CustomSqlServerIndexer.Repositories;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace CustomSqlServerIndexer.Services;
 
 public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
 {
     private readonly ILogger<CustomSqlServerIndexerService> _logger;
-    private readonly ServiceSettings _serviceSettings;
+    private readonly CustomIndexerSettings _settings;
     private readonly ICustomSearchIndexService _cognitiveIndexService;
     private readonly IHotelRepository _hotelRepository;
     private readonly IHighWaterMarkStorageService _highWaterMarkStorage;
@@ -16,12 +17,12 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
     /// Constructor
     /// </summary>
     public CustomSqlServerIndexerService(ILogger<CustomSqlServerIndexerService> logger,
-        ServiceSettings serviceSettings,
+        IOptions<CustomIndexerSettings> serviceSettings,
         ICustomSearchIndexService cognitiveIndexService,
         IHotelRepository hotelRepository, IHighWaterMarkStorageService highWaterMarkStorage)
     {
         _logger = logger;
-        _serviceSettings = serviceSettings;
+        _settings = serviceSettings.Value;
         _cognitiveIndexService = cognitiveIndexService;
         _hotelRepository = hotelRepository;
         _highWaterMarkStorage = highWaterMarkStorage;
@@ -64,7 +65,7 @@ public class CustomSqlServerIndexerService : ICustomSqlServerIndexerService
                     listOfChangedItems.Add(MapDocument(hotel));
                 }
 
-                if ((listOfKeysToDelete.Count + listOfChangedItems.Count) >= _serviceSettings.CognitiveSearchMaxUpsertBatchSize)
+                if ((listOfKeysToDelete.Count + listOfChangedItems.Count) >= _settings.CognitiveSearchMaxUpsertBatchSize)
                 {
                     numberOfItemsChanged += await SaveBatchAsync(listOfKeysToDelete, listOfChangedItems, cancellationToken);
 

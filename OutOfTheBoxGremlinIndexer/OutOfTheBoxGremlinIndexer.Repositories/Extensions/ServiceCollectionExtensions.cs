@@ -1,13 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CogSimple.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace CustomSqlServerIndexer.Repositories;
+namespace OutOfTheBoxGremlinIndexer.Repositories;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddRepositories(this IServiceCollection services, RepositorySettings settings)
+    public static IServiceCollection AddRepositories(this IServiceCollection services, IConfiguration config)
     {
-        services.AddSingleton(settings);
-
+        services.ConfigureSectionSettings<RepositorySettings>(config, RepositorySettings.SectionName);
 
         services.AddScoped<IGremlinClientWrapper, GremlinClientWrapper>();
         services.AddScoped<IGremlinDataRepository, GremlinDataRepository>();

@@ -3,23 +3,24 @@ using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using CogSimple.Services;
 using CustomSqlServerIndexer.Models;
+using Microsoft.Extensions.Options;
 
 namespace CustomSqlServerIndexer.Services;
 
 public class CustomSearchIndexService : ICustomSearchIndexService
 {
-    private readonly ServiceSettings _settings;
+    private readonly CustomIndexerSettings _settings;
     private readonly ICogClientWrapperService _clientWrapperService;
     private readonly ICogSearchIndexService _cogSearchIndexService;
    
     /// <summary>
     /// Constructor
     /// </summary>
-    public CustomSearchIndexService(ServiceSettings settings,
+    public CustomSearchIndexService(IOptions<CustomIndexerSettings> settings,
         ICogClientWrapperService clientWrapperService,
         ICogSearchIndexService cogSearchIndexService)
     {
-        _settings = settings;
+        _settings = settings.Value;
         _clientWrapperService = clientWrapperService;
         _cogSearchIndexService = cogSearchIndexService;
     }

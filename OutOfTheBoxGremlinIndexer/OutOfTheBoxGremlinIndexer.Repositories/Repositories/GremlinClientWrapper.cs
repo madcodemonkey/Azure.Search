@@ -3,8 +3,9 @@ using System.Net.WebSockets;
 using Gremlin.Net.Driver.Remote;
 using Gremlin.Net.Process.Traversal;
 using Gremlin.Net.Structure.IO.GraphSON;
+using Microsoft.Extensions.Options;
 
-namespace CustomSqlServerIndexer.Repositories;
+namespace OutOfTheBoxGremlinIndexer.Repositories;
 
 public class GremlinClientWrapper : IDisposable, IGremlinClientWrapper
 {
@@ -14,9 +15,9 @@ public class GremlinClientWrapper : IDisposable, IGremlinClientWrapper
     /// <summary>
     /// Constructor
     /// </summary>
-    public GremlinClientWrapper(RepositorySettings repositorySettings)
+    public GremlinClientWrapper(IOptions<RepositorySettings> repositorySettings)
     {
-        _repositorySettings = repositorySettings;
+        _repositorySettings = repositorySettings.Value;
     }
 
     public GremlinClient GetClient()

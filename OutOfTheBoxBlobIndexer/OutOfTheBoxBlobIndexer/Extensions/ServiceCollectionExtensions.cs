@@ -11,7 +11,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddCustomBlobIndexerDependencies(this IServiceCollection sc, IConfiguration config)
     {
         sc.ConfigureSectionSettings<OutOfTheBoxSettings>(config, OutOfTheBoxSettings.SectionName);
-        
+
+        sc.AddCogSimpleServices(config);
         sc.AddServices(config);
 
         return sc;

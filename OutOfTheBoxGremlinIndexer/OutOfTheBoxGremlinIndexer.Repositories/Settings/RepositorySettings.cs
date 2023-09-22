@@ -1,8 +1,9 @@
-﻿namespace CustomSqlServerIndexer.Repositories;
+﻿namespace OutOfTheBoxGremlinIndexer.Repositories;
 
 /// <summary>Settings used by the repository library.</summary>
 public class RepositorySettings
 {
+    public const string SectionName = "Repository";
     public string GremlinContainerName { get; set; } = string.Empty;
     /// <summary>
     /// Gremlin connection string. 

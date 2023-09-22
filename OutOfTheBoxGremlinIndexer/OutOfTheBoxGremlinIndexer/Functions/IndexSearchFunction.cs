@@ -2,17 +2,18 @@ using System.Net;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using CogSimple.Services;
-using CustomSqlServerIndexer.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using OutOfTheBoxGremlinIndexer.Models;
 
 namespace CustomSqlServerIndexer.Functions;
 
 public class IndexSearchFunction
 {
-    private readonly ServiceSettings _settings;
+    private readonly OutOfTheBoxSettings _settings;
     private readonly ILogger _logger;
     private readonly ICogSearchIndexService _searchIndexService;
 
@@ -20,11 +21,11 @@ public class IndexSearchFunction
     /// Constructor
     /// </summary>
     public IndexSearchFunction(ILoggerFactory loggerFactory,
-        ServiceSettings settings,
+        IOptions<OutOfTheBoxSettings> settings,
         ICogSearchIndexService searchIndexService)
     {
         _logger = loggerFactory.CreateLogger<IndexSearchFunction>();
-        _settings = settings;
+        _settings = settings.Value;
         _searchIndexService = searchIndexService;
     }
 

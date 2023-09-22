@@ -1,6 +1,6 @@
 ﻿using Azure.Search.Documents.Models;
 
-namespace CustomSqlServerIndexer.Services;
+namespace OutOfTheBoxGremlinIndexer.Services;
 
 public static class SearchDocumentExtensions
 {

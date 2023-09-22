@@ -4,6 +4,7 @@ using CustomSqlServerIndexer.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace CustomSqlServerIndexer.Functions;
 
@@ -11,16 +12,16 @@ public class IndexManipulationFunction
 {
     private readonly ILogger _logger;
     private readonly ICustomSearchIndexService _searchIndexService;
-    private readonly ServiceSettings _settings;
+    private readonly CustomIndexerSettings _settings;
 
     /// <summary>
     /// Constructor
     /// </summary>
     public IndexManipulationFunction(ILoggerFactory loggerFactory,
-        ServiceSettings settings,
+        IOptions<CustomIndexerSettings> settings,
         ICustomSearchIndexService searchIndexService)
     {
-        _settings = settings;
+        _settings = settings.Value;
         _searchIndexService = searchIndexService;
         _logger = loggerFactory.CreateLogger<IndexManipulationFunction>();
     }

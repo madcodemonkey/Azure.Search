@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CogSimple.Services\CogSimple.Services.csproj" />
     <ProjectReference Include="..\CustomSqlServerIndexer.Models\CustomSqlServerIndexer.Models.csproj" />
   </ItemGroup>
 

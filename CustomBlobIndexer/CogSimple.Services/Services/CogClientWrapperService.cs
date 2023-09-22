@@ -7,15 +7,15 @@ namespace CogSimple.Services;
 
 public class CogClientWrapperService : ICogClientWrapperService
 {
-    private readonly CogClientSettings _settings;
+    private readonly CognitiveSettings _settings;
     private SearchIndexClient? _indexClient;
     private SearchIndexerClient? _indexerClient;
-    private SearchClient? _searchClient;
+    private readonly Dictionary<string, SearchClient> _clients = new();
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public CogClientWrapperService(IOptions<CogClientSettings> settings)
+    public CogClientWrapperService(IOptions<CognitiveSettings> settings)
     {
         _settings = settings.Value;
     }
@@ -26,7 +26,7 @@ public class CogClientWrapperService : ICogClientWrapperService
         if (_indexClient == null)
         {
             var serviceEndpoint = GetServiceEndpoint();
-            var credential = new AzureKeyCredential(_settings.Key);
+            var credential = new AzureKeyCredential(_settings.SearchKey);
             _indexClient = new SearchIndexClient(serviceEndpoint, credential);
         }
 
@@ -38,7 +38,7 @@ public class CogClientWrapperService : ICogClientWrapperService
         if (_indexerClient == null)
         {
             var serviceEndpoint = GetServiceEndpoint();
-            var credential = new AzureKeyCredential(_settings.Key);
+            var credential = new AzureKeyCredential(_settings.SearchKey);
 
             _indexerClient = new SearchIndexerClient(serviceEndpoint, credential);
         }
@@ -47,19 +47,20 @@ public class CogClientWrapperService : ICogClientWrapperService
     }
     public SearchClient GetSearchClient(string indexName)
     {
-        if (_searchClient == null)
+        if (!_clients.ContainsKey(indexName))
         {
             var serviceEndpoint = GetServiceEndpoint();
-            var credential = new AzureKeyCredential(_settings.Key);
-            _searchClient = new SearchClient(serviceEndpoint, indexName, credential);
+            var credential = new AzureKeyCredential(_settings.SearchKey);
+            var searchClient = new SearchClient(serviceEndpoint, indexName, credential);
+            _clients.Add(indexName, searchClient);
         }
 
-        return _searchClient;
+        return _clients[indexName];
     }
 
     private Uri GetServiceEndpoint()
     {
-        Uri serviceEndpoint = new Uri(_settings.Endpoint);
+        Uri serviceEndpoint = new Uri(_settings.SearchEndpoint);
         return serviceEndpoint;
     }
 }
