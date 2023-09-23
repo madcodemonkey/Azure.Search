@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebReactApp", "WebReactApp\WebReactApp.csproj", "{AFA69C12-2CAC-465D-AFA3-147A6CB1A22A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebReactApp", "Search.Web\Search.Web.csproj", "{AFA69C12-2CAC-465D-AFA3-147A6CB1A22A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
