@@ -1,55 +1,17 @@
-import { useEffect, useState } from 'react'
 import './App.css'
+import { ToastContainer } from 'react-toastify';
+import ModalContainer from './common/modal/ModalContainer';
+import { Outlet } from 'react-router-dom';
 
 function App() {
-    const [state, setState] = useState({ forecasts: [], loading: true });
-
-    async function populateWeatherData() {
-        const response = await fetch('weatherforecast');
-        const data = await response.json();
-        setState({ forecasts: data, loading: false });
-    }
-
-    useEffect(() => {
-        populateWeatherData();
-    }, [])
-
-    function renderForecastsTable(forecasts: any) {
-        return (
-            <table className='table table-striped' aria-labelledby="tabelLabel">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Temp. (C)</th>
-                        <th>Temp. (F)</th>
-                        <th>Summary</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {forecasts.map((forecast: any) =>
-                        <tr key={forecast.date}>
-                            <td>{forecast.date}</td>
-                            <td>{forecast.temperatureC}</td>
-                            <td>{forecast.temperatureF}</td>
-                            <td>{forecast.summary}</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
-        );
-    }
-
-    let contents = state.loading
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : renderForecastsTable(state.forecasts);
-
-
     return (
-        <div>
-            <h1 id="tabelLabel" >Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {contents}
-        </div>
+        <>
+            <ModalContainer />
+            <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
+            <div style={{ paddingTop: "3.5em" }}>
+                <Outlet />
+            </div>
+        </>
     )
 }
 
