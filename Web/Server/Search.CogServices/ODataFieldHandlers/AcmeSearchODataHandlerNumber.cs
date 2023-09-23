@@ -28,8 +28,18 @@ public class AcmeSearchODataHandlerNumber : AcmeSearchODataHandlerBase
             if (values.Count < 2)
                 throw new ArgumentException($"To use the {AcmeSearchFilterOperatorEnum.WithinRange} operator with a number field, you must include at least two values!");
 
-            return $"{fieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.GreaterOrEqual)} {ConvertToNullOrTrimString(values[0])} and " +
-                $"{fieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.LessOrEqual)} {ConvertToNullOrTrimString(values[1])}";
+            string value1 = ConvertToNullOrTrimString(values[0]);
+            string value2 = ConvertToNullOrTrimString(values[1]);
+
+            if (value1 == null || value2 == null)
+            {
+                throw new ArgumentException(
+                    $"You cannot send non-numeric values ({values[0]}, {values[1]} into a range query!");
+            }
+
+
+            return $"{fieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.GreaterOrEqual)} {value1} and " +
+                $"{fieldName} {OperatorToString(AcmeSearchFilterOperatorEnum.LessOrEqual)} {value2}";
         }
 
         return $"{fieldName} {OperatorToString(searchOperator)} {ConvertToNullOrTrimString(values[0])}";

@@ -47,8 +47,9 @@ public class SearchController : SearchControllerBase
             return new BadRequestObjectResult(validationResult.ToString());
         }
         
+
         var result = await _autoCompleteService.AutoCompleteAsync(query, 
-            await GetSecurityTrimmingFieldAsync(query.IndexName, cancellationToken), GetRoles());
+            await GetSecurityTrimmingFieldAsync(query.IndexName, cancellationToken));
 
         return Ok(result);
     }
@@ -63,11 +64,11 @@ public class SearchController : SearchControllerBase
             return new BadRequestObjectResult(validationResult.ToString());
         }
 
-        var securityTrimmingField = await GetSecurityTrimmingFieldAsync(query.IndexName, cancellationToken);
+        var securityTrimmingFilter = await GetSecurityTrimmingFieldAsync(query.IndexName, cancellationToken);
 
         AcmeSearchQueryResult<SearchResult<SearchDocument>> searchResult = query.QueryType == SearchQueryType.Semantic ?
-            await _searchService.SemanticSearchAsync(query, query.SemanticConfigurationName ?? string.Empty, securityTrimmingField, GetRoles()) :
-            await _searchService.SearchAsync(query, securityTrimmingField, GetRoles());
+            await _searchService.SemanticSearchAsync(query, query.SemanticConfigurationName ?? string.Empty, securityTrimmingFilter) :
+            await _searchService.SearchAsync(query, securityTrimmingFilter);
 
         return new OkObjectResult(searchResult);
     }
@@ -83,14 +84,17 @@ public class SearchController : SearchControllerBase
         }
 
         SuggestResults<SearchDocument> suggestResult = await _suggestService.SuggestAsync(query,
-            await GetSecurityTrimmingFieldAsync(query.IndexName, cancellationToken), GetRoles());
+            await GetSecurityTrimmingFieldAsync(query.IndexName, cancellationToken));
 
         return new OkObjectResult(suggestResult);
     }
 
-    private async Task<string?> GetSecurityTrimmingFieldAsync(string indexName, CancellationToken cancellationToken)
+    private async Task<IAcmeSecurityTrimmingFilter?> GetSecurityTrimmingFieldAsync(string indexName, CancellationToken cancellationToken)
     {
         var indexConfig = await _indexConfigurationService.GetOrCreateAsync(indexName, cancellationToken);
-        return indexConfig.SecurityTrimmingField;
+        if (string.IsNullOrWhiteSpace(indexConfig.SecurityTrimmingField))
+            return null;
+
+        return new AcmeSecurityTrimmingFilter(indexConfig.SecurityTrimmingField, GetRoles(), new AcmeSearchODataHandlerStringCollection());
     }
 }

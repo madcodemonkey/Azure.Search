@@ -15,18 +15,24 @@ public class AcmeSearchODataHandlerChildObjectString : AcmeSearchODataHandlerBas
     /// <returns>An OData filer</returns>
     protected override string GetFilter(string fieldName, AcmeSearchFilterOperatorEnum searchOperator, List<string?> values)
     {
-        string[] fields = fieldName.Split('/');
-        if (fields == null || fields.Length != 2)
-            throw new ArgumentException("Please use slash syntax to denote parent and child fields (e.g., 'authors/name' where authors is parent and name is child object field name)");
-        string parentFieldName = fields[0];
-        string childFieldName = fields[1];
-
         if (values == null || values.Count == 0)
+            return string.Empty;
+        if (string.IsNullOrWhiteSpace(fieldName))
             return string.Empty;
 
         if (searchOperator != AcmeSearchFilterOperatorEnum.Equal)
             throw new ArgumentException($"Currently we only handle equal operator for collections!  Please correct the search operator for the field named {fieldName}");
 
+        string[] fieldArray = fieldName.Split('/');
+
+        if (fieldArray.Length > 2)
+            throw new ArgumentException("Currently, we only handle one level deep when accessing child fields", nameof(fieldName));
+        if (fieldArray.Length != 2)
+            throw new ArgumentException("Please use slash syntax to denote parent and child fields (e.g., 'authors/name' where authors is parent and name is child object field name)");
+
+        string parentFieldName = fieldArray[0];
+        string childFieldName = fieldArray[1];
+        
         //  return $"authors/any(c: c/name eq '{values[0]}')";
         return $"{parentFieldName}/any(c: c/{childFieldName} eq '{values[0]}')";
     }

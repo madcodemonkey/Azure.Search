@@ -1,4 +1,6 @@
-﻿namespace Search.CogServices;
+﻿using System.Text;
+
+namespace Search.CogServices;
 
 public class AcmeSearchODataHandlerString : AcmeSearchODataHandlerBase
 {
@@ -15,6 +17,28 @@ public class AcmeSearchODataHandlerString : AcmeSearchODataHandlerBase
     /// <returns>An OData filer</returns>
     protected override string GetFilter(string fieldName, AcmeSearchFilterOperatorEnum searchOperator, List<string?> values)
     {
+        if (searchOperator == AcmeSearchFilterOperatorEnum.Equal && values.Count > 1)
+        {
+            var sb = new StringBuilder();
+            sb.Append($"search.in({fieldName}, '");
+            bool commaNeeded = false;
+            foreach (string? value in values)
+            {
+                if (commaNeeded)
+                {
+                    sb.Append(",");
+                }
+
+                sb.Append($"{value}");
+                commaNeeded = true;
+            }
+
+            sb.Append("', ',')");
+
+            return sb.ToString();
+        }
+
+
         string theValue = values[0] == null ? "null" : $"'{values[0]}'";
 
         return $"{fieldName} {OperatorToString(searchOperator)} {theValue}";

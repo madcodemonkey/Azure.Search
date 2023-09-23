@@ -19,14 +19,11 @@ public class AcmeSuggestService : IAcmeSuggestService
 
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
-    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
-    /// being used for security trimming.  It's assumed that it is a string collection.</param>
-    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
-    /// we will only bring back records that have the 'admin' role on them.</param>
-    public virtual SuggestOptions CreateDefaultOptions(AcmeSuggestQuery request,
-        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
+    /// <param name="securityTrimmingFilter">An optional security trimming filter.</param>
+    public virtual SuggestOptions CreateDefaultOptions(AcmeSuggestQuery request, 
+        IAcmeSecurityTrimmingFilter? securityTrimmingFilter = null)
     {
-        string filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFieldName, securityTrimmingValues);
+        string? filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFilter);
 
         var options = new SuggestOptions
         {
@@ -72,17 +69,14 @@ public class AcmeSuggestService : IAcmeSuggestService
 
     /// <summary>Suggest</summary>
     /// <param name="request">A request for a suggestion</param>
-    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
-    /// being used for security trimming.  It's assumed that it is a string collection.</param>
-    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
-    /// we will only bring back records that have the 'admin' role on them.</param>
+    /// <param name="securityTrimmingFilter">An optional security trimming filter.</param>
     /// <returns>List of suggestions</returns>
     public virtual async Task<SuggestResults<SearchDocument>> SuggestAsync(AcmeSuggestQuery request,
-        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
+        IAcmeSecurityTrimmingFilter? securityTrimmingFilter = null)
     {
-        var options = CreateDefaultOptions(request, securityTrimmingFieldName, securityTrimmingValues);
+        var options = CreateDefaultOptions(request, securityTrimmingFilter);
 
-        return await SuggestAsync(request, options, securityTrimmingFieldName);
+        return await SuggestAsync(request, options, securityTrimmingFilter?.FieldName);
     }
 
     /// <summary>Suggest</summary>

@@ -23,6 +23,12 @@ public class AcmeSearchODataHandlerStringCollection : AcmeSearchODataHandlerBase
         if (searchOperator != AcmeSearchFilterOperatorEnum.Equal)
             throw new ArgumentException($"Currently we only handle equal operator for collections!  Please correct the search operator for the field named {fieldName}");
 
+        var valueList = RemoveNulls(values);
+        if (valueList.Count == 0)
+        {
+            return string.Empty;
+        }
+
         // Do not make sb a member of the class.
         //  Create it each time in case we make this class a singleton!
         var sb = new StringBuilder();
@@ -35,11 +41,8 @@ public class AcmeSearchODataHandlerStringCollection : AcmeSearchODataHandlerBase
 
         // Length of string is greater than zero now, so need a way of tracking when a comma is needed.
         bool commaNeeded = false;
-        foreach (string? item in values)
+        foreach (string? item in valueList)
         {
-            if (item == null)
-                continue;
-
             if (commaNeeded)
                 sb.Append(",");
             sb.Append($"{item}");

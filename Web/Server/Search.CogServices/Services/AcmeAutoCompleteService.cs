@@ -19,15 +19,12 @@ public class AcmeAutoCompleteService : IAcmeAutoCompleteService
 
     /// <summary>Autocomplete</summary>
     /// <param name="request">A request for a suggestion</param>
-    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
-    /// being used for security trimming.  It's assumed that it is a string collection.</param>
-    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
-    /// we will only bring back records that have the 'admin' role on them.</param>
+    /// <param name="securityTrimmingFilter">An optional security trimming filter.</param>
     /// <returns>List of suggestions</returns>
-    public virtual async Task<Response<AutocompleteResults>> AutoCompleteAsync(AcmeAutoCompleteQuery request,
-        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
+    public virtual async Task<Response<AutocompleteResults>> AutoCompleteAsync(AcmeAutoCompleteQuery request, 
+        IAcmeSecurityTrimmingFilter? securityTrimmingFilter = null)
     {
-        var options = CreateDefaultOptions(request, securityTrimmingFieldName, securityTrimmingValues);
+        var options = CreateDefaultOptions(request, securityTrimmingFilter);
 
         return await AutoCompleteAsync(request, options);
     }
@@ -44,16 +41,15 @@ public class AcmeAutoCompleteService : IAcmeAutoCompleteService
         return autoCompleteResult;
     }
 
+
+
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
-    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
-    /// being used for security trimming.  It's assumed that it is a string collection.</param>
-    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
-    /// we will only bring back records that have the 'admin' role on them.</param>
-    public virtual AutocompleteOptions CreateDefaultOptions(AcmeAutoCompleteQuery request,
-        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
+    /// <param name="securityTrimmingFilter">An optional security trimming filter.</param>
+    public virtual AutocompleteOptions CreateDefaultOptions(AcmeAutoCompleteQuery request, 
+        IAcmeSecurityTrimmingFilter? securityTrimmingFilter = null)
     {
-        string filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFieldName, securityTrimmingValues);
+        string? filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFilter);
 
         var options = new AutocompleteOptions
         {

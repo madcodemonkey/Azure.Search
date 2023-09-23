@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
         sc.AddScoped<IAcmeSearchIndexService, AcmeSearchIndexService>();
         sc.AddScoped<IAcmeSearchService, AcmeSearchService>();
         sc.AddScoped<IAcmeSearchSynonymService, AcmeSearchSynonymService>();
+        sc.AddScoped<IAcmeSecurityTrimmingService, AcmeSecurityTrimmingService>();
         sc.AddScoped<IAcmeSuggestService, AcmeSuggestService>();
     }
 }

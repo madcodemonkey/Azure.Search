@@ -21,14 +21,11 @@ public class AcmeSearchService : IAcmeSearchService
 
     /// <summary>Creates a set of default options you can then override if necessary.</summary>
     /// <param name="request">The request from the user.</param>
-    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
-    /// being used for security trimming.  It's assumed that it is a string collection.</param>
-    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
-    /// we will only bring back records that have the 'admin' role on them.</param>
+    /// <param name="securityTrimmingFilter">An optional security trimming filter.</param>
     public virtual SearchOptions CreateDefaultSearchOptions(AcmeSearchQuery request,
-        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
+        IAcmeSecurityTrimmingFilter? securityTrimmingFilter = null)
     {
-        string filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFieldName, securityTrimmingValues);
+        string? filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFilter);
         int skip = (request.PageNumber - 1) * request.ItemsPerPage;
 
         var options = new SearchOptions
@@ -96,17 +93,14 @@ public class AcmeSearchService : IAcmeSearchService
     /// certain things and need others that are different form a normal search.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="configurationName">The name of the semantic configuration in the Azure Portal that should be used.</param>
-    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
-    /// being used for security trimming.  It's assumed that it is a string collection.</param>
-    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
-    /// we will only bring back records that have the 'admin' role on them.</param>
+    /// <param name="securityTrimmingFilter">An optional security trimming filter.</param>
     public virtual SearchOptions CreateSemanticSearchOptions(AcmeSearchQuery request, string configurationName,
-        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
+        IAcmeSecurityTrimmingFilter? securityTrimmingFilter = null)
     {
         if (string.IsNullOrWhiteSpace(configurationName))
             throw new ArgumentException("The Semantic Configuration name is not optional!", nameof(configurationName));
 
-        string filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFieldName, securityTrimmingValues);
+        string? filter = _oDataService.BuildODataFilter(request.IndexName, request.Filters, securityTrimmingFilter);
         int skip = (request.PageNumber - 1) * request.ItemsPerPage;
 
         var options = new SearchOptions
@@ -133,16 +127,13 @@ public class AcmeSearchService : IAcmeSearchService
 
     /// <summary>Searches using the Azure Search API.  Used for Simple or Full searches only.</summary>
     /// <param name="request">The request from the user.</param>
-    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
-    /// being used for security trimming.  It's assumed that it is a string collection.</param>
-    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
-    /// we will only bring back records that have the 'admin' role on them.</param>
+    /// <param name="securityTrimmingFilter">An optional security trimming filter.</param>
     public virtual async Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SearchAsync(AcmeSearchQuery request,
-        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
+        IAcmeSecurityTrimmingFilter? securityTrimmingFilter = null)
     {
-        SearchOptions options = CreateDefaultSearchOptions(request, securityTrimmingFieldName, securityTrimmingValues);
+        SearchOptions options = CreateDefaultSearchOptions(request, securityTrimmingFilter);
 
-        return await SearchAsync(request, options, securityTrimmingFieldName);
+        return await SearchAsync(request, options, securityTrimmingFilter?.FieldName);
     }
 
     /// <summary>Searches using the Azure Search API for the search type of your choice since you are controlling the options.</summary>
@@ -166,16 +157,13 @@ public class AcmeSearchService : IAcmeSearchService
     /// <summary>Searches using the Azure Search API for semantic searches only.</summary>
     /// <param name="request">The request from the user.</param>
     /// <param name="configurationName">The name of the semantic configuration in the Azure Portal that should be used.</param>
-    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
-    /// being used for security trimming.  It's assumed that it is a string collection.</param>
-    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
-    /// we will only bring back records that have the 'admin' role on them.</param>
+    /// <param name="securityTrimmingFilter">An optional security trimming filter.</param>
     public virtual async Task<AcmeSearchQueryResult<SearchResult<SearchDocument>>> SemanticSearchAsync(AcmeSearchQuery request, string configurationName,
-        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
+        IAcmeSecurityTrimmingFilter? securityTrimmingFilter = null)
     {
-        SearchOptions options = CreateSemanticSearchOptions(request, configurationName, securityTrimmingFieldName, securityTrimmingValues);
+        SearchOptions options = CreateSemanticSearchOptions(request, configurationName, securityTrimmingFilter);
 
-        return await SearchAsync(request, options, securityTrimmingFieldName);
+        return await SearchAsync(request, options, securityTrimmingFilter?.FieldName);
     }
 
     /// <summary>Gets the results requested and will page the results out of Azure Search. This method is called by <see cref="WrapResultsAsync"/> </summary>

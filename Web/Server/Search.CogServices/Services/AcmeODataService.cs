@@ -23,13 +23,9 @@ public class AcmeODataService : IAcmeODataService
     /// <summary>Builds and OData filter for Azure Search based on user specified filters and the roles that user has been assigned.</summary>
     /// <param name="indexName">The name of the Azure Index</param>
     /// <param name="fieldFilters">A list of field filter where each represents a grouping of filters for one field.</param>
-    /// <param name="securityTrimmingFieldName">The name of the field (as specified in the Azure Index and it is case sensitive)
-    /// being used for security trimming.  It's assumed that it is a string collection.</param>
-    /// <param name="securityTrimmingValues">The values that the current user has that we will try to match.  In other words, if they have the 'admin' role,
-    /// we will only bring back records that have the 'admin' role on them.</param>
-    /// <returns>An OData Filter</returns>
-    public string BuildODataFilter(string indexName, List<AcmeSearchFilterField>? fieldFilters,
-        string? securityTrimmingFieldName = null, List<string?>? securityTrimmingValues = null)
+    /// <param name="securityTrimmingFilter">An optional security trimming filter.</param>
+    /// <returns>A string OData Filter</returns>
+    public string? BuildODataFilter(string indexName, List<AcmeSearchFilterField>? fieldFilters, IAcmeSecurityTrimmingFilter? securityTrimmingFilter = null)
     {
         // All Filters are case SENSITIVE
         // All Filters are case SENSITIVE
@@ -58,35 +54,20 @@ public class AcmeODataService : IAcmeODataService
 
                 sbFilter.Append(oneFieldODataFilter);
             }
+
+            securityTrimmingFilter?.AddFilter(sbFilter, fieldFilters);
         }
 
-        // Warning!! If the object of T that you're passing into the Azure Suggest or Azure Search methods does not have the Roles property on it,
-        //           using roles here will do NOTHING!!!  In other words, I didn't want to return roles to the user
-        //           so I removed it from by BookDocumentBrief class. Afterwards, this filter STOPPED working!  No ERRORS!
-        if (string.IsNullOrWhiteSpace(securityTrimmingFieldName) == false && 
-            securityTrimmingValues != null && 
-            securityTrimmingValues.Count > 0)
-        {
-            if (sbFilter.Length > 0)
-            {
-                if (ShouldSurroundAllTheFieldFiltersWithParenthesis(fieldFilters))
-                    sbFilter.SurroundWithParenthesis();
+        return sbFilter.Length > 0 ? sbFilter.ToString() : null;
+    }
 
-                sbFilter.Append(" and ");
-            }
-
-            IAcmeSearchODataHandler? fieldHandler =
-                _oDataFieldHandlers.FirstOrDefault(w => w.CanHandle(AcmeSearchFilterFieldTypeEnum.StringCollection));
-
-            if (fieldHandler == null)
-                throw new ArgumentNullException(
-                    $"Could not find a OData field handler for a field named '{securityTrimmingFieldName}' with field type '{AcmeSearchFilterFieldTypeEnum.StringCollection}'");
-
-            sbFilter.Append(fieldHandler.CreateFilter(securityTrimmingFieldName, AcmeSearchFilterOperatorEnum.Equal,
-                securityTrimmingValues));
-        }
-
-        return sbFilter.ToString();
+    /// <summary>
+    /// Finds an instance of an OData hanlder.
+    /// </summary>
+    /// <param name="fieldType">The field type.</param>
+    public IAcmeSearchODataHandler? FindHandler(AcmeSearchFilterFieldTypeEnum fieldType)
+    {
+        return _oDataFieldHandlers.FirstOrDefault(w => w.CanHandle(fieldType));
     }
 
     /// <summary>Creates an OData filter for one group.</summary>
@@ -95,7 +76,7 @@ public class AcmeODataService : IAcmeODataService
     {
         var sbGroupFilter = new StringBuilder();
 
-        IAcmeSearchODataHandler? fieldHandler = _oDataFieldHandlers.FirstOrDefault(w => w.CanHandle(fieldFilter.FieldType));
+        IAcmeSearchODataHandler? fieldHandler = FindHandler(fieldFilter.FieldType);
 
         if (fieldHandler == null)
             throw new ArgumentNullException($"Could not find a OData field handler for a field named '{fieldFilter.FieldName}' with field type '{fieldFilter.FieldType}'");

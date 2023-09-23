@@ -66,7 +66,7 @@ public class HotelSearchController : SearchControllerBase
         };
 
         var result = await _autoCompleteService.AutoCompleteAsync(request,
-            await GetSecurityTrimmingFieldAsync(_searchServiceSettings.Hotel.IndexName, cancellationToken), GetRoles());
+            await GetSecurityTrimmingFieldAsync(_searchServiceSettings.Hotel.IndexName, cancellationToken));
 
         return Ok(result);
     }
@@ -101,7 +101,7 @@ public class HotelSearchController : SearchControllerBase
         };
 
         AcmeSearchQueryResult<SearchResult<SearchDocument>> searchResult = await _searchService.SearchAsync(request,
-            await GetSecurityTrimmingFieldAsync(_searchServiceSettings.Hotel.IndexName, cancellationToken), GetRoles());
+            await GetSecurityTrimmingFieldAsync(_searchServiceSettings.Hotel.IndexName, cancellationToken));
 
         return new OkObjectResult(searchResult);
     }
@@ -133,14 +133,19 @@ public class HotelSearchController : SearchControllerBase
         };
 
         SuggestResults<SearchDocument> suggestResult = await _suggestService.SuggestAsync(request,
-            await GetSecurityTrimmingFieldAsync(_searchServiceSettings.Hotel.IndexName, cancellationToken), GetRoles());
+            await GetSecurityTrimmingFieldAsync(_searchServiceSettings.Hotel.IndexName, cancellationToken));
 
         return new OkObjectResult(suggestResult);
     }
 
-    private async Task<string?> GetSecurityTrimmingFieldAsync(string indexName, CancellationToken cancellationToken)
+   
+
+    private async Task<IAcmeSecurityTrimmingFilter?> GetSecurityTrimmingFieldAsync(string indexName, CancellationToken cancellationToken)
     {
         var indexConfig = await _indexConfigurationService.GetOrCreateAsync(indexName, cancellationToken);
-        return indexConfig.SecurityTrimmingField;
+        if (string.IsNullOrWhiteSpace(indexConfig.SecurityTrimmingField))
+            return null;
+
+        return new AcmeSecurityTrimmingFilter(indexConfig.SecurityTrimmingField, GetRoles(), new AcmeSearchODataHandlerStringCollection());
     }
 }

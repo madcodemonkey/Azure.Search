@@ -20,8 +20,9 @@ public class AcmeSearchODataHandlerBoolean : AcmeSearchODataHandlerBase
 
         if (searchOperator != AcmeSearchFilterOperatorEnum.Equal && searchOperator != AcmeSearchFilterOperatorEnum.NotEqual)
             throw new ArgumentException($"Please specify either equal or not equal for boolean field named {fieldName}!");
-
-        string booleanAsString = values[0]?.ToLower().Trim() ?? "null";
+        
+        var firstString = values[0];
+        string booleanAsString = string.IsNullOrWhiteSpace(firstString) ? "null" : firstString.ToLower().Trim();
         if (booleanAsString != "null" && booleanAsString != "true" && booleanAsString != "false")
             throw new ArgumentException($"Please specify either 'true' or 'false' for the field value for the field named {fieldName}!");
 

@@ -31,4 +31,45 @@ public class AcmeSearchODataHandlerStringTests
         // Assert
         Assert.AreEqual(expectedFilter, actualResult);
     }
+
+    [TestMethod]
+    public void CanCreateSearchInFilterWhenSearchFilterOperatorIsEqualAndGivenMoreThanOneValue()
+    {
+        // Arrange
+        var cut = new AcmeSearchODataHandlerString();
+        var values = new List<string?> { "bob", "john" };
+
+        // Act
+        string actualFilter = cut.CreateFilter(IndexFieldName, AcmeSearchFilterOperatorEnum.Equal, values);
+
+        // Assert
+        Assert.AreEqual($"search.in({IndexFieldName}, 'bob,john', ',')", actualFilter);
+    }
+
+
+    [TestMethod]
+    public void CanRemoveParenthesisFromInputValues()
+    {
+        // Arrange
+        var cut = new AcmeSearchODataHandlerString();
+        var values = new List<string?> { "(Chardonnay)(" };
+
+        // Act
+        string actualFilter = cut.CreateFilter(IndexFieldName, AcmeSearchFilterOperatorEnum.Equal, values);
+
+        // Assert
+        Assert.AreEqual($"{IndexFieldName} eq 'Chardonnay'", actualFilter);
+    }
+
+    [ExpectedException(typeof(ArgumentException))]
+    [TestMethod]
+    public void CannotCreateFilterUsingTheWithinRangeOperator_ArgumentExceptionIsThrown()
+    {
+        // Arrange
+        var cut = new AcmeSearchODataHandlerString();
+        var values = new List<string?> { "true" };
+        
+        // Act
+        cut.CreateFilter(IndexFieldName, AcmeSearchFilterOperatorEnum.WithinRange, values);
+    }
 }

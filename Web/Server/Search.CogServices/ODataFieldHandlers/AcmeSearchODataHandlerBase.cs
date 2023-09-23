@@ -1,4 +1,6 @@
-﻿namespace Search.CogServices;
+﻿using System.Text.RegularExpressions;
+
+namespace Search.CogServices;
 
 public abstract class AcmeSearchODataHandlerBase : IAcmeSearchODataHandler
 {
@@ -11,8 +13,10 @@ public abstract class AcmeSearchODataHandlerBase : IAcmeSearchODataHandler
     {
         if (values == null || values.Count == 0)
             throw new ArgumentException("You must specify one or more values for a filter!");
+        
         var scrubbedFieldValues = ScrubFieldValues(values);
-        return GetFilter(fieldName, searchOperator, scrubbedFieldValues);
+        var scrubbedFieldName = Regex.Replace(fieldName, @"(\(|\)|')", "");
+        return GetFilter(scrubbedFieldName, searchOperator, scrubbedFieldValues);
     }
 
     /// <summary>
@@ -51,6 +55,10 @@ public abstract class AcmeSearchODataHandlerBase : IAcmeSearchODataHandler
             case AcmeSearchFilterOperatorEnum.LessOrEqual:
                 return "le";
 
+            case AcmeSearchFilterOperatorEnum.WithinRange:
+                throw new ArgumentException(
+                    "There is no conversion from 'WithinRange' to an OData operator!  It must be handled by each filter field class and not by the base class!");
+
             default:
                 return "eq";
         }
@@ -60,23 +68,40 @@ public abstract class AcmeSearchODataHandlerBase : IAcmeSearchODataHandler
     /// <param name="values"></param>
     private List<string?> ScrubFieldValues(List<string?> values)
     {
-        var result = new List<string>(values.Count);
+        var result = new List<string?>(values.Count);
 
         foreach (var value in values)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
                 result.Add(value);
+                continue;
             }
-            else if (value.IndexOf("'", StringComparison.Ordinal) != -1)
-            {
-                result.Add(value.Replace("'", "''"));
-            }
-            else
-            {
-                result.Add(value);
-            }
+
+            var valueToAdd = Regex.Replace(value, @"(\(|\))", "");
+            
+            if (valueToAdd.IndexOf("'", StringComparison.Ordinal) != -1)
+               valueToAdd = valueToAdd.Replace("'", "''");
+            
+            result.Add(valueToAdd);
         }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Removes all the nulls from the string list.
+    /// </summary>
+    /// <param name="values">A string list with possible nulls</param>
+    /// <returns>A string list that cannot have nulls.</returns>
+    protected List<string> RemoveNulls(List<string?> values)
+    {
+        var result = new List<string>();
+        values.ForEach(i =>
+        {
+            if (i != null)
+                result.Add(i);
+        });
 
         return result;
     }
