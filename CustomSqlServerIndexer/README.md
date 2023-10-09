@@ -3,7 +3,7 @@
 This project is designed to do three things
 1. Create an Azure Cognitive Search index (see IndexManipulationFunction.cs and the IndexCreator HttpTrigger)
 2. Fire a timer periodically OR when triggered manually Trigger to check for database changes (see XXXTimer or YYY HttpTrigger)
-3. Give you a very basic search endpoint (see IndexSearchFunction.cs and the IndexSearch HttpTrigger).  There is a provided Postman collection to help you do a POST to this endpoint.
+3. Give you a very basic search endpoint (see IndexSearchFunction.cs and the IndexSearch HttpTrigger).  There is a provided Postman collection at the root of this repository to help you do a POST to this endpoint.
 
 # Setup
 You'll need to do the following
@@ -29,7 +29,7 @@ After initial creation, to avoid running it everytime, see the DatabaseRunMigrat
 3. Use postman (see postman collection) to do searches against the search endpoint, which is searching the cognitive search index.
 
 # Postman collection
-There is a POSTMAN collection that can be used againt the HttpTrigger endpoints.
+There is a POSTMAN collection, at the root of this repository, that can be used againt the HttpTrigger endpoints.
 
 # Things that could be done better
 - In HighWaterMarkStorageService.cs, actually store the high watermark in a database, redis cache or something external.

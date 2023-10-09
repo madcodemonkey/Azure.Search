@@ -2,7 +2,7 @@
 
 This project is designed to do three things
 1. Create an Azure Cognitive Search index (see IndexManipulationFunction.cs and the IndexCreator HttpTrigger)
-2. Give you a very basic search endpoint (see IndexSearchFunction.cs and the IndexSearch HttpTrigger).  There is a provided Postman collection to help you do a POST to this endpoint.
+2. Give you a very basic search endpoint (see IndexSearchFunction.cs and the IndexSearch HttpTrigger).  There is a provided Postman collection at the root of this repository to help you do a POST to this endpoint.
 
 # Setup
 You'll need to do the following

@@ -29,7 +29,7 @@ You'll need to do the following
 
 # Running
 1. **IndexerHelper**. Start the IndexerHelper Azure Function first.
-1. **IndexerHelper**. Using the postman collection (in same directory as the IndexHelperApp.sln file) or a browser, hit the Index-Creator GET endpoint in the IndexManipulationFunction.cs.  This will create the index in Azure Cognitive Search.
+1. **IndexerHelper**. Using the postman collection (at the root of the repository) or a browser, hit the Index-Creator GET endpoint in the IndexManipulationFunction.cs.  This will create the index in Azure Cognitive Search.
 1. **WorkerServiceMongoIndexer**. Start the WorkerServiceMongoIndexer.  This will begin monitoring the change stream of the specified database 
 1. **IndexerHelper**.  You can now use the postman collection (in same directory as the IndexHelperApp.sln file) to perform CRUD actions against the MongoDB.
    - The Mongo-Create endpoint will create MongoDB records.

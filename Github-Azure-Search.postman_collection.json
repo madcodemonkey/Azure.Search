@@ -404,10 +404,10 @@
 				{
 					"name": "Create Index",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:7071/api/IndexCreator",
+							"raw": "http://localhost:7071/api/Index-Creator",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -415,7 +415,27 @@
 							"port": "7071",
 							"path": [
 								"api",
-								"IndexCreator"
+								"Index-Creator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Index",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7071/api/Index-Deleter",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"Index-Deleter"
 							]
 						}
 					},
@@ -503,26 +523,6 @@
 							"path": [
 								"api",
 								"OpenAISearch"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Clear all documents from the Index",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:7071/api/IndexDocumentDeleter",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "7071",
-							"path": [
-								"api",
-								"IndexDocumentDeleter"
 							]
 						}
 					},
@@ -675,7 +675,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"query\": \"which notel has a view of the space needle?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 10,\r\n    \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Semantic\"\r\n    // \"queryType\": \"Simple\"\r\n    // \"queryType\": \"Full\"\r\n}",
+							"raw": "{\r\n    \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -701,13 +701,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/api/Gremlin-Person-List",
+							"raw": "{{baseUrl}}/api/Gremlin-Person-List?showSoftDeleted=true",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"api",
 								"Gremlin-Person-List"
+							],
+							"query": [
+								{
+									"key": "showSoftDeleted",
+									"value": "true"
+								}
 							]
 						}
 					},
@@ -720,7 +726,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"thomas3\",\r\n    \"FirstName\": \"Thomas\",\r\n    \"LastName\": \"Lowes\",\r\n    \"Age\": 34,\r\n    \"IsDeleted\": false\r\n}",
+							"raw": "{\r\n    \"id\": \"james\",\r\n    \"FirstName\": \"James\",\r\n    \"LastName\": \"Bond\",\r\n    \"Age\": 37,\r\n    \"IsDeleted\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -735,6 +741,33 @@
 							"path": [
 								"api",
 								"Gremlin-Person-Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Gremlin - Person Soft Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"james\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Gremlin-Person-Delete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Gremlin-Person-Delete"
 							]
 						}
 					},
@@ -791,7 +824,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete docs in the Index",
+					"name": "Delete index, ds, and indexer",
 					"request": {
 						"method": "GET",
 						"header": [],

@@ -3,7 +3,7 @@
 This project is designed to do three things
 1. Create an Azure Cognitive Search index (see IndexManipulationFunction.cs and the IndexCreator HttpTrigger)
 2. Help you create the data in the Gremlin database so that the out-of-the-box indexer picks them up and then you can query.
-3. Give you a very basic azure cogntive search endpoint (see IndexSearchFunction.cs and the IndexSearch HttpTrigger).  There is a provided Postman collection to help you do a POST to this endpoint.
+3. Give you a very basic azure cogntive search endpoint (see IndexSearchFunction.cs and the IndexSearch HttpTrigger).  There is a provided Postman collection at the root of this repository to help you do a POST to this endpoint.
 
 # Gremlin .NET NuGet package notes
 - For Cosmos DB Apache Gremlin, the current recommended version is 3.4.13 ([reference the compatible client libraries here](https://learn.microsoft.com/en-us/azure/cosmos-db/gremlin/support#compatible-client-libraries))

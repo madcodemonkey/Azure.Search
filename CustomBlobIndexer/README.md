@@ -3,7 +3,7 @@
 This project is designed to do four things
 1. Create an Azure Cognitive Search index (see IndexManipulationFunction.cs and the IndexCreator HttpTrigger)
 2. Trigger when files are uploaded to a blob and put documents in the Cognitive Search index (see BlobTriggerFunction.cs and theBlobTrigger)
-3. Give you a very basic search endpoint (see IndexSearchFunction.cs and the IndexSearch HttpTrigger).  There is a provided Postman collection to help you do a POST to this endpoint.
+3. Give you a very basic search endpoint (see IndexSearchFunction.cs and the IndexSearch HttpTrigger).  There is a provided Postman collection at the root of this repository to help you do a POST to this endpoint.
 4. Give you a very basic Open AI search that uses Cognitive Search (semantic query type, so it has to be turned on) and then a query to Open AI engine.  It's loosely based on [this Python example](https://github.com/Azure-Samples/azure-search-openai-demo/blob/main/README.md)
 
 You do NOT have to use the Open AI parts of this example nor do you have to use the search endpoint if all you want is an indexer example.  This just allowed me a common project to show a simple implementation of each!
@@ -35,11 +35,11 @@ You'll need to do the following
 1. Run the "CustomBlobIndexer" function project.
 2. If you haven't created an index, first hit the  IndexCreator: [GET,POST] http://localhost:7071/api/IndexCreator to create the index.  You can use a browser since GET is available.
 3. Upload a document to the my-files container to trigger the blob indexer.  This can be done manually via the portal.
-4. Use postman (see postman collection) to do searches against the search endpoint, which is searching the cognitive search index.
+4. Use postman (see postman collection at the root of the repository) to do searches against the search endpoint, which is searching the cognitive search index.
 5. If you configured Open AI, used the postman collection to do posts against the open ai endpoint; otherwise, avoid it or you will receive errors.
 
 # Postman collection
-There is a POSTMAN collection that can be used againt the HttpTrigger endpoints.
+There is a POSTMAN collection, at the root of the repository, that can be used againt the HttpTrigger endpoints.
 - If you plan to do semantic searches, you'll need to turn that on in the Azure Portal.  See the "Semantic search (preview)" option under Settings in your Azure Cognitive Search resource.
 
 # Notes
