@@ -2,7 +2,7 @@
 using Azure.AI.OpenAI;
 using Microsoft.Extensions.Options;
 
-namespace CustomBlobIndexer.Services;
+namespace VectorExample.Services;
 
 public abstract class OpenAIClientService
 {

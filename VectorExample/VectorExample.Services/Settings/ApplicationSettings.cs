@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 
-namespace CustomBlobIndexer.Services;
+namespace VectorExample.Services;
 
 public class ApplicationSettings 
 {

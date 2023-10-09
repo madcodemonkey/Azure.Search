@@ -1,10 +1,10 @@
 ﻿using Azure.Search.Documents.Indexes.Models;
-using CustomBlobIndexer.Models;
+using VectorExample.Models;
 using Azure.Search.Documents.Indexes;
 using CogSimple.Services;
 using Microsoft.Extensions.Options;
 
-namespace CustomBlobIndexer.Services;
+namespace VectorExample.Services;
 
 public class CustomIndexService : ICustomIndexService
 {

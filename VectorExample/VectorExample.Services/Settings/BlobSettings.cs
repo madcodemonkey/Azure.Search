@@ -1,4 +1,4 @@
-﻿namespace CustomBlobIndexer.Services;
+﻿namespace VectorExample.Services;
 
 public class BlobSettings
 {

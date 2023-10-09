@@ -1,6 +1,6 @@
 ﻿using Azure.Search.Documents.Models;
 
-namespace CustomBlobIndexer.Models;
+namespace VectorExample.Models;
 
 public class SearchRequest
 {

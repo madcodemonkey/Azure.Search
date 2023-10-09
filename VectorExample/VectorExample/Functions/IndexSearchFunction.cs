@@ -2,14 +2,14 @@ using System.Net;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using CogSimple.Services;
-using CustomBlobIndexer.Services;
+using VectorExample.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace CustomBlobIndexer.Functions;
+namespace VectorExample.Functions;
 
 public class IndexSearchFunction
 {

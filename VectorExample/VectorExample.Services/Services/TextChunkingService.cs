@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace CustomBlobIndexer.Services;
+namespace VectorExample.Services;
 
 public class TextChunkingService : ITextChunkingService
 {

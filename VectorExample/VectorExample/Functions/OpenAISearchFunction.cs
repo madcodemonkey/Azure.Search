@@ -1,12 +1,12 @@
 using System.Net;
-using CustomBlobIndexer.Models;
-using CustomBlobIndexer.Services;
+using VectorExample.Models;
+using VectorExample.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace CustomBlobIndexer.Functions;
+namespace VectorExample.Functions;
 
 public class OpenAISearchFunction
 {

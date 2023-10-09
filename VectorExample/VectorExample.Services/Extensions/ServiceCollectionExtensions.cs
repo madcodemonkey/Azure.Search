@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CustomBlobIndexer.Services;
+namespace VectorExample.Services;
 
 public static class ServiceCollectionExtensions
 {

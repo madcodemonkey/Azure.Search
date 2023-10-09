@@ -1,9 +1,9 @@
 ﻿using CogSimple.Services;
-using CustomBlobIndexer.Services;
+using VectorExample.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CustomBlobIndexer;
+namespace VectorExample;
  
 
 public static class ServiceCollectionExtensions

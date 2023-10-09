@@ -1,7 +1,7 @@
 ﻿using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 
-namespace CustomBlobIndexer.Models;
+namespace VectorExample.Models;
 
 public class SearchIndexDocument
 {

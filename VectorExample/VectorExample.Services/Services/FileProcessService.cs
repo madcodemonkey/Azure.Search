@@ -1,9 +1,9 @@
 ﻿using CogSimple.Services;
 using Microsoft.Extensions.Logging;
-using CustomBlobIndexer.Models;
+using VectorExample.Models;
 using Microsoft.Extensions.Options;
 
-namespace CustomBlobIndexer.Services;
+namespace VectorExample.Services;
 
 /// <summary>
 /// Processes a file and creates ONE search document in the Azure Cognitive Search index.

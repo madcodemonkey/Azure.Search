@@ -1,4 +1,4 @@
-﻿namespace CustomBlobIndexer.Models;
+﻿namespace VectorExample.Models;
 
 public class SearchSentiment
 {

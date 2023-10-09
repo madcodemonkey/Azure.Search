@@ -1,4 +1,4 @@
-﻿namespace CustomBlobIndexer.Services;
+﻿namespace VectorExample.Services;
 
 /// <summary>
 /// Azure's Computer Vision service gives you access to advanced algorithms that process images and return information based on the visual features you're interested in.

@@ -1,11 +1,11 @@
 ﻿using Azure.Search.Documents.Models;
 using Azure.Search.Documents;
-using CustomBlobIndexer.Models;
+using VectorExample.Models;
 using Microsoft.Extensions.Logging;
 using CogSimple.Services;
 using Microsoft.Extensions.Options;
 
-namespace CustomBlobIndexer.Services;
+namespace VectorExample.Services;
 
 /// <summary>
 /// Processes a file and creates MULTIPLE search documents in the Azure Cognitive Search index based on the chunk size.

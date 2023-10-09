@@ -2,7 +2,7 @@
 using Azure.Storage.Sas;
 using Microsoft.Extensions.Options;
 
-namespace CustomBlobIndexer.Services;
+namespace VectorExample.Services;
 
 /// <summary>
 /// Used for creating SAS tokens

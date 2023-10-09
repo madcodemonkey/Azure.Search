@@ -1,6 +1,6 @@
 ﻿using Azure.Storage.Sas;
 
-namespace CustomBlobIndexer.Services;
+namespace VectorExample.Services;
 
 public interface IBlobSasBuilderService
 {

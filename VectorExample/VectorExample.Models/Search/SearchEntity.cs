@@ -1,6 +1,6 @@
 ﻿using Azure.Search.Documents.Indexes;
 
-namespace CustomBlobIndexer.Models;
+namespace VectorExample.Models;
 
 public class SearchEntity
 {

@@ -1,11 +1,11 @@
 ﻿using Azure;
 using Azure.AI.TextAnalytics;
-using CustomBlobIndexer.Models;
+using VectorExample.Models;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using Microsoft.Extensions.Options;
 
-namespace CustomBlobIndexer.Services;
+namespace VectorExample.Services;
 
 // TODO: Remove all Console.WriteLines
 

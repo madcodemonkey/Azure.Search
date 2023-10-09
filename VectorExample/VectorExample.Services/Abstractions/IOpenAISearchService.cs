@@ -1,6 +1,6 @@
-﻿using CustomBlobIndexer.Models;
+﻿using VectorExample.Models;
 
-namespace CustomBlobIndexer.Services;
+namespace VectorExample.Services;
 
 public interface IOpenAISearchService
 {

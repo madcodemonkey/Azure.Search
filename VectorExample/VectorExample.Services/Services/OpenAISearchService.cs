@@ -4,10 +4,10 @@ using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using CogSimple.Services;
-using CustomBlobIndexer.Models;
+using VectorExample.Models;
 using Microsoft.Extensions.Options;
 
-namespace CustomBlobIndexer.Services;
+namespace VectorExample.Services;
 
 public class OpenAISearchService : OpenAIClientService, IOpenAISearchService
 {
