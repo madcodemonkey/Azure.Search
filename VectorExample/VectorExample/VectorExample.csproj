@@ -5,7 +5,7 @@
     <OutputType>Exe</OutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <UserSecretsId>96588C66-6AC2-4138-859A-C06212854ED5</UserSecretsId>
+    <UserSecretsId>CE747B58-4488-4354-B0CC-47159EF02F6B</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Search.Documents" Version="11.5.0-beta.4" />

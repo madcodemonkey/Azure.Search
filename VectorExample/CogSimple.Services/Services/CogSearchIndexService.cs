@@ -126,13 +126,24 @@ public class CogSearchIndexService : ICogSearchIndexService
         await indexClient.DeleteIndexAsync(indexName, cancellationToken);
     }
 
+    /// <summary>
+    /// Counts the number of documents inside the index.
+    /// </summary>
+    /// <param name="indexName">The name of the index</param>
+    /// <param name="cancellationToken">A cancellation token</param>
+    public async Task<long> DocumentCountAsync(string indexName, CancellationToken cancellationToken = default)
+    {
+        var searchClient = ClientService.GetSearchClient(indexName);
+        return await searchClient.GetDocumentCountAsync(cancellationToken);
+    }
+
     /// <summary>Searches for documents</summary>
     /// <typeparam name="T">The type of data being returned.</typeparam>
     /// <param name="indexName">The name of the index.</param>
     /// <param name="searchText">The text to find</param>
     /// <param name="options">The search options to apply</param>
     /// <param name="cancellationToken">A cancellation token</param>
-    public async Task<SearchQueryResponse<T>> SearchAsync<T>(string indexName, string searchText, SearchOptions options, CancellationToken cancellationToken = default) where T : class
+    public async Task<SearchQueryResponse<T>> SearchAsync<T>(string indexName, string? searchText, SearchOptions options, CancellationToken cancellationToken = default) where T : class
     {
         var searchClient = ClientService.GetSearchClient(indexName);
         var response = await searchClient.SearchAsync<T>(searchText, options, cancellationToken);

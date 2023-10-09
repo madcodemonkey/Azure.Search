@@ -5,41 +5,24 @@ namespace VectorExample.Models;
 
 public class SearchIndexDocument
 {
-    [SimpleField(IsKey = true, IsFilterable = true)]
+    [SearchableField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
+    public string Category { get; set; }
+
+    [SearchableField(IsFilterable = true, AnalyzerName = LexicalAnalyzerName.Values.EnMicrosoft)]
+    public string Content { get; set; }
+
+    [SearchableField]
+    public IReadOnlyList<float> ContentVector { get; set; }
+
+    [SimpleField(IsKey = true, IsFilterable = true, IsSortable = true)]
     public string Id { get; set; }
 
-    /// <summary>
-    /// If we are chunking documents (breaking them apart), this is the order they can be
-    /// recombined; thus, you could use the <see cref="SourcePath"/> to retrieve them and then sort
-    /// them by <see cref="ChunkOrderNumber"/> and reassemble all the text.
-    /// </summary>
-    [SimpleField(IsFilterable = true, IsSortable = true)]
-    public int ChunkOrderNumber { get; set; }
-
-    [SearchableField(IsSortable = true)]
+    [SearchableField(IsSortable = true, IsFilterable = true)]
     public string Title { get; set; }
-   
-    [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnMicrosoft)]
-    public string Content { get; set; }
-    
-    [SearchableField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
-    public string SourcePath { get; set; }
-    
-    [SearchableField(IsFilterable = true, IsFacetable = true)]
-    public List<string> KeyPhrases { get; set; }
- 
-    [SearchableField(IsFilterable = true, IsFacetable = true)]
-    public List<SearchEntity> Entities { get; set; }
 
-    // [SearchableField(IsFilterable = true, IsFacetable = true)]
-    // public List<SearchSentiment> Sentiments { get; set; }
-   
-    [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnMicrosoft)]
-    public string Summary { get; set; }
-  
-    [SearchableField(IsFilterable = true, IsFacetable = true)]
-    public List<SearchLanguage> Languages { get; set; }
- 
-    [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnMicrosoft)]
-    public string RedactedText { get; set; }
+    [SearchableField]
+    public IReadOnlyList<float> TitleVector { get; set; }
+
+    [SimpleField(IsFilterable = true)]
+    public int VectorEmbeddingVersion { get; set; }
 }

@@ -39,9 +39,7 @@ public class CustomIndexService : ICustomIndexService
     {
         await _indexService.DeleteIndexAsync(_appSettings.CognitiveSearchIndexName, checkIfExistsFirst: true, cancellationToken: cancellationToken);
     }
-
-
-
+    
     /// <summary>
     /// Create index or update the index.
     /// </summary>
@@ -55,9 +53,7 @@ public class CustomIndexService : ICustomIndexService
         // setup the suggestor
         var suggester = new SearchSuggester("sg", new[]
         {
-            nameof(SearchIndexDocument.Title),
-            nameof(SearchIndexDocument.Id),
-            nameof(SearchIndexDocument.KeyPhrases)
+            nameof(SearchIndexDocument.Title)
         });
         definition.Suggesters.Add(suggester);
 
@@ -71,16 +67,39 @@ public class CustomIndexService : ICustomIndexService
         };
 
         prioritizedFields.ContentFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.Content) });
-        prioritizedFields.KeywordFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.KeyPhrases) });
+        prioritizedFields.KeywordFields.Add(new SemanticField() { FieldName = nameof(SearchIndexDocument.Category) });
 
         SemanticConfiguration semanticConfig = new SemanticConfiguration(_appSettings.CognitiveSearchSemanticConfigurationName, prioritizedFields);
         definition.SemanticSettings = new SemanticSettings();
         definition.SemanticSettings.Configurations.Add(semanticConfig);
+        
+        // VECTOR fields
+        definition.VectorSearch = new()
+        {
+            AlgorithmConfigurations =
+            {
+                new HnswVectorSearchAlgorithmConfiguration(_appSettings.VectorSearchConfigurationName)
+            }
+        };
+
+        SetupVectorFieldProperties(definition, nameof(SearchIndexDocument.ContentVector));
+        SetupVectorFieldProperties(definition, nameof(SearchIndexDocument.TitleVector));
 
         // Create it using the index client
         var indexClient = _clientService.GetIndexClient();
-         await indexClient.CreateOrUpdateIndexAsync(definition, cancellationToken: cancellationToken);
+        await indexClient.CreateOrUpdateIndexAsync(definition, cancellationToken: cancellationToken);
     }
 
-
+    /// <summary>
+    /// Sets the vector field configuration and vector search dimensions for a field since it can't be done via the attribute notation.
+    /// </summary>
+    private void SetupVectorFieldProperties(SearchIndex definition, string fieldName)
+    {
+        SearchField? contentVectorField = definition.Fields.FirstOrDefault(w => w.Name == fieldName);
+        if (contentVectorField != null)
+        {
+            contentVectorField.VectorSearchConfiguration = _appSettings.VectorSearchConfigurationName;
+            contentVectorField.VectorSearchDimensions = 1536;
+        }
+    }
 }

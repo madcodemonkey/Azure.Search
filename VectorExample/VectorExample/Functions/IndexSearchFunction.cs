@@ -15,6 +15,7 @@ public class IndexSearchFunction
 {
     private readonly ApplicationSettings _appSettings;
     private readonly ICogSearchIndexService _cogSearchIndexService;
+    private readonly IOpenAIService _openAIService;
     private readonly ILogger _logger;
 
     /// <summary>
@@ -22,10 +23,12 @@ public class IndexSearchFunction
     /// </summary>
     public IndexSearchFunction(ILoggerFactory loggerFactory,
         IOptions<ApplicationSettings> appSettings,
-        ICogSearchIndexService cogSearchIndexService)
+        ICogSearchIndexService cogSearchIndexService,
+        IOpenAIService openAIService)
     {
         _appSettings = appSettings.Value;
         _cogSearchIndexService = cogSearchIndexService;
+        _openAIService = openAIService;
         _logger = loggerFactory.CreateLogger<IndexSearchFunction>();
     }
 
@@ -33,19 +36,63 @@ public class IndexSearchFunction
     public async Task<HttpResponseData> IndexSearch([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
+        SearchQueryResponse<SearchDocument> result;
 
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        SearchRequest? data = JsonConvert.DeserializeObject<SearchRequest>(requestBody);
-
-        var result = data != null
-            ? await _cogSearchIndexService.SearchAsync<SearchDocument>(_appSettings.CognitiveSearchIndexName, data.Query, new SearchOptions()
+        SearchRequest? request = JsonConvert.DeserializeObject<SearchRequest>(requestBody);
+        
+        if (request != null)
+        {
+            var searchOptions = new SearchOptions
             {
-                IncludeTotalCount = data.IncludeCount,
-                QueryType = SearchQueryType.Simple,
-                SearchMode = data.IncludeAllWords ? SearchMode.All : SearchMode.Any
-            }, cancellationToken)
-            : new SearchQueryResponse<SearchDocument>();
+                IncludeTotalCount = request.IncludeCount,
+                QueryType = request.QueryType,
+                SearchMode = request.IncludeAllWords ? SearchMode.All : SearchMode.Any
+            };
 
+            if (request.QueryType == SearchQueryType.Semantic)
+            {
+                searchOptions.QueryLanguage = QueryLanguage.EnUs;
+                searchOptions.SemanticConfigurationName = _appSettings.CognitiveSearchSemanticConfigurationName;
+            }
+
+            if (request.DocumentFields != null)
+            {
+                foreach (string field in request.DocumentFields)
+                {
+                    searchOptions.Select.Add(field);
+                }
+            }
+
+            if (request.SearchFields != null)
+            {
+                foreach (string field in request.SearchFields)
+                {
+                    searchOptions.SearchFields.Add(field);
+                }
+            }
+
+            if (request.VectorFields != null && request.VectorFields.Count > 0 && string.IsNullOrWhiteSpace(request.Query) == false)
+            {
+                var embedding = await _openAIService.GenerateEmbeddingAsync(request.Query, cancellationToken);
+                var searchQueryVector = new SearchQueryVector() { Value = embedding, KNearestNeighborsCount = 3 };
+                foreach (string field in request.VectorFields)
+                {
+                    searchQueryVector.Fields.Add(field);
+                }
+
+                searchOptions.Vectors.Add(searchQueryVector);
+            }
+
+            string? query = request.VectorOnlySearch ? null : request.Query;
+
+            result = await _cogSearchIndexService.SearchAsync<SearchDocument>(
+                _appSettings.CognitiveSearchIndexName, query, searchOptions, cancellationToken);
+        }
+        else
+        {
+            result = new SearchQueryResponse<SearchDocument>();
+        }
         
         var response = req.CreateResponse(HttpStatusCode.OK); 
         await response.WriteAsJsonAsync(result, cancellationToken);

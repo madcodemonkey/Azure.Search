@@ -531,6 +531,242 @@
 			]
 		},
 		{
+			"name": "VectorExample",
+			"item": [
+				{
+					"name": "Create Index",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7071/api/Index-Creator",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"Index-Creator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7071/api/Data-Creator",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"Data-Creator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update embeddings",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7071/api/Data-Update-Embeddings?batchSize=20",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"Data-Update-Embeddings"
+							],
+							"query": [
+								{
+									"key": "batchSize",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Index",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:7071/api/Index-Deleter",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"Index-Deleter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search-simple",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"CDN\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"documentFields\": [\r\n        \"Id\",\r\n        \"Content\",\r\n        \"Category\",\r\n        \"Title\"\r\n    ],\r\n    \"vectorFields\": [], // Not doing a vector based search\r\n    \"searchFields\": [], // All\r\n    \"queryType\": \"Simple\",\r\n    \"vectorOnlySearch\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/IndexSearch",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"IndexSearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search-semantic",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"what resources are pay as you go?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"documentFields\": [\r\n        \"Id\",\r\n        \"Content\",\r\n        \"Category\",\r\n        \"Title\"\r\n    ],\r\n    \"vectorFields\": [], // Not doing a vector based search\r\n    \"searchFields\": [], // All\r\n    \"queryType\": \"Semantic\",\r\n    \"vectorOnlySearch\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/IndexSearch",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"IndexSearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search-vector ONLY",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"what resources are pay as you go?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"documentFields\": [\r\n        \"Id\",\r\n        \"Content\",\r\n        \"Category\",\r\n        \"Title\"\r\n    ],\r\n    \"vectorFields\": [\"ContentVector\", \"TitleVector\"], \r\n    \"searchFields\": [], // All\r\n    \"queryType\": \"Simple\",\r\n    \"vectorOnlySearch\": true // ONLY vector and nothing else\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/IndexSearch",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"IndexSearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search-vector-and-simple",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"CDN\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"documentFields\": [\r\n        \"Id\",\r\n        \"Content\",\r\n        \"Category\",\r\n        \"Title\"\r\n    ],\r\n    \"vectorFields\": [\"ContentVector\", \"TitleVector\"], \r\n    \"searchFields\": [], // All\r\n    \"queryType\": \"Simple\",\r\n    \"vectorOnlySearch\": false // vector and simple\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/IndexSearch",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"IndexSearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search-vector-and-semantic",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"what resources are pay as you go?\",\r\n    \"includeAllWords\": false,\r\n    \"includeCount\": true,\r\n    \"documentFields\": [\r\n        \"Id\",\r\n        \"Content\",\r\n        \"Category\",\r\n        \"Title\"\r\n    ],\r\n    \"vectorFields\": [\"ContentVector\", \"TitleVector\"], \r\n    \"searchFields\": [], // All\r\n    \"queryType\": \"Semantic\",\r\n    \"vectorOnlySearch\": false // vector and semantic\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/IndexSearch",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"IndexSearch"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "OutOfTheBoxGremlinIndexer",
 			"item": [
 				{
